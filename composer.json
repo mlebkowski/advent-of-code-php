@@ -1,0 +1,24 @@
+{
+  "name": "puck/aoc-php",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    },
+    "files": [
+      "src/Lib/functions.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "Maciej Łebkowski",
+      "email": "m.lebkowski@gmail.com"
+    }
+  ],
+  "require": {
+    "illuminate/collections": "^10.13",
+    "phpunit/phpunit": "^10.2",
+    "loophp/collection": "^7.1"
+  }
+}
