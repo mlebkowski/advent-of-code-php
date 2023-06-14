@@ -22,8 +22,8 @@ final readonly class InputFetcher
         );
 
         $inputPath = sprintf('%s.txt', $fileBasePath);
-        $samplePath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part, 'sample');
-        $expectedPath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part, 'expected');
+        $samplePath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part->value, 'sample');
+        $expectedPath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part->value, 'expected');
 
         if (false === file_exists($inputPath)) {
             mkdir(dirname($inputPath), recursive: true);
