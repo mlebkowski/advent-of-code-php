@@ -15,12 +15,24 @@ final readonly class AttributeValue
     {
     }
 
-    public function tryEquals(?AttributeValue $other): bool
+    public function tryEquals(?AttributeValue $other, bool $outdatedRetroEncabulator): bool
     {
         if (null === $other) {
             return true;
         }
 
-        return $other->attribute === $this->attribute && $other->value === $this->value;
+        if ($other->attribute !== $this->attribute) {
+            return false;
+        }
+
+        if (false === $outdatedRetroEncabulator) {
+            return $other->value === $this->value;
+        }
+
+        return match (true) {
+            $this->attribute->isFewerThan() => $this->value > $other->value,
+            $this->attribute->isGreaterThan() => $this->value < $other->value,
+            default => $this->value === $other->value,
+        };
     }
 }

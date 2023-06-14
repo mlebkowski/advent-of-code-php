@@ -16,4 +16,14 @@ enum Attribute: string
     case Trees = 'trees';
     case Cars = 'cars';
     case Perfumes = 'perfumes';
+
+    public function isGreaterThan(): bool
+    {
+        return in_array($this, [self::Cats, self::Trees], true);
+    }
+
+    public function isFewerThan(): bool
+    {
+        return in_array($this, [self::Pomeranians, self::Goldfish], true);
+    }
 }

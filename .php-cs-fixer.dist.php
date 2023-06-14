@@ -97,7 +97,7 @@ return $config
             'strict_comparison' => true,
             'strict_param' => true,
             'ternary_operator_spaces' => false,
-            'trailing_comma_in_multiline' => ['elements' => ['arrays', 'arguments', 'parameters']],
+            'trailing_comma_in_multiline' => ['elements' => ['arrays', 'arguments', 'parameters', 'match']],
             'unary_operator_spaces' => false,
             'visibility_required' => true,
             'whitespace_after_comma_in_array' => true,

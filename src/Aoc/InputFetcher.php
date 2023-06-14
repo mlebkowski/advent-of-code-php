@@ -25,10 +25,11 @@ final readonly class InputFetcher
         $samplePath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part->value, 'sample');
         $expectedPath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part->value, 'expected');
 
+        file_exists($samplePath) || touch($samplePath);
+        file_exists($expectedPath) || touch($expectedPath);
+
         if (false === file_exists($inputPath)) {
             mkdir(dirname($inputPath), recursive: true);
-            touch($samplePath);
-            touch($expectedPath);
             $url = sprintf(
                 'https://adventofcode.com/%d/day/%d/input',
                 $challenge->year,

@@ -34,9 +34,12 @@ final readonly class Sue
         $this->attributes = $attributes;
     }
 
-    public function matches(AttributeValue $attributeValue): bool
+    public function matches(AttributeValue $attributeValue, bool $outdatedRetroEncabulator): bool
     {
-        return $attributeValue->tryEquals($this->getAttributeValue($attributeValue->attribute));
+        return $attributeValue->tryEquals(
+            $this->getAttributeValue($attributeValue->attribute),
+            $outdatedRetroEncabulator,
+        );
     }
 
     private function getAttributeValue(Attribute $attribute): AttributeValue|null

@@ -40,12 +40,16 @@ final class MyFirstCrimeSceneAnalysisMachine implements Solution
 
         $criteria = Collection::fromIterable($this->criteria);
         $progress = Progress::ofExpectedIterations(count($aunts));
+        $outdatedRetroEncabulator = $challenge->isPartTwo();
 
         return Collection::fromIterable($aunts)
             ->apply($progress->step(...))
             ->filter(
                 static fn (Sue $sue) => $criteria->every(
-                    static fn (AttributeValue $attributeValue) => $sue->matches($attributeValue),
+                    static fn (AttributeValue $attributeValue) => $sue->matches(
+                        $attributeValue,
+                        $outdatedRetroEncabulator,
+                    ),
                 ),
             )
             ->map(static fn (Sue $sue) => $sue->name)
