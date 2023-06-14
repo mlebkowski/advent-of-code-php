@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Solutions\Y2015\D16;
 
 use loophp\collection\Collection;
+use Stringable;
 
-final readonly class Sue
+final readonly class Sue implements Stringable
 {
     private array $attributes;
 
@@ -51,4 +52,8 @@ final readonly class Sue
             );
     }
 
+    public function __toString()
+    {
+        return "Sue {$this->name}";
+    }
 }

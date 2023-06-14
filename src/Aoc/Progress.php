@@ -44,4 +44,12 @@ final class Progress
         Output::step($value, $meta);
         return true;
     }
+
+    public function delay(int $delay): callable
+    {
+        return static function () use ($delay) {
+            usleep($delay);
+            return true;
+        };
+    }
 }

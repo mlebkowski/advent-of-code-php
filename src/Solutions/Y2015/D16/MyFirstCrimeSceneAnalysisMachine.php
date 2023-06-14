@@ -43,7 +43,9 @@ final class MyFirstCrimeSceneAnalysisMachine implements Solution
         $outdatedRetroEncabulator = $challenge->isPartTwo();
 
         return Collection::fromIterable($aunts)
+            ->apply($progress->delay(5_000))
             ->apply($progress->step(...))
+            ->apply($progress->report(...))
             ->filter(
                 static fn (Sue $sue) => $criteria->every(
                     static fn (AttributeValue $attributeValue) => $sue->matches(
