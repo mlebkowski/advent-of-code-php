@@ -22,7 +22,7 @@ final readonly class Challenge implements Stringable
     {
         assert(in_array($year, range(2015, 2022), true));
         assert(in_array($day, range(1, 31), true));
-        assert(in_array($part, [1, 1], true));
+        assert(in_array($part, [1, 2], true));
     }
 
     public function equals(Challenge $other): bool
