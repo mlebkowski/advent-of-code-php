@@ -13,6 +13,14 @@ final readonly class Challenge implements Stringable
         return new self(...array_map('intval', array_slice($argv, 1)));
     }
 
+    public static function bothParts(int $year, int $day): iterable
+    {
+        return [
+            self::of($year, $day, 1),
+            self::of($year, $day, 2),
+        ];
+    }
+
     public static function of(int $year, int $day, int $part): self
     {
         return new self($year, $day, $part);
@@ -23,6 +31,11 @@ final readonly class Challenge implements Stringable
         assert(in_array($year, range(2015, 2022), true));
         assert(in_array($day, range(1, 31), true));
         assert(in_array($part, [1, 2], true));
+    }
+
+    public function isPartTwo(): bool
+    {
+        return 2 === $this->part;
     }
 
     public function equals(Challenge $other): bool

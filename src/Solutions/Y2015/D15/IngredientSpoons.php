@@ -22,6 +22,7 @@ final readonly class IngredientSpoons
             ['durability', $this->ingredient->durability * $this->count],
             ['flavor', $this->ingredient->flavor * $this->count],
             ['texture', $this->ingredient->texture * $this->count],
+            ['calories', $this->count * $this->ingredient->calories],
         ];
     }
 }

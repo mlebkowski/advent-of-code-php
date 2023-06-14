@@ -6,51 +6,42 @@ namespace App\Aoc;
 
 final class Progress
 {
-    public static function step(mixed $value, string $meta = ''): true
+    private int $iteration = 0;
+    private readonly int $iterationPadding;
+
+    public static function ofExpectedIterations(int $expectedIterations): self
     {
-        $separator = $meta ? ' ' : '';
-        $len = strlen((string)$value) + strlen($meta) + strlen($separator);
-        $eraseUntilEndOfLine = "\033[K";
-        $moveCursorLeft = "\033[{$len}D";
-        $yellowBackground = "\033[0;43m";
-        $greenText = "\033[32m";
-        $restoreColor = "\033[0m";
+        $start = microtime(true);
+        return new self($expectedIterations, $start);
+    }
 
-        echo implode("", [
-            $eraseUntilEndOfLine,
-            $yellowBackground,
-            $meta,
-            $restoreColor,
-            $separator,
-            $greenText,
-            $value,
-            $restoreColor,
-            $moveCursorLeft,
-        ]);
+    public function __construct(
+        private readonly int $expectedIterations,
+        private readonly float $start,
+    ) {
+        $this->iterationPadding = (int)floor(log10($this->expectedIterations)) + 1;
+    }
 
+    public function step(): true
+    {
+        $this->iteration++;
         return true;
     }
 
-    public static function ofExpectedIterations(int $expectedIterations): callable
+    public function report(mixed $value): true
     {
-        $start = microtime(true);
-        $i = 0;
-        $iPad = (int)floor(log10($expectedIterations)) + 1;
-        return static function (mixed $value) use (&$i, $iPad, $expectedIterations, $start): true {
-            $i++;
+        $percentage = $this->iteration / $this->expectedIterations;
+        $elapsed = microtime(true) - $this->start;
+        $expectedTime = (round($elapsed) / $percentage) * (1 - $percentage);
 
-            $percentage = $i / $expectedIterations;
-            $elapsed = microtime(true) - $start;
-            $expectedTime = (round($elapsed) / $percentage) * (1 - $percentage);
+        $meta = sprintf(
+            '[ %s / % 2.0f%% / %ds ]',
+            str_pad((string)$this->iteration, $this->iterationPadding, pad_type: STR_PAD_LEFT),
+            $percentage * 100,
+            $expectedTime,
+        );
 
-            $meta = sprintf(
-                '[ %s / % 2.0f%% / %ds ]',
-                str_pad((string)$i, $iPad, pad_type: STR_PAD_LEFT),
-                $percentage * 100,
-                $expectedTime,
-            );
-
-            return self::step($value, $meta);
-        };
+        Output::step($value, $meta);
+        return true;
     }
 }

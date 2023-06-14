@@ -12,10 +12,11 @@ use loophp\collection\Collection;
 final class ScienceForHungryPeople implements Solution
 {
     private const MaxCapacity = 100;
+    private const IdealCalories = 500;
 
     public function challenges(): iterable
     {
-        yield Challenge::of(2015, 15, 1);
+        return Challenge::bothParts(2015, 15);
     }
 
     public function solve(Challenge $challenge, string $input): mixed
@@ -25,18 +26,18 @@ final class ScienceForHungryPeople implements Solution
 
         $expectedIterations = $this->expectedIterations(count($input->ingredients));
 
+        $caloriesExpectation = $challenge->isPartTwo()
+            ? static fn (Score $score) => $score->calories === self::IdealCalories
+            : static fn () => true;
+
+        $scoreCounter = new ScoreCounter($input->ingredients);
+        $progress = Progress::ofExpectedIterations($expectedIterations);
         return Collection::fromGenerator($partitions)
-            ->map(
-                static fn (array $counts) => Collection::fromIterable($counts)
-                    ->zip($input->ingredients)
-                    ->map(static fn (array $pairs) => IngredientSpoons::fromPairs(...$pairs))
-                    ->flatMap(static fn (IngredientSpoons $spoons) => $spoons->values())
-                    ->unpack()
-                    ->groupBy(static fn (mixed $value, mixed $key) => $key)
-                    ->map(static fn (array $values) => max(0, array_sum($values)))
-                    ->reduce(static fn (int $product, int $value) => $product * $value, 1),
-            )
-            ->apply(Progress::ofExpectedIterations($expectedIterations))
+            ->map($scoreCounter->calculateScore(...))
+            ->apply($progress->step(...))
+            ->filter($caloriesExpectation)
+            ->map(static fn (Score $score) => $score->score)
+            ->apply($progress->report(...))
             ->max();
     }
 
