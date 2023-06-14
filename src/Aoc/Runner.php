@@ -19,7 +19,7 @@ final class Runner
         }
         echo "Result: ";
         $actual = $solution->solve($challenge, $input);
-        echo "\033[K", var_export($actual, true), "\n\n";
+        echo "\033[K", $actual, "\n\n";
         if ($expected && ((string)$actual !== $expected)) {
             exit;
         }
