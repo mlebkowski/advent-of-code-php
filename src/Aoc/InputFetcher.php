@@ -15,16 +15,15 @@ final readonly class InputFetcher
     public function fetch(Challenge $challenge): Input
     {
         $fileBasePath = sprintf(
-            '%s/%d-%d-%d',
+            '%s/%d-%d',
             $this->cachePath,
             $challenge->year,
             $challenge->day,
-            $challenge->part,
         );
 
-        $inputPath = $fileBasePath . '.txt';
-        $samplePath = $fileBasePath . '-sample.txt';
-        $expectedPath = $fileBasePath . '-expected.txt';
+        $inputPath = sprintf('%s.txt', $fileBasePath);
+        $samplePath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part, 'sample');
+        $expectedPath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part, 'expected');
 
         if (false === file_exists($inputPath)) {
             mkdir(dirname($inputPath), recursive: true);
