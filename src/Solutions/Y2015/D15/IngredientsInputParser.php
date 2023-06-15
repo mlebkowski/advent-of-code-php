@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D15;
 
-final class InputParser
+use App\Aoc\Runner\InputParser;
+
+/** @implements InputParser<IngredientsInput> */
+final class IngredientsInputParser implements InputParser
 {
-    public static function parse(string $input): IngredientsInput
+    public function parse(string $input): IngredientsInput
     {
         $knownAttributes = ['capacity', 'durability', 'flavor', 'texture', 'calories'];
         $re = collect($knownAttributes)

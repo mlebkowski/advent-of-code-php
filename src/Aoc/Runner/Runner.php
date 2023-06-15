@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Aoc;
+namespace App\Aoc\Runner;
 
-final class Runner
+use App\Aoc\Challenge;
+use App\Aoc\Solution;
+
+final readonly class Runner
 {
-    public static function run(
+    public function __construct(private ChallengeInputParser $inputParser)
+    {
+    }
+
+    public function run(
         Solution $solution,
         Challenge $challenge,
         string $title,
@@ -18,7 +25,7 @@ final class Runner
             echo "Expecting: {$expected}\n";
         }
         echo "Result: ";
-        $actual = $solution->solve($challenge, $input);
+        $actual = $solution->solve($challenge, $this->inputParser->parseInput($solution, $input));
         echo "\033[K", $actual, "\n\n";
         if ($expected && ((string)$actual !== $expected)) {
             exit;

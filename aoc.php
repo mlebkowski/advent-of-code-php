@@ -5,28 +5,29 @@ declare(strict_types=1);
 namespace App\Aoc;
 
 // region setup
+use App\Aoc\Discovery\ImplementationsDiscovery;
+use App\Aoc\Runner\ChallengeInputParser;
+use App\Aoc\Runner\InputFactory;
+use App\Aoc\Runner\Runner;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 $sessionKey = getenv('AOC_SESSION_KEY');
 $challenge = Challenge::fromArgv($argv);
 assert(128 === strlen($sessionKey));
 
-$fetcher = new InputFetcher(
-    __DIR__ . '/var',
-    $sessionKey,
-);
-
-$factory = new SolutionFactory(
-    __DIR__ . '/src',
-);
+$fetcher = new InputFetcher(__DIR__ . '/var', $sessionKey);
+$implementationsDiscovery = new ImplementationsDiscovery(__DIR__ . '/src/Solutions');
+$factory = new SolutionFactory($implementationsDiscovery);
+$runner = new Runner(new ChallengeInputParser(new InputFactory($implementationsDiscovery)));
+// endregion
 
 $solution = $factory->make($challenge);
 $input = $fetcher->fetch($challenge);
-// endregion
 
 echo $challenge, "\n", '---', "\n\n";
 if ($input->sample) {
-    Runner::run($solution, $challenge, 'sample', $input->sample, $input->expected);
+    $runner->run($solution, $challenge, 'sample', $input->sample, $input->expected);
 }
 
-Runner::run($solution, $challenge, 'challenge', $input->actual);
+$runner->run($solution, $challenge, 'challenge', $input->actual);

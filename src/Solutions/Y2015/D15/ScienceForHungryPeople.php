@@ -9,6 +9,9 @@ use App\Aoc\Progress;
 use App\Aoc\Solution;
 use loophp\collection\Collection;
 
+/**
+ * @implements Solution<IngredientsInput>
+ */
 final class ScienceForHungryPeople implements Solution
 {
     private const MaxCapacity = 100;
@@ -19,9 +22,8 @@ final class ScienceForHungryPeople implements Solution
         return Challenge::bothParts(2015, 15);
     }
 
-    public function solve(Challenge $challenge, string $input): mixed
+    public function solve(Challenge $challenge, mixed $input): mixed
     {
-        $input = InputParser::parse($input);
         $partitions = Partition::into(self::MaxCapacity, count($input->ingredients));
 
         $expectedIterations = $this->expectedIterations(count($input->ingredients));

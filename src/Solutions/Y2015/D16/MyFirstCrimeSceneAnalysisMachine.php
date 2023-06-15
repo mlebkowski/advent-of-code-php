@@ -9,6 +9,7 @@ use App\Aoc\Progress;
 use App\Aoc\Solution;
 use loophp\collection\Collection;
 
+/** @implements Solution<AuntsInput> */
 final class MyFirstCrimeSceneAnalysisMachine implements Solution
 {
     private readonly array $criteria;
@@ -34,9 +35,9 @@ final class MyFirstCrimeSceneAnalysisMachine implements Solution
         return Challenge::bothParts(2015, 16);
     }
 
-    public function solve(Challenge $challenge, string $input): string
+    public function solve(Challenge $challenge, mixed $input): string
     {
-        $aunts = InputParser::parse($input);
+        $aunts = $input->aunts;
 
         $criteria = Collection::fromIterable($this->criteria);
         $progress = Progress::ofExpectedIterations(count($aunts));

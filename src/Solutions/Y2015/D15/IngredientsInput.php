@@ -9,7 +9,7 @@ final readonly class IngredientsInput
     /** @var Ingredient[] */
     public array $ingredients;
 
-    public static function of(Ingredient ...$ingredients)
+    public static function of(Ingredient ...$ingredients): self
     {
         return new self(...$ingredients);
     }

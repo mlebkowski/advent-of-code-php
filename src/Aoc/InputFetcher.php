@@ -29,7 +29,7 @@ final readonly class InputFetcher
         file_exists($expectedPath) || touch($expectedPath);
 
         if (false === file_exists($inputPath)) {
-            mkdir(dirname($inputPath), recursive: true);
+            is_dir(dirname($inputPath)) || mkdir(dirname($inputPath), recursive: true);
             $url = sprintf(
                 'https://adventofcode.com/%d/day/%d/input',
                 $challenge->year,
