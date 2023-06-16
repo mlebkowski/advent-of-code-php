@@ -8,9 +8,16 @@ final class Progress
 {
     private int $iteration = 0;
     private readonly int $iterationPadding;
+    private static int $dieAfter = 0;
+
+    public static function dieAfter(int $max): void
+    {
+        self::$dieAfter = $max;
+    }
 
     public static function ofExpectedIterations(int $expectedIterations): self
     {
+        assert($expectedIterations > 0);
         $start = microtime(true);
         return new self($expectedIterations, $start);
     }
@@ -25,6 +32,9 @@ final class Progress
     public function step(): true
     {
         $this->iteration++;
+        if (self::$dieAfter && $this->iteration >= self::$dieAfter) {
+            exit("\n\033[1;31mReached {$this->iteration} iterations\033[0m\n");
+        }
         return true;
     }
 

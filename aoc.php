@@ -13,6 +13,7 @@ use App\Aoc\Runner\Runner;
 require_once __DIR__ . '/vendor/autoload.php';
 
 $sessionKey = getenv('AOC_SESSION_KEY');
+Progress::dieAfter((int)getenv('MAX_ITERATIONS'));
 $challenge = Challenge::fromArgv($argv);
 assert(128 === strlen($sessionKey));
 
