@@ -32,10 +32,4 @@ final readonly class MoleculeReplacementFactory
             $base .= $replacement->from;
         }
     }
-
-    public function fold(Replacement $replacement): iterable
-    {
-        yield from $this->generateReplacements($replacement->reversed());
-    }
-
 }

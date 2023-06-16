@@ -17,11 +17,6 @@ final readonly class Replacement implements Stringable
     {
     }
 
-    public function reversed(): self
-    {
-        return self::of($this->to, $this->from);
-    }
-
     public function __toString(): string
     {
         return "$this->from => $this->to";
