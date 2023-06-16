@@ -24,8 +24,8 @@ final class LikeAGifForYourYard implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $steps = $runMode->isSample() ? self::SampleSteps : self::ActualSteps;
-        $progress = Progress::ofExpectedIterations($steps ^ 2);
-        return Collection::range(1, $steps)
+        $progress = Progress::ofExpectedIterations($input->matrix->count() * $steps);
+        return Collection::range(0, $steps)
             ->reduce(static fn (LightMatrix $matrix) => $matrix->update($progress), $input->matrix)
             ->countLightsOn();
     }

@@ -68,6 +68,11 @@ final readonly class LightMatrix
             ->count();
     }
 
+    public function count(): int
+    {
+        return count($this->lights) ** 2;
+    }
+
     private function within(Rectangle $rectangle): iterable
     {
         return Collection::fromIterable($this->lights)
