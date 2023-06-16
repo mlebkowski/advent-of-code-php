@@ -24,15 +24,24 @@ final class NoSuchThingAsTooMuch implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $containerCount = count($input->sizes);
-        $expectedSize = $runMode->isSample() ? self::SampleSize : self::Eggnog;
+        $expectedCapacity = $runMode->isSample() ? self::SampleSize : self::Eggnog;
         $expectedIterations = 2 ** $containerCount;
         $progress = Progress::ofExpectedIterations($expectedIterations);
 
+        $groupingMethod = ContainerSetGroupOfAny::empty();
+        if ($challenge->isPartTwo()) {
+            $groupingMethod = ContainerSetGroupOfMinimalSize::empty();
+        }
+
         return Collection::fromIterable(Variation::withRepetition($input->sizes))
             ->apply($progress->step(...))
-            ->map(static fn (array $sizes) => array_sum($sizes))
+            ->map(ContainerSet::of(...))
             ->apply($progress->report(...))
-            ->filter(static fn (int $sum) => $sum === $expectedSize)
+            ->filter(static fn (ContainerSet $set) => $set->isExpectedCapacity($expectedCapacity))
+            ->reduce(
+                static fn (ContainerSetGroup $group, ContainerSet $set) => $group->apply($set),
+                $groupingMethod,
+            )
             ->count();
     }
 }
