@@ -26,7 +26,9 @@ final class Progress
         private readonly int $expectedIterations,
         private readonly float $start,
     ) {
-        $this->iterationPadding = (int)floor(log10($this->expectedIterations)) + 1;
+        $iterationPadding = (int)floor(log10($expectedIterations)) + 1;
+        $iterationPadding += floor(($iterationPadding - 1) / 3);
+        $this->iterationPadding = (int)$iterationPadding;
     }
 
     public function step(): true
@@ -46,7 +48,11 @@ final class Progress
 
         $meta = sprintf(
             '[ %s / %s / %s ]',
-            str_pad((string)$this->iteration, $this->iterationPadding, pad_type: STR_PAD_LEFT),
+            str_pad(
+                number_format($this->iteration, thousands_separator: ' '),
+                $this->iterationPadding,
+                pad_type: STR_PAD_LEFT,
+            ),
             $percentage > 1 ? '??%' : sprintf('% 2.0f%%', $percentage * 100),
             $percentage > 1 ? '??s' : sprintf('%ds', $expectedTime),
         );
