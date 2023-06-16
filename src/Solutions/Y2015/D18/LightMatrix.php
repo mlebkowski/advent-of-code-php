@@ -11,25 +11,25 @@ final readonly class LightMatrix
 {
     public static function ofLights(bool ...$lights): self
     {
-        $side = sqrt(count($lights));
-        assert($side === floor($side));
-
+        $sideLength = sqrt(count($lights));
+        assert($sideLength === floor($sideLength));
         return new self(
+            (int)$sideLength,
             Collection::fromIterable($lights)
                 ->map(static fn (bool $state, int $idx) => Light::of(
                     state: $state,
                     point: Point::of(
-                        x: $idx % $side,
-                        y: (int)floor($idx / $side),
+                        x: $idx % $sideLength,
+                        y: (int)floor($idx / $sideLength),
                     ),
                 ))
-                ->groupBy(static fn (Light $light) => $light->point->y)
                 ->all(false),
         );
     }
 
-    private function __construct(private array $lights)
+    private function __construct(private int $sideLength, private array $lights)
     {
+        assert(count($this->lights) === $this->sideLength ** 2);
     }
 
     public function update(Progress $progress): self
@@ -37,7 +37,6 @@ final readonly class LightMatrix
         return self::ofLights(
             ...
             Collection::fromIterable($this->lights)
-                ->flatten()
                 ->apply($progress->step(...))
                 ->map(fn (Light $light) => $light->update($this))
                 ->apply($progress->report(...))
@@ -48,35 +47,33 @@ final readonly class LightMatrix
 
     public function countAdjacentLights(Point $point): int
     {
-        $light = $this->lights[$point->x][$point->y] ?? null;
-        if (null === $light) {
-            return 0;
+        $count = 0;
+        foreach ($point->adjacent() as $adjacentPoint) {
+            if ($this->at($adjacentPoint)?->on) {
+                $count++;
+            }
         }
-
-        $rectangle = Rectangle::covering(...$point->adjacent());
-        return Collection::fromIterable($this->within($rectangle))
-            ->filter(static fn (Light $light) => $light->on)
-            ->filter(static fn (Light $light) => false === $light->point->equals($point))
-            ->count();
+        return $count;
     }
 
     public function countLightsOn(): int
     {
         return Collection::fromIterable($this->lights)
-            ->flatten()
             ->filter(static fn (Light $light) => $light->on)
             ->count();
     }
 
     public function count(): int
     {
-        return count($this->lights) ** 2;
+        return count($this->lights);
     }
 
-    private function within(Rectangle $rectangle): iterable
+    public function at(Point $point): Light|null
     {
-        return Collection::fromIterable($this->lights)
-            ->flatten()
-            ->filter(static fn (Light $light) => $rectangle->contains($light->point));
+        if ($point->x >= $this->sideLength || $point->y >= $this->sideLength) {
+            return null;
+        }
+
+        return $this->lights[$point->x + $point->y * $this->sideLength] ?? null;
     }
 }

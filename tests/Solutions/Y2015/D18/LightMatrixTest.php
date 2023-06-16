@@ -65,6 +65,21 @@ final class LightMatrixTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
+    public function test indexing is correct(): void
+    {
+        $point = Point::of(3, 2);
+        $actual = $this->sut->at($point)->point;
+
+        self::assertEquals($actual, $point);
+    }
+
+    public function test indexing does not wrap(): void
+    {
+        $actual = $this->sut->at(Point::of(6, 0));
+
+        self::assertNull($actual);
+    }
+
     public function setUp(): void
     {
         $this->sut = (new LightMatrixParser())->parse(
