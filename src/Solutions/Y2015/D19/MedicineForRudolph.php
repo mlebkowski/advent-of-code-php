@@ -22,11 +22,8 @@ final class MedicineForRudolph implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $progress = Progress::unknown();
-        $reverseEngineering = MoleculeReverseEngineering::ofMolecule(
-            $input->molecule,
-            $progress,
-            ...$input->replacements,
-        );
+        $reverseEngineering = MoleculeReverseEngineering::ofMolecule($input, $progress);
+
         return Collection::fromIterable($reverseEngineering)
             ->reduce(
                 static fn (MinimumStepsStrategy $min, Procedure $process) => $min->apply($process),

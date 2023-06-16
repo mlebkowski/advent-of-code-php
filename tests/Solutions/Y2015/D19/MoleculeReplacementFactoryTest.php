@@ -8,8 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 final class MoleculeReplacementFactoryTest extends TestCase
 {
-    private MoleculeReplacementFactory $sut;
-
     public static function data(): iterable
     {
         yield [Replacement::of('H', 'HO'), 'HOOH', 'HOHO'];
@@ -18,16 +16,28 @@ final class MoleculeReplacementFactoryTest extends TestCase
     }
 
     /** @dataProvider data */
-    public function test generate replacements(Replacement $replacement, string ...$expected)
+    public function test generate replacements(Replacement $replacement, string ...$expected): void
     {
+        $sut = MoleculeReplacementFactory::of('HOH');
+
         $actual = iterator_to_array(
-            $this->sut->generateReplacements($replacement),
+            $sut->generateReplacements($replacement),
         );
+
         self::assertSame($expected, $actual);
     }
 
-    protected function setUp(): void
+    public function test it folds(): void
     {
-        $this->sut = MoleculeReplacementFactory::of('HOH');
+        $sut = MoleculeReplacementFactory::of('H1H2H3');
+        $actual = iterator_to_array($sut->fold(Replacement::of('x', 'H')));
+        self::assertSame(['x1H2H3', 'H1x2H3', 'H1H2x3'], $actual);
+    }
+
+    public function test it does not yield anything if there are no matches(): void
+    {
+        $sut = MoleculeReplacementFactory::of('1234');
+        $actual = iterator_to_array($sut->fold(Replacement::of('x', 'H')));
+        self::assertSame([], $actual);
     }
 }

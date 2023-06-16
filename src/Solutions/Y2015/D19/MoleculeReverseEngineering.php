@@ -7,40 +7,51 @@ namespace App\Solutions\Y2015\D19;
 use App\Aoc\Progress;
 use loophp\collection\Collection;
 
-final readonly class MoleculeReverseEngineering
+final class MoleculeReverseEngineering
 {
-    public static function ofMolecule(
-        string $molecule,
-        Progress $progress,
-        Replacement ...$replacements,
-    ): iterable {
-        yield from self::discover(
-            Procedure::ofMolecule($molecule),
-            $progress,
-            ...$replacements,
-        );
+    private int $shortestProcedure = PHP_INT_MAX;
+    private array $seen = [];
+
+    public static function ofMolecule(NuclearMedicineInput $input, Progress $progress): iterable
+    {
+        yield from self::prepare($progress, $input->replacements)
+            ->discover(Procedure::ofMolecule($input->molecule));
     }
 
-    private static function discover(
-        Procedure $procedure,
-        Progress $progress,
-        Replacement ...$replacements,
-    ): iterable {
+    private function __construct(
+        private readonly Progress $progress,
+        private readonly array $replacements,
+    ) {
+    }
+
+    private static function prepare(Progress $progress, array $replacements): self
+    {
+        return new self($progress, $replacements);
+    }
+
+    private function discover(Procedure $procedure): iterable
+    {
+        $stepsCount = $procedure->stepsCount();
+        $molecule = $procedure->molecule;
+
+        if (array_key_exists($molecule, $this->seen) || $stepsCount >= $this->shortestProcedure) {
+            return;
+        }
+        $this->seen[$molecule] = true;
+
         if ($procedure->isFolded()) {
+            $this->shortestProcedure = min($this->shortestProcedure, $stepsCount);
             yield $procedure;
             return;
         }
 
-        $factory = MoleculeReplacementFactory::of($procedure->molecule);
+        $factory = MoleculeReplacementFactory::of($molecule);
 
-        yield from Collection::fromIterable($replacements)
+        yield from Collection::fromIterable($this->replacements)
+            ->sort()
             ->flatMap(static fn (Replacement $replacement) => $factory->fold($replacement))
-            ->apply($progress->step(...))
-            ->apply(static fn (string $molecule) => $progress->report($procedure->stepsCount()))
-            ->flatMap(static fn (string $molecule) => self::discover(
-                $procedure->step($molecule),
-                $progress,
-                ...$replacements,
-            ));
+            ->apply($this->progress->step(...))
+            ->apply(fn (string $molecule) => $this->progress->report('.'))
+            ->flatMap(fn (string $molecule) => $this->discover($procedure->step($molecule)));
     }
 }
