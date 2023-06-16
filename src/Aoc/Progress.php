@@ -35,10 +35,10 @@ final class Progress
         $expectedTime = (round($elapsed) / $percentage) * (1 - $percentage);
 
         $meta = sprintf(
-            '[ %s / % 2.0f%% / %ds ]',
+            '[ %s / %s / %s ]',
             str_pad((string)$this->iteration, $this->iterationPadding, pad_type: STR_PAD_LEFT),
-            $percentage * 100,
-            $expectedTime,
+            $percentage > 1 ? '??%' : sprintf('% 2.0f%%', $percentage * 100),
+            $percentage > 1 ? '??s' : sprintf('%ds', $expectedTime),
         );
 
         Output::step($value, $meta);
