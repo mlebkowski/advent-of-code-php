@@ -25,7 +25,11 @@ final readonly class Runner
             echo "Expecting: {$expected}\n";
         }
         echo "Result: ";
-        $actual = $solution->solve($challenge, $this->inputParser->parseInput($solution, $input));
+        $actual = $solution->solve(
+            $challenge,
+            $this->inputParser->parseInput($solution, $input),
+            $expected ? RunMode::Sample : RunMode::Actual,
+        );
         echo "\033[K", $actual, "\n\n";
         if ($expected && ((string)$actual !== $expected)) {
             exit;

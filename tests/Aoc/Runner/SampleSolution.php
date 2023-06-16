@@ -15,7 +15,7 @@ final class SampleSolution implements Solution
         return [];
     }
 
-    public function solve(Challenge $challenge, mixed $input): mixed
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         return null;
     }

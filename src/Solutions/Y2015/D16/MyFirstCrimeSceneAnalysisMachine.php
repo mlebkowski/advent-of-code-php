@@ -6,6 +6,7 @@ namespace App\Solutions\Y2015\D16;
 
 use App\Aoc\Challenge;
 use App\Aoc\Progress;
+use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use loophp\collection\Collection;
 
@@ -35,7 +36,7 @@ final class MyFirstCrimeSceneAnalysisMachine implements Solution
         return Challenge::bothParts(2015, 16);
     }
 
-    public function solve(Challenge $challenge, mixed $input): string
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): string
     {
         $aunts = $input->aunts;
 

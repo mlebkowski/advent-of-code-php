@@ -6,6 +6,7 @@ namespace App\Solutions\Y2015\D15;
 
 use App\Aoc\Challenge;
 use App\Aoc\Progress;
+use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use loophp\collection\Collection;
 
@@ -22,7 +23,7 @@ final class ScienceForHungryPeople implements Solution
         return Challenge::bothParts(2015, 15);
     }
 
-    public function solve(Challenge $challenge, mixed $input): mixed
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $partitions = Partition::into(self::MaxCapacity, count($input->ingredients));
 
