@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D18;
 
+use loophp\collection\Collection;
 use PHPUnit\Framework\TestCase;
 
 final class LightMatrixTest extends TestCase
@@ -78,6 +79,16 @@ final class LightMatrixTest extends TestCase
         $actual = $this->sut->at(Point::of(6, 0));
 
         self::assertNull($actual);
+    }
+
+    public function test corners(): void
+    {
+        $actual = Collection::fromIterable($this->sut->corners())
+            ->map(static fn (Point $point) => (string)$point)
+            ->sort()
+            ->implode(', ');
+
+        self::assertSame('0×0, 0×5, 5×0, 5×5', $actual);
     }
 
     public function setUp(): void

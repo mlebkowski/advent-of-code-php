@@ -27,21 +27,24 @@ final readonly class LightMatrix
         );
     }
 
-    private function __construct(private int $sideLength, private array $lights)
-    {
+    private function __construct(
+        private int $sideLength,
+        private array $lights,
+        private array $stuckPoints = [],
+    ) {
         assert(count($this->lights) === $this->sideLength ** 2);
     }
 
     public function update(Progress $progress): self
     {
-        return self::ofLights(
-            ...
+        return new self(
+            $this->sideLength,
             Collection::fromIterable($this->lights)
                 ->apply($progress->step(...))
                 ->map(fn (Light $light) => $light->update($this))
                 ->apply($progress->report(...))
-                ->map(static fn (Light $light) => $light->on)
                 ->all(),
+            $this->stuckPoints,
         );
     }
 
@@ -75,5 +78,29 @@ final readonly class LightMatrix
         }
 
         return $this->lights[$point->x + $point->y * $this->sideLength] ?? null;
+    }
+
+    public function corners(): iterable
+    {
+        yield Point::of(0, 0);
+        yield Point::of($this->sideLength - 1, 0);
+        yield Point::of(0, $this->sideLength - 1);
+        yield Point::of($this->sideLength - 1, $this->sideLength - 1);
+    }
+
+    public function withStuckPoints(Point ...$stuckPoints): self
+    {
+        return new self($this->sideLength, $this->lights, $stuckPoints);
+    }
+
+    public function isStuck(Point $point): bool
+    {
+        /** @var Point $point */
+        foreach ($this->stuckPoints as $stuckPoint) {
+            if ($point->equals($stuckPoint)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

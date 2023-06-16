@@ -22,6 +22,10 @@ final readonly class Light implements Stringable
 
     public function update(LightMatrix $matrix): self
     {
+        if ($matrix->isStuck($this->point)) {
+            return self::of(state: true, point: $this->point);
+        }
+
         $adjacentLights = $matrix->countAdjacentLights($this->point);
         $nextState = match (true) {
             $this->on => in_array($adjacentLights, [2, 3], true),
