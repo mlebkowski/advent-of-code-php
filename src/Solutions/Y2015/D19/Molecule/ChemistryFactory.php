@@ -64,7 +64,7 @@ final class ChemistryFactory
 
         return $compounds->map($this->compoundFromString(...))
             ->merge($particles->map($this->particleFromString(...)))
-            ->map(static fn (Compound|Particle $foldable) => FoldingInstruction::of($element, $foldable));
+            ->map(static fn (Foldable $foldable) => FoldingInstruction::of($element, $foldable));
     }
 
     private function compoundFromString(string $compound): Compound
@@ -73,14 +73,14 @@ final class ChemistryFactory
             ->filter(static fn ($element) => $element instanceof Element);
 
         $alpha = $elements
-            ->find(callbacks: static fn (Element|Protomolecule $element) => str_starts_with(
+            ->find(callbacks: static fn (BasicElement $element) => str_starts_with(
                 $compound,
-                $element->name,
+                (string)$element,
             ));
         $bravo = $elements
-            ->find(callbacks: static fn (Element|Protomolecule $element) => str_ends_with(
+            ->find(callbacks: static fn (BasicElement $element) => str_ends_with(
                 $compound,
-                $element->name,
+                (string)$element,
             ));
 
         assert(
@@ -106,7 +106,7 @@ final class ChemistryFactory
         );
     }
 
-    private function createElement(string $name): Element|Protomolecule
+    private function createElement(string $name): BasicElement
     {
         $element = Element::of($name);
         if (Protomolecule::is($element)) {

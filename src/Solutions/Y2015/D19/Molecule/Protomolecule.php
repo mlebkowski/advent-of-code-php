@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D19\Molecule;
 
-final class Protomolecule implements AtomicPart
+final class Protomolecule implements BasicElement
 {
     private const ProtomoleculeSymbol = 'e';
 

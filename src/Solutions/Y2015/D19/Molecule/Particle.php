@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D19\Molecule;
 
-final readonly class Particle implements AtomicPart
+final readonly class Particle implements Foldable, AtomicPart
 {
     public static function of(Element $main, Element ...$secondary): self
     {
@@ -16,7 +16,7 @@ final readonly class Particle implements AtomicPart
         assert(in_array(count($secondary), [1, 2, 3], true));
     }
 
-    public function equals(Particle|Compound $other): bool
+    public function equals(Foldable $other): bool
     {
         return $other instanceof self && (string)$other === (string)$this;
     }

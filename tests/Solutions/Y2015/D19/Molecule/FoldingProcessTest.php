@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D19\Molecule;
 
+use App\Solutions\Y2015\D19\Molecule\Parser\Pair;
 use PHPUnit\Framework\TestCase;
 
 final class FoldingProcessTest extends TestCase

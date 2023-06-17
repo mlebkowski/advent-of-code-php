@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D19\Molecule;
 
+use App\Solutions\Y2015\D19\Molecule\Parser\Group;
 use loophp\collection\Collection;
 use RuntimeException;
 
@@ -20,15 +21,14 @@ final class FoldingProcess
     {
     }
 
-    public function fold(Compound|Particle|Pair|Branch $input): Element|Protomolecule
+    public function fold(Parser\Token $input): BasicElement
     {
-        // todo: branch. before or after unfolding Pair? :-/ does it matter?
-        if ($input instanceof Pair) {
-            $input = $input->intoCompound($this);
+        if ($input instanceof Element) {
+            return $input;
         }
 
-        if ($input instanceof Branch) {
-            $input = $input->intoParticle($this);
+        if ($input instanceof Group) {
+            $input = $input->intoFoldable($this);
         }
 
         $instruction = Collection::fromIterable($this->instructions)->find(

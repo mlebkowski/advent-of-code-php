@@ -8,16 +8,16 @@ use Stringable;
 
 final readonly class FoldingInstruction implements Stringable
 {
-    public static function of(Element|Protomolecule $into, Compound|Particle $foldable): self
+    public static function of(BasicElement $into, Foldable $foldable): self
     {
         return new self($into, $foldable);
     }
 
-    private function __construct(public Element|Protomolecule $into, public Compound|Particle $foldable)
+    private function __construct(public BasicElement $into, public Foldable $foldable)
     {
     }
 
-    public function handles(Compound|Particle $input): bool
+    public function handles(Foldable $input): bool
     {
         return $this->foldable->equals($input);
     }

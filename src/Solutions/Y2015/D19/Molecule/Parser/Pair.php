@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D19\Molecule;
+namespace App\Solutions\Y2015\D19\Molecule\Parser;
 
+use App\Solutions\Y2015\D19\Molecule\Compound;
+use App\Solutions\Y2015\D19\Molecule\Element;
+use App\Solutions\Y2015\D19\Molecule\Foldable;
+use App\Solutions\Y2015\D19\Molecule\FoldingProcess;
+use App\Solutions\Y2015\D19\Molecule\Protomolecule;
 use Exception;
 use Stringable;
 
-final readonly class Pair implements Stringable
+final readonly class Pair implements Group, Stringable
 {
-    // todo: branch!
-    public static function of(
-        Pair|Particle|Compound|Element|Branch $alpha,
-        Pair|Particle|Compound|Element|Branch $bravo,
-    ): self {
+    public static function of(Token $alpha, Token $bravo): self
+    {
         return new self($alpha, $bravo);
     }
 
-    private function __construct(
-        private Pair|Particle|Compound|Element|Branch $alpha,
-        private Pair|Particle|Compound|Element|Branch $bravo,
-    ) {
+    private function __construct(private Token $alpha, private Token $bravo)
+    {
     }
 
-    public function intoCompound(FoldingProcess $foldingProcess): Compound
+    public function intoFoldable(FoldingProcess $foldingProcess): Foldable
     {
         $alpha = $this->alpha;
         if (false === $alpha instanceof Element) {

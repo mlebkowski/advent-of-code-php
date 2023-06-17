@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Solutions\Y2015\D19\Molecule\Parser;
 
 use App\Solutions\Y2015\D19\Molecule\AtomicPart;
-use App\Solutions\Y2015\D19\Molecule\Branch;
 use App\Solutions\Y2015\D19\Molecule\Chemistry;
 use App\Solutions\Y2015\D19\Molecule\Compound;
 use App\Solutions\Y2015\D19\Molecule\Element;
+use App\Solutions\Y2015\D19\Molecule\Foldable;
 use App\Solutions\Y2015\D19\Molecule\FoldingInstruction;
-use App\Solutions\Y2015\D19\Molecule\Pair;
-use App\Solutions\Y2015\D19\Molecule\Particle;
 use Exception;
 use loophp\collection\Collection;
 
@@ -37,7 +35,7 @@ final readonly class MoleculeParser
 
         $this->knownCompounds = Collection::fromIterable($this->chemistry->instructions)
             ->map(static fn (FoldingInstruction $instruction) => $instruction->foldable)
-            ->filter(static fn (Compound|Particle $foldable) => $foldable instanceof Compound)
+            ->filter(static fn (Foldable $foldable) => $foldable instanceof Compound)
             ->sort(
                 callback: static function (Compound $alpha, Compound $bravo) {
                     return strlen((string)$bravo) <=> strlen((string)$alpha);
@@ -47,7 +45,7 @@ final readonly class MoleculeParser
         $this->knownAtoms = $this->knownCompounds->merge($this->knownElements);
     }
 
-    public function build(string $molecule): Element|Compound|Particle|Pair|Branch
+    public function build(string $molecule): Token
     {
         assert(strlen($molecule));
 
