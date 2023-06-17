@@ -26,18 +26,4 @@ final class MoleculeReplacementFactoryTest extends TestCase
 
         self::assertSame($expected, $actual);
     }
-
-    public function test it folds(): void
-    {
-        $sut = MoleculeReplacementFactory::of('H1H2H3');
-        $actual = iterator_to_array($sut->fold(Replacement::of('x', 'H')));
-        self::assertSame(['x1H2H3', 'H1x2H3', 'H1H2x3'], $actual);
-    }
-
-    public function test it does not yield anything if there are no matches(): void
-    {
-        $sut = MoleculeReplacementFactory::of('1234');
-        $actual = iterator_to_array($sut->fold(Replacement::of('x', 'H')));
-        self::assertSame([], $actual);
-    }
 }
