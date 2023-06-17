@@ -24,7 +24,12 @@ final readonly class MoleculeParser
     /** @var Collection<int,Compound|Element> */
     private Collection $knownAtoms;
 
-    public function __construct(private Chemistry $chemistry)
+    public static function of(Chemistry $chemistry): self
+    {
+        return new self($chemistry);
+    }
+
+    private function __construct(private Chemistry $chemistry)
     {
         $this->knownElements = Collection::fromIterable($this->chemistry->elements)
             ->sort(
@@ -47,9 +52,10 @@ final readonly class MoleculeParser
 
     public function build(string $molecule): Token
     {
-        assert(strlen($molecule));
+        // normalize:
+        $molecule = strtr($molecule, ['Rn' => '(', 'Y' => ',', 'Ar' => ')']);
 
-        $parenthesis = ParenthesisMatcher::march($molecule);
+        $parenthesis = ParenthesisMatcher::match($molecule);
         if ($parenthesis) {
             $molecule = substr($molecule, $parenthesis->length);
             $branch = Branch::of(

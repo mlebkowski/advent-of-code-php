@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D19\Molecule;
 
+use App\Solutions\Y2015\D19\Molecule\Parser\MoleculeParser;
 use App\Solutions\Y2015\D19\Molecule\Parser\Pair;
+use App\Solutions\Y2015\D19\NuclearMedicineInputMother;
 use PHPUnit\Framework\TestCase;
 
 final class FoldingProcessTest extends TestCase
@@ -41,5 +43,16 @@ final class FoldingProcessTest extends TestCase
 
         self::assertTrue($actual instanceof Protomolecule);
         self::assertSame($steps, $sut->stepsCount());
+    }
+
+    public function test ultimate(): void
+    {
+        $data = NuclearMedicineInputMother::some();
+        $chemistry = ChemistryFactory::ofReplacements(...$data->replacements);
+        $sut = FoldingProcess::ofInstructions(...$chemistry->instructions);
+        $moleculeStructure = MoleculeParser::of($chemistry)->build($data->molecule);
+        $result = $sut->fold($moleculeStructure);
+
+        self::assertTrue($result instanceof Protomolecule);
     }
 }

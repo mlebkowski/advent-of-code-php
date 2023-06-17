@@ -33,7 +33,7 @@ final class MoleculeParserTest extends TestCase
     public function test fold(string $molecule, string $expected, int $steps = null, string $element = null): void
     {
         $chemistry = ChemistryMother::some();
-        $sut = new MoleculeParser($chemistry);
+        $sut = MoleculeParser::of($chemistry);
         $actual = $sut->build($molecule);
         self::assertSame($expected, (string)$actual);
         if ($steps && $element) {
