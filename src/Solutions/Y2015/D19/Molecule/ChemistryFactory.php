@@ -6,6 +6,7 @@ namespace App\Solutions\Y2015\D19\Molecule;
 
 use App\Solutions\Y2015\D19\Replacement;
 use loophp\collection\Collection;
+use loophp\collection\Contract\Operation\Sortable;
 
 final class ChemistryFactory
 {
@@ -34,16 +35,22 @@ final class ChemistryFactory
         $this->elements = $groupedReplacements
             ->keys()
             ->map($this->createElement(...))
-            ->sort(callback: static fn ($element) => $element instanceof Protomolecule ? 1 : 0)
+            ->reject(static fn (BasicElement $element) => Protomolecule::is($element))
+            ->map(static fn (BasicElement $element) => [(string)$element, $element])
+            ->unpack()
             ->all(false);
 
         $instructions = $groupedReplacements
             ->flatMap($this->createInstructions(...))
             ->all();
 
+        $elements = Collection::fromIterable($this->elements)
+            ->sort(Sortable::BY_KEYS)
+            ->all(false);
+
         return new Chemistry(
-            array_pop($this->elements),
-            $this->elements,
+            Protomolecule::fromPhoebe(),
+            $elements,
             $instructions,
         );
     }
@@ -97,7 +104,7 @@ final class ChemistryFactory
         preg_match('/^(\w{1,2})(?:Y(\w{1,2}))?(?:Y(\w{1,2}))?$/', $matches['secondary'], $secondary);
 
         return Particle::of(
-            $this->createElement($matches['main']),
+            $this->createElement($matches['main']), // todo: type mismatch
             ...
             Collection::fromIterable($secondary)
                 ->drop(1)
@@ -110,9 +117,9 @@ final class ChemistryFactory
     {
         $element = Element::of($name);
         if (Protomolecule::is($element)) {
-            return new Protomolecule();
+            return Protomolecule::fromPhoebe();
         }
 
-        return $element;
+        return $this->elements[$element->name] = $element;
     }
 }

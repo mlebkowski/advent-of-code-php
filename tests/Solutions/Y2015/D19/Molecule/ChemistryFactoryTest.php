@@ -15,7 +15,7 @@ final class ChemistryFactoryTest extends TestCase
         $sut = ChemistryFactory::ofReplacements(...ReplacementsMother::some());
         $elements = implode(', ', $sut->elements);
 
-        self::assertSame('Al, B, Ca, F, H, Mg, N, O, P, Si, Th, Ti', $elements);
+        self::assertSame('Al, B, C, Ca, F, H, Mg, N, O, P, Si, Th, Ti', $elements);
 
         $instructions = $sut->instructions;
         usort(

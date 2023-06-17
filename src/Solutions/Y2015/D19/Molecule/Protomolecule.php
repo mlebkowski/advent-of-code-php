@@ -8,9 +8,22 @@ final class Protomolecule implements BasicElement
 {
     private const ProtomoleculeSymbol = 'e';
 
-    public static function is(Element $element): bool
+    public static function fromPhoebe(): self
     {
-        return self::ProtomoleculeSymbol === $element->name;
+        return new self();
+    }
+
+    public static function is(BasicElement $element): bool
+    {
+        if ($element instanceof Element) {
+            return self::ProtomoleculeSymbol === $element->name;
+        }
+
+        return $element instanceof self;
+    }
+
+    private function __construct()
+    {
     }
 
     public function __toString()
