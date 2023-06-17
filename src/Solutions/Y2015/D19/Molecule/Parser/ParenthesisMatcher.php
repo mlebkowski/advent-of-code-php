@@ -10,7 +10,7 @@ final class ParenthesisMatcher
     private const Separator = ',';
     private const CloseBracket = ')';
 
-    public static function march(string $input): Parenthesis|null
+    public static function match(string $input): Parenthesis|null
     {
         $firstOpenBracketPosition = strpos($input, self::OpenBracket);
 

@@ -25,14 +25,14 @@ final class ParenthesisMatcherTest extends TestCase
     /** @dataProvider data */
     public function test read branch(string $input, array|null $expected): void
     {
-        $actual = ParenthesisMatcher::march($input);
+        $actual = ParenthesisMatcher::match($input);
         self::assertSame($expected, [$actual->length, $actual->leftPart, ...$actual->arguments]);
     }
 
     /** @dataProvider data */
     public function test read branch negative scenarios(): void
     {
-        self::assertNull(ParenthesisMatcher::march(''));
-        self::assertNull(ParenthesisMatcher::march('CaCaCaCaSiTh'));
+        self::assertNull(ParenthesisMatcher::match(''));
+        self::assertNull(ParenthesisMatcher::match('CaCaCaCaSiTh'));
     }
 }
