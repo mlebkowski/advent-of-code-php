@@ -36,7 +36,7 @@ final class FoldingProcess
         );
 
         if (false === $instruction instanceof FoldingInstruction) {
-            throw new RuntimeException("Cannot fold $input");
+            throw new RuntimeException("Cannot fold $input at step $this->steps");
         }
 
         $this->steps++;

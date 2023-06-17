@@ -36,6 +36,8 @@ final class ParenthesisMatcher
                     if ($openCount === 0) {
                         $arguments[] = $buffer;
                         $buffer = '';
+                    } else {
+                        $buffer .= $char;
                     }
                     break;
                 case self::CloseBracket:

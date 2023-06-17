@@ -20,6 +20,7 @@ final class ParenthesisMatcherTest extends TestCase
         // yield ['CaCaCaCaSiThRnFAr', [17, 'CaCaCaCaSiTh', 'F']];
         yield ['C(F,P(F),F)', [11, 'C', 'F', 'P(F)', 'F']];
         // yield ['CRnFYPRnFArYFAr', [15, 'C', 'F', 'P(F)', 'F']];
+        yield ['C(Si(CaPTiMg,CaPTi(F)SiThF))', [28, 'C', 'Si(CaPTiMg,CaPTi(F)SiThF)']];
     }
 
     /** @dataProvider data */
@@ -29,7 +30,6 @@ final class ParenthesisMatcherTest extends TestCase
         self::assertSame($expected, [$actual->length, $actual->leftPart, ...$actual->arguments]);
     }
 
-    /** @dataProvider data */
     public function test read branch negative scenarios(): void
     {
         self::assertNull(ParenthesisMatcher::match(''));
