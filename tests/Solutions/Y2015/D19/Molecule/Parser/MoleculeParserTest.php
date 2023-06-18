@@ -12,6 +12,12 @@ final class MoleculeParserTest extends TestCase
 {
     public static function data(): iterable
     {
+        yield [
+            'SiTh(F)',
+            '{(SiTh, F) | [Si, (Th, F)}',
+            1,
+            'e',
+        ];
         yield ['CaPBCaPB', '[CaP, [BCa, PB]]', 5, 'Ca'];
         yield ['CaPTiBCaSiThCaSiThPMg', '[CaP, [TiB, [CaSi, [ThCa, [SiTh, PMg]]]]]', 11, 'F'];
         yield ['CaCaSiThCaCaCaSi', '[CaCa, [SiTh, [CaCa, CaSi]]]', 7, 'Si'];
@@ -25,7 +31,11 @@ final class MoleculeParserTest extends TestCase
         ];
         yield [
             'CaSi(TiBSiThSi(SiAl,CaF)P(F)SiThCaF)',
-            '(CaSi, [([TiB, [SiTh, Si]], [SiAl, CaF]), [(P, F), [SiTh, CaF]]])',
+            '(CaSi, [([TiB, [SiTh, Si]], SiAl, CaF), [(P, F), [SiTh, CaF]]])',
+        ];
+        yield [
+            'PTiTiTiBSi(SiAl)',
+            '([PTi, [TiTi, [B, Si]]], SiAl)',
         ];
     }
 

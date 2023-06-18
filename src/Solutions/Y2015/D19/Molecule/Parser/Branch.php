@@ -4,50 +4,38 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D19\Molecule\Parser;
 
-use App\Solutions\Y2015\D19\Molecule\Element;
-use App\Solutions\Y2015\D19\Molecule\Foldable;
-use App\Solutions\Y2015\D19\Molecule\FoldingProcess;
-use App\Solutions\Y2015\D19\Molecule\Particle;
-use App\Solutions\Y2015\D19\Molecule\Protomolecule;
-use Exception;
-use loophp\collection\Collection;
+use IteratorAggregate;
+use Stringable;
+use Traversable;
 
-final class Branch implements Group
+final readonly class Branch implements Token, IteratorAggregate, Stringable
 {
-    public static function of(Token $main, Token ...$secondary): self
+    public static function autoCollapse(Token ...$tokens): Token
     {
-        return new self($main, $secondary);
-    }
-
-    private function __construct(private Token $main, private array $secondary)
-    {
-    }
-
-    public function intoFoldable(FoldingProcess $foldingProcess): Foldable
-    {
-        $main = $this->main;
-        if (false === $main instanceof Element) {
-            $main = $foldingProcess->fold($main);
+        if (1 === count($tokens)) {
+            return reset($tokens);
         }
 
-        $secondary = Collection::fromIterable($this->secondary)
-            ->map(
-                static fn ($secondary) => $secondary instanceof Element
-                    ? $secondary
-                    : $foldingProcess->fold($secondary),
-            );
+        return self::of(...$tokens);
+    }
 
-        if ($main instanceof Protomolecule) {
-            // todo: check if secondary folded into protomo
-            throw new Exception('Todo');
-        }
+    public static function of(Token ...$tokens): self
+    {
+        return new self($tokens);
+    }
 
-        return Particle::of($main, ...$secondary);
+    public function __construct(private array $tokens)
+    {
+        assert(count($this->tokens) >= 2);
+    }
+
+    public function getIterator(): Traversable
+    {
+        yield from $this->tokens;
     }
 
     public function __toString(): string
     {
-        $secondary = implode(', ', $this->secondary);
-        return "({$this->main}, $secondary)";
+        return sprintf('{%s}', implode(' | ', $this->tokens));
     }
 }

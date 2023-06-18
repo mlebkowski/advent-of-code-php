@@ -8,12 +8,17 @@ use App\Solutions\Y2015\D19\Molecule\Compound;
 use App\Solutions\Y2015\D19\Molecule\Element;
 use App\Solutions\Y2015\D19\Molecule\Foldable;
 use App\Solutions\Y2015\D19\Molecule\FoldingProcess;
+use App\Solutions\Y2015\D19\Molecule\Problems\ProtomoleculeSpreadToEros;
 use App\Solutions\Y2015\D19\Molecule\Protomolecule;
-use Exception;
 use Stringable;
 
 final readonly class Pair implements Group, Stringable
 {
+    public static function autoCollapse(Token $alpha, ?Token $bravo): Token
+    {
+        return $bravo ? self::of($alpha, $bravo) : $alpha;
+    }
+
     public static function of(Token $alpha, Token $bravo): self
     {
         return new self($alpha, $bravo);
@@ -34,10 +39,8 @@ final readonly class Pair implements Group, Stringable
             $bravo = $foldingProcess->fold($bravo);
         }
 
-        if ($alpha instanceof Protomolecule || $bravo instanceof Protomolecule) {
-            // it folds all back to the protomolecule
-            throw new Exception('Todo');
-        }
+        ProtomoleculeSpreadToEros::whenever($alpha instanceof Protomolecule);
+        ProtomoleculeSpreadToEros::whenever($bravo instanceof Protomolecule);
 
         return Compound::of($alpha, $bravo);
     }

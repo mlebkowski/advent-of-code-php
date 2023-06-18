@@ -4,52 +4,29 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D19\Molecule\Parser;
 
-use App\Solutions\Y2015\D19\Molecule\AtomicPart;
 use App\Solutions\Y2015\D19\Molecule\Chemistry;
 use App\Solutions\Y2015\D19\Molecule\Compound;
 use App\Solutions\Y2015\D19\Molecule\Element;
-use App\Solutions\Y2015\D19\Molecule\Foldable;
-use App\Solutions\Y2015\D19\Molecule\FoldingInstruction;
-use Exception;
+use App\Solutions\Y2015\D19\Molecule\Problems\NothingMatchesMolecule;
 use loophp\collection\Collection;
 
 final readonly class MoleculeParser
 {
-    /** @var Collection<string,Element> */
-    private Collection $knownElements;
-
-    /** @var Collection<int,Compound> */
-    private Collection $knownCompounds;
-
-    /** @var Collection<int,Compound|Element> */
-    private Collection $knownAtoms;
+    private AtomMatcher $atomMatcher;
 
     public static function of(Chemistry $chemistry): self
     {
         return new self($chemistry);
     }
 
-    private function __construct(private Chemistry $chemistry)
+    private function __construct(Chemistry $chemistry)
     {
-        $this->knownElements = Collection::fromIterable($this->chemistry->elements)
-            ->sort(
-                callback: static function (Element $alpha, Element $bravo) {
-                    return strlen($bravo->name) <=> strlen($alpha->name);
-                },
-            );
-
-        $this->knownCompounds = Collection::fromIterable($this->chemistry->instructions)
-            ->map(static fn (FoldingInstruction $instruction) => $instruction->foldable)
-            ->filter(static fn (Foldable $foldable) => $foldable instanceof Compound)
-            ->sort(
-                callback: static function (Compound $alpha, Compound $bravo) {
-                    return strlen((string)$bravo) <=> strlen((string)$alpha);
-                },
-            );
-
-        $this->knownAtoms = $this->knownCompounds->merge($this->knownElements);
+        $this->atomMatcher = new AtomMatcher($chemistry);
     }
 
+    /**
+     * @throws NothingMatchesMolecule
+     */
     public function build(string $molecule): Token
     {
         // normalize:
@@ -57,8 +34,7 @@ final readonly class MoleculeParser
 
         $parenthesis = ParenthesisMatcher::match($molecule);
         if ($parenthesis) {
-            $molecule = substr($molecule, $parenthesis->length);
-            $branch = Branch::of(
+            $complex = Complex::of(
                 $this->build($parenthesis->leftPart),
                 ...
                 Collection::fromIterable($parenthesis->arguments)
@@ -66,29 +42,38 @@ final readonly class MoleculeParser
                     ->all(),
             );
 
-            if (!$molecule) {
-                return $branch;
-            }
-
-            return Pair::of($branch, $this->build($molecule));
+            return Pair::autoCollapse(
+                $complex,
+                $this->tryBuild(substr($molecule, $parenthesis->length)),
+            );
         }
 
-        $atom = $this->matchAtom($molecule);
-        if ($atom) {
-            $molecule = substr($molecule, strlen((string)$atom));
-            if (!$molecule) {
-                return $atom;
-            }
-            return Pair::of($atom, $this->build($molecule));
-        }
+        $atoms = $this->atomMatcher->match($molecule);
 
-        throw new Exception("Nothing matches: $molecule");
+        NothingMatchesMolecule::whenever(0 === count($atoms), $molecule);
+
+        return Branch::autoCollapse(
+            ...
+            Collection::fromIterable($atoms)
+                ->map(
+                    fn (Element|Compound $atom) => Pair::autoCollapse(
+                        $atom,
+                        $this->tryBuild(substr($molecule, strlen((string)$atom))),
+                    ),
+                )
+                ->all(),
+        );
     }
 
-    private function matchAtom($molecule): Compound|Element|null
+    /**
+     * @throws NothingMatchesMolecule
+     */
+    private function tryBuild(?string $molecule): Token|null
     {
-        return $this->knownAtoms->find(
-            callbacks: static fn (AtomicPart $atom) => str_starts_with($molecule, (string)$atom),
-        );
+        if (!$molecule) {
+            return null;
+        }
+
+        return $this->build($molecule);
     }
 }

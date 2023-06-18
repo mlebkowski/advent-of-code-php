@@ -5,36 +5,17 @@ declare(strict_types=1);
 namespace App\Solutions\Y2015\D19\Molecule;
 
 use App\Solutions\Y2015\D19\Molecule\Parser\MoleculeParser;
+use App\Solutions\Y2015\D19\Molecule\Parser\MoleculeParserTest;
 use App\Solutions\Y2015\D19\Molecule\Parser\Pair;
 use App\Solutions\Y2015\D19\NuclearMedicineInputMother;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\DependsExternal;
 use PHPUnit\Framework\TestCase;
 
 final class FoldingProcessTest extends TestCase
 {
-    public static function data(): iterable
-    {
-        yield [1, Compound::of(Element::of('H'), Element::of('F'))];
-        yield [1, Compound::of(Element::of('N'), Element::of('Al'))];
-        yield [1, Compound::of(Element::of('O'), Element::of('Mg'))];
-        yield [
-            4,
-            Pair::of(
-                Particle::of(
-                    Element::of('C'),
-                    Element::of('F'),
-                ),
-                Pair::of(
-                    Compound::of(
-                        Element::of('Th'),
-                        Element::of('Ca'),
-                    ),
-                    Element::of('F'),
-                ),
-            ),
-        ];
-    }
-
-    /** @dataProvider data */
+    #[DataProviderExternal(FoldingProcessDataProvider::class, 'data')]
     public function test fold(int $steps, Compound|Particle|Pair $given): void
     {
         $sut = FoldingProcess::ofInstructions(...FoldingInstructionMother::some());
@@ -45,6 +26,18 @@ final class FoldingProcessTest extends TestCase
         self::assertSame($steps, $sut->stepsCount());
     }
 
+    #[DataProviderExternal(FoldingProcessDataProvider::class, 'edge cases')]
+    public function test edge cases(string $molecule, string $expected): void
+    {
+        $chemistry = ChemistryMother::some();
+        $sut = FoldingProcess::ofInstructions(...$chemistry->instructions);
+        $structure = MoleculeParser::of($chemistry)->build($molecule);
+        $actual = $sut->fold($structure);
+        self::assertSame($expected, (string)$actual);
+    }
+
+    #[Depends('test edge cases')]
+    #[DependsExternal(MoleculeParserTest::class, 'test fold')]
     public function test ultimate(): void
     {
         $data = NuclearMedicineInputMother::some();
