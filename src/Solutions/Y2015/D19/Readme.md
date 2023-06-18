@@ -137,3 +137,7 @@ Of which all elements are 3rd generation, so they remain unchanged in the deriva
 
 I have no other clues for today. I’ll take a hint that there is only one possible solution,
 and submit my `200` result I got from bruteforce (but haven’t proven to be correct).
+
+And a link to the actual solution:
+
+https://www.reddit.com/r/adventofcode/comments/3xhkeb/day_19_part_2_proof_that_everyones_posted/cy8mzev/
