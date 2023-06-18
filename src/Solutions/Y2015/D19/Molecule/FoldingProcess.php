@@ -32,18 +32,22 @@ final class FoldingProcess
             return $input;
         }
 
-        $originalInput = $input;
+        $originalInput = (string)$input;
         if ($input instanceof Group) {
             $input = $input->intoFoldable($this);
         }
 
+        /** @var FoldingInstruction $instruction */
         $instruction = Collection::fromIterable($this->instructions)->find(
             callbacks: static fn (FoldingInstruction $instruction) => $instruction->handles($input),
         );
 
-        if (false === $instruction instanceof FoldingInstruction) {
-            throw FoldingImpossible::ofToken($input, $this->steps + 1);
-        }
+        FoldingImpossible::whenNoInstructions(
+            $instruction,
+            $input,
+            $this->steps + 1,
+            $originalInput,
+        );
 
         $this->steps++;
         return $instruction->into;

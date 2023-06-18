@@ -49,16 +49,25 @@ final readonly class Chemistry
             ->distinct()
             ->all();
 
-        $contains = static fn (BasicElement $element) => $element instanceof Element
-            && in_array($element->name, $elementNamesInComplexStructures, true);
+        $allowedElementNames = $this->findElementNamesInInstructions(
+            $elementNamesInComplexStructures,
+        );
+
+        return $this->findElementNamesInInstructions($allowedElementNames);
+    }
+
+    private function findElementNamesInInstructions(array $whitelist): array
+    {
+        $isAllowed = static fn (BasicElement $element) => $element instanceof Element
+            && in_array($element->name, $whitelist, true);
 
         return Collection::fromIterable($this->instructions)
-            ->filter(static fn (FoldingInstruction $instruction) => $contains($instruction->into))
+            ->filter(static fn (FoldingInstruction $instruction) => $isAllowed($instruction->into))
             ->map(static fn (FoldingInstruction $instruction) => $instruction->foldable)
             ->filter(static fn (Foldable $foldable) => $foldable instanceof Compound)
             ->flatMap(static fn (Compound $compound) => [$compound->alpha, $compound->bravo])
             ->map(static fn (Element $element) => $element->name)
-            ->merge($elementNamesInComplexStructures)
+            ->merge($whitelist)
             ->distinct()
             ->all();
     }
