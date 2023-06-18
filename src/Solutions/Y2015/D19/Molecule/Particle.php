@@ -6,14 +6,14 @@ namespace App\Solutions\Y2015\D19\Molecule;
 
 final readonly class Particle implements Foldable, AtomicPart
 {
-    public static function of(Element $main, Element ...$secondary): self
+    public static function of(Element $main, Element ...$elements): self
     {
-        return new self($main, $secondary);
+        return new self($main, $elements);
     }
 
-    private function __construct(private Element $main, private array $secondary)
+    private function __construct(private Element $main, public array $elements)
     {
-        assert(in_array(count($secondary), [1, 2, 3], true));
+        assert(in_array(count($elements), [1, 2, 3], true));
     }
 
     public function equals(Foldable $other): bool
@@ -23,6 +23,6 @@ final readonly class Particle implements Foldable, AtomicPart
 
     public function __toString(): string
     {
-        return "{$this->main}(" . implode(',', $this->secondary) . ")";
+        return "{$this->main}(" . implode(',', $this->elements) . ")";
     }
 }

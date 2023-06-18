@@ -11,7 +11,7 @@ final readonly class Compound implements Foldable, AtomicPart
         return new self($alpha, $bravo);
     }
 
-    private function __construct(private Element $alpha, private Element $bravo)
+    private function __construct(public Element $alpha, public Element $bravo)
     {
     }
 
