@@ -126,3 +126,14 @@ my input molecule is inside parenthesis. that seems like a huge win already.
 Next step is to apply this logic to parsing and I’m hoping, that this will allow
 me to unambiguously fold inner parts. Either way, I’m off to coding that logic,
 and let’s see where it gets us.
+
+## That got me nowhere
+
+So I didn’t realize that my parser/folder got stuck on a sequence:
+
+* `CaSiThSiThPBCaCaSi(…)`
+
+Of which all elements are 3rd generation, so they remain unchanged in the derivative. :(
+
+I have no other clues for today. I’ll take a hint that there is only one possible solution,
+and submit my `200` result I got from bruteforce (but haven’t proven to be correct).
