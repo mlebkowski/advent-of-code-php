@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D21\Inventory;
 
-final readonly class Item
+use Stringable;
+
+final readonly class Item implements Stringable
 {
     public static function of(string $name, int $damage, int $armor, ItemType $type): self
     {
@@ -17,20 +19,18 @@ final readonly class Item
         public int $armor,
         public ItemType $type,
     ) {
+        assert($this->damage > 0 || $type !== ItemType::Weapon);
+        assert($this->armor > 0 || $type !== ItemType::Armor);
+        assert($this->armor >= 0 || $this->damage >= 0);
     }
 
-    public function isArmor(): bool
+    public function largestAttribute(): int
     {
-        return $this->type === ItemType::Armor;
+        return max($this->damage, $this->armor);
     }
 
-    public function isWeapon(): bool
+    public function __toString(): string
     {
-        return $this->type === ItemType::Weapon;
-    }
-
-    public function isRing(): bool
-    {
-        return $this->type === ItemType::Ring;
+        return "$this->name ({$this->type->name}) {atk: $this->damage, def: $this->armor}";
     }
 }

@@ -45,11 +45,12 @@ final class Character implements Stringable
     private function __construct(
         public readonly string $name,
         private int $hitPoints,
-        private readonly int $armor,
+        public readonly int $armor,
         public readonly int $attack,
     ) {
         assert($this->hitPoints > 0);
         assert($this->armor >= 0);
+        assert($this->attack >= 0);
     }
 
     public function receiveAttack(int $damage): void
