@@ -95,14 +95,6 @@ final class Progress
         return true;
     }
 
-    public function delay(int $delay): callable
-    {
-        return static function () use ($delay) {
-            usleep($delay);
-            return true;
-        };
-    }
-
     private function calculateIterationPadding(): void
     {
         if (null === $this->expectedIterations) {

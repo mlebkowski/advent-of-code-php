@@ -41,11 +41,10 @@ final class MyFirstCrimeSceneAnalysisMachine implements Solution
         $aunts = $input->aunts;
 
         $criteria = Collection::fromIterable($this->criteria);
-        $progress = Progress::ofExpectedIterations(count($aunts));
+        $progress = Progress::ofExpectedIterations(count($aunts))->withDelay(5_000);
         $outdatedRetroEncabulator = $challenge->isPartTwo();
 
         return Collection::fromIterable($aunts)
-            ->apply($progress->delay(5_000))
             ->apply($progress->step(...))
             ->apply($progress->report(...))
             ->filter(
