@@ -6,7 +6,7 @@ namespace App\Solutions\Y2015\D19;
 
 use App\Aoc\Challenge;
 use App\Aoc\Part;
-use App\Aoc\Progress;
+use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 

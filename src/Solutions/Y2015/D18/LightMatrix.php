@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D18;
 
-use App\Aoc\Progress;
+use App\Aoc\Progress\Progress;
 use loophp\collection\Collection;
 
 final readonly class LightMatrix

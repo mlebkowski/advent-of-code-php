@@ -6,6 +6,7 @@ namespace App\Aoc;
 
 // region setup
 use App\Aoc\Discovery\ImplementationsDiscovery;
+use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\ChallengeInputParser;
 use App\Aoc\Runner\InputFactory;
 use App\Aoc\Runner\Runner;
