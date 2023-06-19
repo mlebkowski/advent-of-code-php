@@ -20,13 +20,17 @@ final class InfiniteElvesAndInfiniteHouses implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $expectedPresents = (int)($input->presents / 10);
-        $max = $expectedPresents;
+        $presentsPerHouse = $challenge->isPartOne() ? 10 : 11;
+        $maxHousesPerElf = $challenge->isPartTwo() ? 50 : PHP_INT_MAX;
+        $iterationsFraction = $challenge->isPartOne() ? 1.1 : 0.33;
+
+        // dunno why, but I’m guessing I can do that in half iterations:
+        $max = (int)($input->presents / $presentsPerHouse / 2);
         // int(1 → n) of n/x dx
-        $expectedIterations = (int)($expectedPresents * log($expectedPresents) * 1.1);
+        $expectedIterations = (int)($max * log($max) * $iterationsFraction);
 
         $progress = Progress::ofExpectedIterations($expectedIterations)
-            ->reportInSteps(100_000)
+            ->reportInSteps(50_000)
             ->withMemoryUsage();
 
         $houses = Houses::upTo($max);
@@ -39,16 +43,16 @@ final class InfiniteElvesAndInfiniteHouses implements Solution
 
         $sums = [];
         foreach (Elves::upTo($max) as $elf) {
-            foreach ($houses->visit($elf) as $house) {
+            foreach ($houses->visit($elf, upTo: $maxHousesPerElf) as $house) {
                 $progress->step();
                 $progress->report($report($elf, $house));
-                $sums[$house] = ($sums[$house] ?? 0) + $elf;
+                $sums[$house] = ($sums[$house] ?? 0) + $elf * $presentsPerHouse;
             }
         }
-        [$house] = Collection::fromIterable($sums)
-            ->pack()
-            ->find([PHP_INT_MAX], static fn (array $item) => end($item) > $expectedPresents);
 
-        return $house;
+        return Collection::fromIterable($sums)
+            ->filter(static fn (int $presents) => $presents > $input->presents)
+            ->keys()
+            ->reduce(MinimumHouseNumberStrategy::reduce(...), PHP_INT_MAX);
     }
 }

@@ -17,10 +17,11 @@ final readonly class Houses
     {
     }
 
-    public function visit($elf): Generator
+    public function visit(int $elf, int $upTo = PHP_INT_MAX): Generator
     {
         $houseNumber = 0;
-        while (($houseNumber += $elf) <= $this->max) {
+        $count = 0;
+        while (($houseNumber += $elf) <= $this->max && ($count++) < $upTo) {
             yield $houseNumber;
         }
     }

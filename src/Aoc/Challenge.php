@@ -38,6 +38,11 @@ final readonly class Challenge implements Stringable
         assert(in_array($day, range(1, 31), true));
     }
 
+    public function isPartOne(): bool
+    {
+        return Part::One === $this->part;
+    }
+
     public function isPartTwo(): bool
     {
         return Part::Two === $this->part;

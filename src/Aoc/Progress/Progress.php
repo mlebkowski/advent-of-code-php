@@ -13,6 +13,7 @@ final class Progress
     private bool $memoryUsage = false;
     private int $iterationPadding;
     private int $inSteps = 1;
+    private int $delay = 0;
     private static int $dieAfter = 0;
 
     public static function dieAfter(int $max): void
@@ -52,8 +53,15 @@ final class Progress
         return $this;
     }
 
+    public function withDelay(int $delay): self
+    {
+        $this->delay = $delay;
+        return $this;
+    }
+
     public function step(): true
     {
+        $this->delay && usleep($this->delay);
         $this->iteration++;
         if (self::$dieAfter && $this->iteration >= self::$dieAfter) {
             exit("\n\033[1;31mReached {$this->iteration} iterations\033[0m\n");
@@ -93,11 +101,6 @@ final class Progress
             usleep($delay);
             return true;
         };
-    }
-
-    public function reportSomeSteps(int $step, callable $value): true
-    {
-        return ($this->iteration % $step) || $this->report($value());
     }
 
     private function calculateIterationPadding(): void
