@@ -24,7 +24,7 @@ registerArgumentsSet(
     'Defense +3',
 );
 
-expectedArguments(\App\Solutions\Y2015\D21\ItemsFactory::get(), 0, argumentsSet('itemNames'));
+expectedArguments(\App\Solutions\Y2015\D21\Inventory\ItemShop::get(), 0, argumentsSet('itemNames'));
 expectedArguments(\App\Solutions\Y2015\D21\CharacterMother::withItems(), 1, argumentsSet('itemNames'));
 expectedArguments(\App\Solutions\Y2015\D21\CharacterMother::withItems(), 2, argumentsSet('itemNames'));
 expectedArguments(\App\Solutions\Y2015\D21\CharacterMother::withItems(), 3, argumentsSet('itemNames'));
