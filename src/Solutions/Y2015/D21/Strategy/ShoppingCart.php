@@ -29,17 +29,19 @@ final readonly class ShoppingCart implements Stringable
         return $alpha->price <=> $bravo->price;
     }
 
-    private function __construct(public int $price, private array $items)
+    public static function providesEnoughPoints(int $pointsRequired): callable
     {
+        return static function (self $cart) use ($pointsRequired) {
+            $points = Collection::fromIterable($cart->items)
+                ->map(static fn (Item $item) => $item->largestAttribute())
+                ->reduce(static fn (int $sum, int $points) => $points + $sum, 0);
+
+            return $points >= $pointsRequired;
+        };
     }
 
-    public function satisfiesRequirements(int $pointsRequired): bool
+    private function __construct(public int $price, private array $items)
     {
-        $points = Collection::fromIterable($this->items)
-            ->map(static fn (Item $item) => $item->largestAttribute())
-            ->reduce(static fn (int $sum, int $points) => $points + $sum, 0);
-
-        return $points >= $pointsRequired;
     }
 
     public function __toString(): string

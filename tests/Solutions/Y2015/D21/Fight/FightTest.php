@@ -45,7 +45,7 @@ final class FightTest extends TestCase
         self::assertEquals($them->hitPoints(), $me->hitPoints());
     }
 
-    public function test ultimate(): void
+    public function test ultimate part one(): void
     {
         $player = CharacterMother::withItems('player', 100, 'Longsword', 'Chainmail', 'Defense +1');
         $boss = CharacterMother::withItems('boss', 100, 'Greataxe', 'Chainmail');
@@ -54,5 +54,17 @@ final class FightTest extends TestCase
 
         self::assertEquals($player, $sut->getReturn());
         self::assertTrue($player->isAlive());
+    }
+
+    public function test ultimate part two(): void
+    {
+        $player = CharacterMother::withItems('player', 100, 'Dagger', 'Damage +2', 'Damage +3');
+        $boss = CharacterMother::withItems('boss', 100, 'Greataxe', 'Chainmail');
+        $sut = Fight::ofCharacters($player, $boss);
+        iterator_to_array($sut);
+
+        self::assertEquals($boss, $sut->getReturn());
+        self::assertTrue($player->isDead());
+        self::assertTrue($boss->isAlive());
     }
 }
