@@ -10,7 +10,7 @@ final class CharacterTest extends TestCase
 {
     public function test attack takes at least one point of damage(): void
     {
-        $sut = CharacterMother::withItems(3, 'Leather' /* +1 armor */);
+        $sut = CharacterMother::withItems('Player', 3, 'Greataxe', 'Leather' /* +1 armor */);
 
         $sut->receiveAttack(1);
         self::assertSame(2, $sut->hitPoints());
@@ -25,7 +25,7 @@ final class CharacterTest extends TestCase
 
     public function test attack takes damage reduced by armor(): void
     {
-        $sut = CharacterMother::withItems(5, 'Chainmail' /* +2 armor */);
+        $sut = CharacterMother::withItems('Player', 5, 'Greataxe', 'Chainmail' /* +2 armor */);
 
         $sut->receiveAttack(4);
         self::assertSame(3, $sut->hitPoints());

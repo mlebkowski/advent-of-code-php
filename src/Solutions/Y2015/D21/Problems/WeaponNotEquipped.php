@@ -13,6 +13,6 @@ final class WeaponNotEquipped extends Exception implements InventoryProblem
      */
     public static function whenNoWeapon(int $count): void
     {
-        $count < 1 || throw new self("You need to equip at least one weapon!");
+        $count < 1 && throw new self("You need to equip at least one weapon!");
     }
 }
