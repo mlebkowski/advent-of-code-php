@@ -13,18 +13,19 @@ final class CharacterMother
 {
     public static function withItems(string $name, int $hitPoints, string ...$names): Character
     {
-        $items = Collection::fromIterable(ItemsFactory::all())
+        $stock = Collection::fromIterable(ItemsFactory::all())
             ->map(static fn (ItemPrice $itemPrice) => [$itemPrice->item->name, $itemPrice->item])
             ->unpack()
             ->all(false);
 
-        return Character::of(
-            $name,
-            $hitPoints,
-            ...
-            Collection::fromIterable($names)
-                ->map(static fn (string $name) => $items[$name] ?? NoItemByThatName::ofName($name))
-                ->all(),
-        );
+        $items = Collection::fromIterable($names)
+            ->map(static fn (string $name) => $stock[$name] ?? NoItemByThatName::ofName($name))
+            ->all();
+
+        return WarriorBuilder::start()
+            ->withName($name)
+            ->withHitPoints($hitPoints)
+            ->withItems(...$items)
+            ->build();
     }
 }

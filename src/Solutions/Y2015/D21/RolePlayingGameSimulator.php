@@ -8,9 +8,9 @@ use App\Aoc\Challenge;
 use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
-use App\Realms\RolePlaying\Character;
 use App\Realms\RolePlaying\Inventory\Item;
 use App\Realms\RolePlaying\Inventory\ItemType;
+use App\Realms\RolePlaying\WarriorBuilder;
 use App\Solutions\Y2015\D21\Strategy\InventoriesSatisfyingRequirements;
 use App\Solutions\Y2015\D21\Strategy\ShoppingCart;
 use loophp\collection\Collection;
@@ -25,12 +25,13 @@ final class RolePlayingGameSimulator implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $boss = Character::of(
-            'boss',
-            $input->hitPoints,
-            Item::of('boss weapon', damage: $input->damage, armor: 0, type: ItemType::Weapon),
-            Item::of('boss armor', damage: 0, armor: $input->armor, type: ItemType::Armor),
-        );
+        $boss = WarriorBuilder::start()
+            ->withName('boss')
+            ->withHitPoints($input->hitPoints)
+            ->withItems(
+                Item::of('boss item', $input->damage, $input->armor, ItemType::Weapon),
+            )
+            ->build();
 
         $positivePointsRequired = $boss->attack + $boss->armor;
 
