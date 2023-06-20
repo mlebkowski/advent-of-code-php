@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D21;
+namespace App\Realms\RolePlaying;
 
 use PHPUnit\Framework\TestCase;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D21\Inventory;
+namespace App\Realms\RolePlaying\Inventory;
 
 use Stringable;
 

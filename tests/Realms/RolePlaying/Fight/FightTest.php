@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D21\Fight;
+namespace App\Realms\RolePlaying\Fight;
 
-use App\Solutions\Y2015\D21\CharacterMother;
+use App\Realms\RolePlaying\CharacterMother;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 

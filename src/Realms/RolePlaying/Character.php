@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D21;
+namespace App\Realms\RolePlaying;
 
-use App\Solutions\Y2015\D21\Inventory\Item;
-use App\Solutions\Y2015\D21\Inventory\ItemType;
-use App\Solutions\Y2015\D21\Problems\CannotWearMultipleArmors;
-use App\Solutions\Y2015\D21\Problems\CannotWearTooManyRings;
-use App\Solutions\Y2015\D21\Problems\InventoryProblem;
-use App\Solutions\Y2015\D21\Problems\NoDualWielding;
-use App\Solutions\Y2015\D21\Problems\WeaponNotEquipped;
+use App\Realms\RolePlaying\Inventory\Item;
+use App\Realms\RolePlaying\Inventory\ItemType;
+use App\Realms\RolePlaying\Inventory\Problems\CannotWearMultipleArmors;
+use App\Realms\RolePlaying\Inventory\Problems\CannotWearTooManyRings;
+use App\Realms\RolePlaying\Inventory\Problems\InventoryProblem;
+use App\Realms\RolePlaying\Inventory\Problems\NoDualWielding;
+use App\Realms\RolePlaying\Inventory\Problems\WeaponNotEquipped;
 use loophp\collection\Collection;
 use Stringable;
 

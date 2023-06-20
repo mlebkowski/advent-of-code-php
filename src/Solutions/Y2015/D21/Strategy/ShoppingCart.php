@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D21\Strategy;
 
-use App\Solutions\Y2015\D21\Inventory\Item;
-use App\Solutions\Y2015\D21\Inventory\ItemPrice;
+use App\Realms\RolePlaying\Inventory\Item;
+use App\Realms\RolePlaying\Inventory\ItemPrice;
 use loophp\collection\Collection;
 use Stringable;
 

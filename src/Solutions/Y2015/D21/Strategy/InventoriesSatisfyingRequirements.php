@@ -6,9 +6,9 @@ namespace App\Solutions\Y2015\D21\Strategy;
 
 use App\Lib\Generators\Combination;
 use App\Lib\Generators\Product;
-use App\Solutions\Y2015\D21\Inventory\ItemPrice;
-use App\Solutions\Y2015\D21\Inventory\ItemsFactory;
-use App\Solutions\Y2015\D21\Inventory\ItemType;
+use App\Realms\RolePlaying\Inventory\ItemPrice;
+use App\Realms\RolePlaying\Inventory\ItemsFactory;
+use App\Realms\RolePlaying\Inventory\ItemType;
 use Generator;
 
 final readonly class InventoriesSatisfyingRequirements

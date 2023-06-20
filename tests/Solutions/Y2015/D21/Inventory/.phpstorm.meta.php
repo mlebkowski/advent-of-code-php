@@ -24,8 +24,8 @@ registerArgumentsSet(
     'Defense +3',
 );
 
-expectedArguments(\App\Solutions\Y2015\D21\Inventory\ItemShop::get(), 0, argumentsSet('itemNames'));
-expectedArguments(\App\Solutions\Y2015\D21\CharacterMother::withItems(), 1, argumentsSet('itemNames'));
-expectedArguments(\App\Solutions\Y2015\D21\CharacterMother::withItems(), 2, argumentsSet('itemNames'));
-expectedArguments(\App\Solutions\Y2015\D21\CharacterMother::withItems(), 3, argumentsSet('itemNames'));
-expectedArguments(\App\Solutions\Y2015\D21\CharacterMother::withItems(), 4, argumentsSet('itemNames'));
+expectedArguments(\App\Realms\RolePlaying\Inventory\ItemShop::get(), 0, argumentsSet('itemNames'));
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 1, argumentsSet('itemNames'));
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 2, argumentsSet('itemNames'));
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 3, argumentsSet('itemNames'));
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 4, argumentsSet('itemNames'));
