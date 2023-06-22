@@ -12,6 +12,8 @@ use App\Realms\RolePlaying\Evolution\Population;
 use App\Realms\RolePlaying\Evolution\SpeciesResult;
 use App\Realms\RolePlaying\Inventory\Item;
 use App\Realms\RolePlaying\Inventory\ItemType;
+use App\Realms\RolePlaying\Magic\Effects\Damage;
+use App\Realms\RolePlaying\Magic\Sorcery;
 use App\Realms\RolePlaying\WarriorBuilder;
 use loophp\collection\Collection;
 
@@ -23,13 +25,16 @@ final class WizardSimulator implements Solution
         return Challenge::bothParts(2015, 22);
     }
 
-    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
         $boss = WarriorBuilder::start('Boss', $input->hitPoints)
             ->withItems(Item::of('BossItem', damage: $input->damage, armor: 0, type: ItemType::Weapon))
             ->build();
 
-        $context = Context::of($boss, hitPoints: 50, mana: 500);
+        $permanentEffect = $challenge->isPartTwo()
+            ? Sorcery::permanent('Handicap', Damage::of(1))
+            : null;
+        $context = Context::of($boss, hitPoints: 50, mana: 500, effect: $permanentEffect);
         $population = Population::some($context, 100);
 
         do {
