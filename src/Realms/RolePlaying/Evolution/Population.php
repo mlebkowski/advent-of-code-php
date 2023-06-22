@@ -33,11 +33,16 @@ final readonly class Population
 
     public function advance(): self
     {
+        $bestWinner = Collection::fromIterable($this->speciesResult)
+            ->filter(static fn (SpeciesResult $result) => $result->winner)
+            ->map(static fn (SpeciesResult $result, int $idx) => $idx)
+            ->first();
+
         $species = Collection::fromIterable($this->speciesResult)
             ->slice(0, (int)round(count($this->speciesResult) / 2))
             ->flatMap(static fn (SpeciesResult $result, int $idx) => [
                 $result->species,
-                $result->species->mutateIfNotBest($result->winner && $idx === 0, $result->turns),
+                $result->species->mutateIfNotBest($bestWinner === $idx, $result->turns),
             ])
             ->all();
 
