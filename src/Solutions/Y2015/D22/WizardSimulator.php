@@ -35,12 +35,11 @@ final class WizardSimulator implements Solution
             ? Sorcery::permanent('Hard difficulty', Curse::of(1))
             : null;
         $context = Context::of($boss, hitPoints: 50, mana: 500, effect: $permanentEffect);
-        $population = Population::some($context, 100);
+        $population = Population::some($context);
 
         do {
             echo "Generation: $population->generation\n";
             echo Collection::fromIterable($population->speciesResult)
-                ->filter(static fn (SpeciesResult $result) => $result->winner)
                 ->slice(0, 5)
                 ->map(static fn (SpeciesResult $result, int $idx) => sprintf("% 3d. %s", $idx + 1, $result))
                 ->implode("\n"), "\n\n";
