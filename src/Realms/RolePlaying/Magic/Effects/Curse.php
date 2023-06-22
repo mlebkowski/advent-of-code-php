@@ -9,8 +9,6 @@ use App\Realms\RolePlaying\Magic\Cleanup\Cleanup;
 
 final class Curse implements Effect
 {
-    private int $iteration = 0;
-
     public static function of(int $value): self
     {
         return new self($value);
@@ -21,9 +19,9 @@ final class Curse implements Effect
         assert($this->value > 0);
     }
 
-    public function apply(Character $caster, Character ...$opponents): ?Cleanup
+    public function apply(Character $caster, int $iteration, Character ...$opponents): ?Cleanup
     {
-        if (++$this->iteration % 2) {
+        if ($iteration % 2) {
             $caster->reduceHitPoints($this->value);
         }
         return null;

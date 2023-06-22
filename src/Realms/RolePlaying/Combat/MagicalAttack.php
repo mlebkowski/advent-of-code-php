@@ -19,7 +19,7 @@ final readonly class MagicalAttack implements Attack
             $spell = $attacker->castSpell();
 
             if ($spell instanceof Instant) {
-                $spell->effect->apply($attacker, $defender);
+                $spell->effect->apply($attacker, 0, $defender);
                 return new self("$attacker casts $spell: $spell->effect.", $spell);
             }
 

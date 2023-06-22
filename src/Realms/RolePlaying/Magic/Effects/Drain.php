@@ -23,10 +23,10 @@ final readonly class Drain implements Effect
         return self::class;
     }
 
-    public function apply(Character $caster, Character ...$opponents): ?Cleanup
+    public function apply(Character $caster, int $iteration, Character ...$opponents): ?Cleanup
     {
-        $this->heal->apply($caster, ...$opponents);
-        $this->damage->apply($caster, ...$opponents);
+        $this->heal->apply($caster, $iteration, ...$opponents);
+        $this->damage->apply($caster, $iteration, ...$opponents);
         return null;
     }
 

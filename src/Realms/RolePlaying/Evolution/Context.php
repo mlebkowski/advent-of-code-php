@@ -26,9 +26,4 @@ final readonly class Context
     {
         return clone $this->enemy;
     }
-
-    public function effect(): ?Sorcery
-    {
-        return $this->effect ? clone $this->effect : null;
-    }
 }

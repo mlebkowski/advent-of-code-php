@@ -19,7 +19,7 @@ final readonly class Shield implements Effect
     {
     }
 
-    public function apply(Character $caster, Character ...$opponents): ?Cleanup
+    public function apply(Character $caster, int $iteration, Character ...$opponents): ?Cleanup
     {
         $caster->increaseArmor($this->value);
 

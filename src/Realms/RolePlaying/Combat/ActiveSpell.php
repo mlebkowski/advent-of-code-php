@@ -51,7 +51,7 @@ final class ActiveSpell
             return;
         }
 
-        $this->cleanup = $this->sorcery->effect->apply($this->wizard, ...$opponents);
+        $this->cleanup = $this->sorcery->effect->apply($this->wizard, $this->iteration, ...$opponents);
         yield SpellEffect::ofEffect(
             $this->sorcery->name,
             $this->sorcery->effect,

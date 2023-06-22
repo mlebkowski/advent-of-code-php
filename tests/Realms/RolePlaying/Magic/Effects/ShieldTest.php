@@ -15,7 +15,7 @@ final class ShieldTest extends TestCase
         self::assertSame(1, $character->armor());
 
         $sut = Shield::of(5);
-        $cleanup = $sut->apply($character);
+        $cleanup = $sut->apply($character, 0);
         self::assertSame(6, $character->armor());
         $cleanup->apply();
         self::assertSame(1, $character->armor());

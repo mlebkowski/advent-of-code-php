@@ -21,17 +21,17 @@ final readonly class SpeciesResult implements Stringable
         $spellCount = count($species->spells);
         $enemy = $context->enemy();
         $originalHitPoints = $enemy->hitPoints();
-        $combat = Combat::ofCharacters($player, $enemy, $context->effect());
+        $combat = Combat::ofCharacters($player, $enemy, $context->effect);
         $turns = (int)ceil(count(iterator_to_array($combat)) / 2);
         $winner = $player->isAlive();
-        $damageDealt = $originalHitPoints - $enemy->hitPoints();
+        $damageDealt = min($originalHitPoints, $originalHitPoints - $enemy->hitPoints());
 
         $manaSpent = Collection::range(0, $turns)
             ->map(static fn (float $roundNo) => $species->spells[$roundNo % $spellCount])
             ->map(static fn (Spell $spell) => $spell->cost)
             ->reduce(static fn (int $sum, int $cost) => $sum + $cost, 0);
 
-        return new self($species, $winner, $turns, $manaSpent, $damageDealt);
+        return new self($species, $winner, $turns, $manaSpent, $damageDealt, $player->hitPoints());
     }
 
     public static function compare(self $alpha, self $bravo): int
@@ -52,18 +52,20 @@ final readonly class SpeciesResult implements Stringable
         public int $turns,
         public int $manaSpent,
         public int $damageDealt,
+        public int $hp,
     ) {
     }
 
     public function __toString()
     {
         return sprintf(
-            '%s (%s, dmg: %d, turns: %d, mana: %d)',
+            '%s (%s, dmg: %d, turns: %d, mana: %d, hp: %d)',
             $this->species->name,
             $this->winner ? 'winner' : 'loser',
             $this->damageDealt,
             $this->turns,
             $this->manaSpent,
+            $this->hp,
         );
     }
 }

@@ -15,7 +15,7 @@ final class DamageTest extends TestCase
         $opponent = CharacterMother::withItems('boss', 10, 'Longsword', 'Splintmail');
         $sut = Damage::of(4);
 
-        $sut->apply($caster, $opponent);
+        $sut->apply($caster, 0, $opponent);
 
         self::assertSame(10, $caster->hitPoints());
         self::assertSame(6, $opponent->hitPoints());

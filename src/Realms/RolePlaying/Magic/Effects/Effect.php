@@ -10,5 +10,5 @@ use Stringable;
 
 interface Effect extends Stringable
 {
-    public function apply(Character $caster, Character ...$opponents): ?Cleanup;
+    public function apply(Character $caster, int $iteration, Character ...$opponents): ?Cleanup;
 }

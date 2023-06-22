@@ -19,7 +19,7 @@ final readonly class Damage implements Effect
         assert($this->value > 0);
     }
 
-    public function apply(Character $caster, Character ...$opponents): ?Cleanup
+    public function apply(Character $caster, int $iteration, Character ...$opponents): ?Cleanup
     {
         foreach ($opponents as $opponent) {
             $opponent->reduceHitPoints($this->value);
