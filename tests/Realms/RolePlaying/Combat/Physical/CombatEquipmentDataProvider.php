@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Realms\RolePlaying\Fight;
+namespace App\Realms\RolePlaying\Combat\Physical;
 
-final class FightEquipmentDataProvider
+final class CombatEquipmentDataProvider
 {
     public static function data(): iterable
     {

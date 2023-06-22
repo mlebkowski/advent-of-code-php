@@ -24,8 +24,21 @@ registerArgumentsSet(
     'Defense +3',
 );
 
-expectedArguments(\App\Realms\RolePlaying\Inventory\ItemShop::get(), 0, argumentsSet('itemNames'));
+registerArgumentsSet(
+    'spellNames',
+    'Magic Missile',
+    'Drain',
+    'Shield',
+    'Poison',
+    'Recharge',
+);
+
 expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 1, argumentsSet('itemNames'));
 expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 2, argumentsSet('itemNames'));
 expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 3, argumentsSet('itemNames'));
 expectedArguments(\App\Realms\RolePlaying\CharacterMother::withItems(), 4, argumentsSet('itemNames'));
+
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withSpells(), 3, argumentsSet('spellNames'));
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withSpells(), 4, argumentsSet('spellNames'));
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withSpells(), 5, argumentsSet('spellNames'));
+expectedArguments(\App\Realms\RolePlaying\CharacterMother::withSpells(), 6, argumentsSet('spellNames'));

@@ -4,37 +4,21 @@ declare(strict_types=1);
 
 namespace App\Realms\RolePlaying;
 
+use App\Realms\RolePlaying\Magic\Problems\NotEnoughMana;
 use PHPUnit\Framework\TestCase;
 
 final class CharacterTest extends TestCase
 {
-    public function test attack takes at least one point of damage(): void
+    public function test cannot cast spells without sufficient mana(): void
     {
-        $sut = CharacterMother::withItems('Player', 3, 'Greataxe', 'Leather' /* +1 armor */);
-
-        $sut->receiveAttack(1);
-        self::assertSame(2, $sut->hitPoints());
-        self::assertFalse($sut->isDead());
-        $sut->receiveAttack(1);
-        self::assertSame(1, $sut->hitPoints());
-        self::assertFalse($sut->isDead());
-        $sut->receiveAttack(1);
-        self::assertSame(0, $sut->hitPoints());
-        self::assertTrue($sut->isDead());
+        $this->expectException(NotEnoughMana::class);
+        $wizard = CharacterMother::withSpells('player', 10, 10, 'Magic Missile');
+        $wizard->castSpell();
     }
-
-    public function test attack takes damage reduced by armor(): void
+    
+    public function test cycles spells(): void
     {
-        $sut = CharacterMother::withItems('Player', 5, 'Greataxe', 'Chainmail' /* +2 armor */);
-
-        $sut->receiveAttack(4);
-        self::assertSame(3, $sut->hitPoints());
-        self::assertFalse($sut->isDead());
-        $sut->receiveAttack(4);
-        self::assertSame(1, $sut->hitPoints());
-        self::assertFalse($sut->isDead());
-        $sut->receiveAttack(4);
-        self::assertSame(-1, $sut->hitPoints());
-        self::assertTrue($sut->isDead());
+        $wizard = CharacterMother::withSpells('player', 10, 1000, 'Magic Missile', 'Shield');
+        self::assertNotEquals($wizard->castSpell(), $wizard->castSpell());
     }
 }

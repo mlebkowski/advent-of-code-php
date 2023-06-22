@@ -60,6 +60,6 @@ final class WarriorBuilder
         CannotWearMultipleArmors::whenMoreThanOneArmor($countByType(ItemType::Armor));
         CannotWearTooManyRings::whenMoreThanTwoRings($countByType(ItemType::Ring));
 
-        return Character::of($this->name, $this->hitPoints, ...$this->items);
+        return Character::of($this->name, $this->hitPoints, 0, ...$this->items);
     }
 }

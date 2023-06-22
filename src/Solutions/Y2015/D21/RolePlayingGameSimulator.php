@@ -33,7 +33,7 @@ final class RolePlayingGameSimulator implements Solution
             )
             ->build();
 
-        $positivePointsRequired = $boss->attack + $boss->armor;
+        $positivePointsRequired = $boss->attack + $boss->armor();
 
         $progress = Progress::ofExpectedIterations(600)->withDelay(1_500);
 

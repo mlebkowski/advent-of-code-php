@@ -2,21 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Realms\RolePlaying\Fight;
+namespace App\Realms\RolePlaying\Combat\Physical;
 
 use App\Realms\RolePlaying\CharacterMother;
+use App\Realms\RolePlaying\Combat\Combat;
+use loophp\collection\Collection;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 
-final class FightTest extends TestCase
+#[CoversClass(Combat::class)]
+final class CombatTest extends TestCase
 {
     public function test sample scenario(): void
     {
-        $player = CharacterMother::withItems('player', 8, 'Platemail', 'Shortsword');
+        $player = CharacterMother::withItems('player', 8, 'Shortsword', 'Platemail');
         $boss = CharacterMother::withItems('boss', 12, 'Longsword', 'Chainmail');
 
-        $sut = Fight::ofCharacters($player, $boss);
-        $actual = implode("\n", iterator_to_array($sut));
+        $sut = Combat::ofCharacters($player, $boss);
+        $actual = Collection::fromGenerator($sut)->implode("\n");
 
         self::assertSame(
             trim(
@@ -34,13 +38,13 @@ final class FightTest extends TestCase
         );
     }
 
-    #[DataProviderExternal(FightEquipmentDataProvider::class, 'data')]
+    #[DataProviderExternal(CombatEquipmentDataProvider::class, 'data')]
     public function test different equipments(array $mine, array $theirs): void
     {
         $me = CharacterMother::withItems('me', 100, ...$mine);
         $them = CharacterMother::withItems('them', 100, ...$theirs);
 
-        $fight = Fight::ofCharacters($me, $them);
+        $fight = Combat::ofCharacters($me, $them);
         $fight->next();
         self::assertEquals($them->hitPoints(), $me->hitPoints());
     }
@@ -49,7 +53,7 @@ final class FightTest extends TestCase
     {
         $player = CharacterMother::withItems('player', 100, 'Longsword', 'Chainmail', 'Defense +1');
         $boss = CharacterMother::withItems('boss', 100, 'Greataxe', 'Chainmail');
-        $sut = Fight::ofCharacters($player, $boss);
+        $sut = Combat::ofCharacters($player, $boss);
         iterator_to_array($sut);
 
         self::assertEquals($player, $sut->getReturn());
@@ -60,7 +64,7 @@ final class FightTest extends TestCase
     {
         $player = CharacterMother::withItems('player', 100, 'Dagger', 'Damage +2', 'Damage +3');
         $boss = CharacterMother::withItems('boss', 100, 'Greataxe', 'Chainmail');
-        $sut = Fight::ofCharacters($player, $boss);
+        $sut = Combat::ofCharacters($player, $boss);
         iterator_to_array($sut);
 
         self::assertEquals($boss, $sut->getReturn());
