@@ -11,16 +11,16 @@ final readonly class Turn implements Stringable
 {
     public static function of(Attack $attack, SpellEffect ...$spellEffects): self
     {
-        return new self(implode("\n", [...$spellEffects, $attack]));
+        return new self(implode("\n", [...$spellEffects, $attack]), $attack);
     }
 
-    public static function winning(Character $winner, Character $looser, SpellEffect...$spellEffects)
+    public static function winning(Character $winner, Character $loser, SpellEffect...$spellEffects): self
     {
-        $winningMessage = "This kills the $looser, and the $winner wins.";
+        $winningMessage = "This kills the $loser, and the $winner wins.";
         return new self(implode("\n", [...$spellEffects, $winningMessage]));
     }
 
-    private function __construct(private string $message)
+    private function __construct(private string $message, public ?Attack $attack = null)
     {
     }
 
