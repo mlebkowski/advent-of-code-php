@@ -16,7 +16,7 @@ final class Combat
     {
         $activeSpells = ActiveSpells::none();
         if ($permanentEffect) {
-            $activeSpells->add($bravo, $permanentEffect);
+            $activeSpells->add($alpha, $permanentEffect);
         }
 
         while (true) {
