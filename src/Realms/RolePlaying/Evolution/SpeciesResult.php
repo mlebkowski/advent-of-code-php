@@ -23,7 +23,7 @@ final readonly class SpeciesResult implements Stringable
         $originalHitPoints = $enemy->hitPoints();
         $combat = Combat::ofCharacters($player, $enemy, $context->effect);
         $turns = (int)ceil(count(iterator_to_array($combat)) / 2);
-        $winner = $player === $combat->getReturn();
+        $winner = $player->isAlive();
         $damageDealt = $originalHitPoints - $enemy->hitPoints();
 
         $manaSpent = Collection::range(0, $turns)
@@ -38,7 +38,8 @@ final readonly class SpeciesResult implements Stringable
     {
         // if we did not manage to win, greatest damage is the closes to a win
         if (false === $bravo->winner) {
-            return $bravo->damageDealt <=> $alpha->damageDealt;
+            return $bravo->damageDealt <=> $alpha->damageDealt
+                ?: $alpha->manaSpent <=> $bravo->manaSpent;
         }
 
         // use the least mana spent:
