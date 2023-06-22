@@ -12,8 +12,11 @@ use loophp\collection\Collection;
 
 final class ActiveSpells
 {
-    /** @var ActiveSpells[] */
+    /** @var ActiveSpell[] */
     private array $spells = [];
+
+    /** @var ActiveSpell[] */
+    private array $exhausted = [];
 
     /** @var Cleanup[] */
     private array $cleanup = [];
@@ -32,31 +35,27 @@ final class ActiveSpells
      */
     public function add(Character $character, Sorcery $sorcery): void
     {
-        $isSpellActive = 0 !== Collection::fromIterable($this->spells)
-            ->filter(
-                static fn (ActiveSpell $active) => $active->hasSameEffectAs($sorcery),
-            )->count();
+        $activeSpellsBySameName = Collection::fromIterable($this->spells)
+            ->filter(static fn (ActiveSpell $active) => $active->hasSameEffectAs($sorcery))
+            ->count();
 
-        NoDuplicateEffects::whenAlreadyActive($isSpellActive, $sorcery);
+        NoDuplicateEffects::whenAlreadyActive($activeSpellsBySameName > 0, $sorcery);
         $this->spells[] = ActiveSpell::of($sorcery, $character);
     }
 
     public function apply(Character ...$players): void
     {
-        $this->cleanup = Collection::fromIterable($this->spells)
-            ->map(static fn (ActiveSpell $spell) => $spell->apply(...$players))
-            ->filter(static fn (?Cleanup $cleanup) => $cleanup)
-            ->all();
-
-        $this->spells = Collection::fromIterable($this->spells)
-            ->reject(static fn (ActiveSpell $spell) => $spell->isExhausted())
-            ->all();
-    }
-
-    public function wearOff(): void
-    {
-        foreach ($this->cleanup as $effect) {
-            $effect->apply();
+        foreach ($this->exhausted as $spell) {
+            $spell->wearOff();
         }
+        $this->exhausted = [];
+
+        foreach ($this->spells as $spell) {
+            $spell->apply(...$players);
+        }
+
+        $isExhausted = static fn (ActiveSpell $spell) => $spell->isExhausted();
+        $this->exhausted = Collection::fromIterable($this->spells)->filter($isExhausted)->all();
+        $this->spells = Collection::fromIterable($this->spells)->reject($isExhausted)->all();
     }
 }

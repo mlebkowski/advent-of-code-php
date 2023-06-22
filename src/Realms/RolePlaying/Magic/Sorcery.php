@@ -6,7 +6,7 @@ namespace App\Realms\RolePlaying\Magic;
 
 use App\Realms\RolePlaying\Magic\Effects\Effect;
 
-final class Sorcery implements Spell
+final readonly class Sorcery implements Spell
 {
     public static function of(string $name, int $cost, int $duration, Effect $effect): self
     {

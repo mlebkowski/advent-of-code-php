@@ -12,6 +12,7 @@ use loophp\collection\Collection;
 final class ActiveSpell
 {
     private int $iteration = 0;
+    private ?Cleanup $cleanup = null;
 
     public static function of(Sorcery $sorcery, Character $wizard): self
     {
@@ -32,11 +33,17 @@ final class ActiveSpell
         return $this->iteration >= $this->sorcery->duration;
     }
 
-    public function apply(Character ...$characters): ?Cleanup
+    public function apply(Character ...$characters): void
     {
         $opponents = Collection::fromIterable($characters)
             ->reject(fn (Character $character) => $character === $this->wizard);
         $this->iteration++;
-        return $this->sorcery->effect->apply($this->wizard, ...$opponents);
+
+        $this->cleanup ??= $this->sorcery->effect->apply($this->wizard, ...$opponents);
+    }
+
+    public function wearOff(): void
+    {
+        $this->cleanup?->apply();
     }
 }

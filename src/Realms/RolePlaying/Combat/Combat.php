@@ -34,7 +34,6 @@ final class Combat
 
             yield $attack;
 
-            $activeSpells->wearOff();
             [$bravo, $alpha] = [$alpha, $bravo];
         }
 
