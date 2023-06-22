@@ -21,4 +21,9 @@ final readonly class ReduceArmor implements Cleanup
     {
         $this->character->reduceArmor($this->value);
     }
+
+    public function __toString(): string
+    {
+        return sprintf('decreases armor by %d', $this->value);
+    }
 }

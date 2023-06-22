@@ -6,8 +6,9 @@ namespace App\Realms\RolePlaying\Magic\Effects;
 
 use App\Realms\RolePlaying\Character;
 use App\Realms\RolePlaying\Magic\Cleanup\Cleanup;
+use Stringable;
 
-interface Effect
+interface Effect extends Stringable
 {
     public function apply(Character $caster, Character ...$opponents): ?Cleanup;
 }

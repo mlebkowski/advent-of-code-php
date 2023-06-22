@@ -29,4 +29,9 @@ final readonly class Drain implements Effect
         $this->damage->apply($caster, ...$opponents);
         return null;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('%s, and %s', $this->damage, $this->heal);
+    }
 }

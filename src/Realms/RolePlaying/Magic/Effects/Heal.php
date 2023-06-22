@@ -24,4 +24,9 @@ final readonly class Heal implements Effect
         $caster->gainHitPoints($this->value);
         return null;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('heals %d hit points', $this->value);
+    }
 }

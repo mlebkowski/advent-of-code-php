@@ -79,6 +79,11 @@ final class Character implements Stringable
         $this->hitPoints -= $value;
     }
 
+    public function mana(): int
+    {
+        return $this->mana;
+    }
+
     public function gainMana(int $value): void
     {
         assert($value >= 0);

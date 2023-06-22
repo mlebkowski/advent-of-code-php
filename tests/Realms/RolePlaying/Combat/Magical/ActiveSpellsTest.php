@@ -43,8 +43,8 @@ final class ActiveSpellsTest extends TestCase
 
         // region a couple of turns
         foreach (range(1, 20) as $turn) {
-            $sut->apply($opponent, $player);
-            $sut->apply($player, $opponent);
+            iterator_to_array($sut->apply($opponent, $player));
+            iterator_to_array($sut->apply($player, $opponent));
         }
         // endregion
 

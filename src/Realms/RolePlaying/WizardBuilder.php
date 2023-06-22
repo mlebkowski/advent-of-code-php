@@ -9,38 +9,22 @@ use App\Realms\RolePlaying\Magic\Spell;
 final class WizardBuilder
 {
     private array $spells = [];
-    private int $mana = 500;
 
-    public static function start(string $name, int $hp): self
+    public static function start(string $name, int $hp, int $mana): self
     {
-        return new self($name, $hp);
+        return new self($name, $hp, $mana);
     }
 
-    private function __construct(private string $name, private int $hp)
-    {
-    }
-
-    public function withHitPoints(int $hp): self
-    {
-        $this->hp = $hp;
-        return $this;
-    }
-
-    public function withName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
+    private function __construct(
+        private readonly string $name,
+        private readonly int $hp,
+        private readonly int $mana,
+    ) {
     }
 
     public function withSpells(Spell ...$spells): self
     {
         $this->spells = array_merge($this->spells, $spells);
-        return $this;
-    }
-
-    public function withMana(int $mana): self
-    {
-        $this->mana = $mana;
         return $this;
     }
 

@@ -25,9 +25,7 @@ final class RolePlayingGameSimulator implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $boss = WarriorBuilder::start()
-            ->withName('boss')
-            ->withHitPoints($input->hitPoints)
+        $boss = WarriorBuilder::start('boss', $input->hitPoints)
             ->withItems(
                 Item::of('boss item', $input->damage, $input->armor, ItemType::Weapon),
             )

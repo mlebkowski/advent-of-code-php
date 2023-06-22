@@ -24,4 +24,9 @@ final readonly class Mana implements Effect
         $caster->gainMana($this->value);
         return null;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('provides %d mana', $this->value);
+    }
 }

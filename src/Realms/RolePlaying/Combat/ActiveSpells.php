@@ -43,15 +43,15 @@ final class ActiveSpells
         $this->spells[] = ActiveSpell::of($sorcery, $character);
     }
 
-    public function apply(Character ...$players): void
+    public function apply(Character ...$players): iterable
     {
         foreach ($this->exhausted as $spell) {
-            $spell->wearOff();
+            yield from $spell->wearOff();
         }
         $this->exhausted = [];
 
         foreach ($this->spells as $spell) {
-            $spell->apply(...$players);
+            yield from $spell->apply(...$players);
         }
 
         $isExhausted = static fn (ActiveSpell $spell) => $spell->isExhausted();

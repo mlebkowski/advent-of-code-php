@@ -25,4 +25,9 @@ final readonly class Shield implements Effect
 
         return ReduceArmor::of($this->value, $caster);
     }
+
+    public function __toString(): string
+    {
+        return sprintf('increases armor by %s', $this->value);
+    }
 }

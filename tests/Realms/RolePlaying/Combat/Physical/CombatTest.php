@@ -31,7 +31,8 @@ final class CombatTest extends TestCase
                 The boss deals 7-5 = 2 damage; the player goes down to 4 hit points.
                 The player deals 5-2 = 3 damage; the boss goes down to 3 hit points.
                 The boss deals 7-5 = 2 damage; the player goes down to 2 hit points.
-                The player deals 5-2 = 3 damage; the boss goes down to 0 hit points.            
+                The player deals 5-2 = 3 damage; the boss goes down to 0 hit points.
+                This kills the boss, and the player wins.
                 EOF,
             ),
             $actual,

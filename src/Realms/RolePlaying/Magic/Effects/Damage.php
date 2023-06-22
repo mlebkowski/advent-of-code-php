@@ -27,4 +27,9 @@ final readonly class Damage implements Effect
 
         return null;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('deals %s damage', $this->value);
+    }
 }

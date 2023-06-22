@@ -29,9 +29,7 @@ final class CharacterMother
             ->map(static fn (string $name) => $stock[$name] ?? NoItemByThatName::ofName($name))
             ->all();
 
-        return WarriorBuilder::start()
-            ->withName($name)
-            ->withHitPoints($hitPoints)
+        return WarriorBuilder::start($name, $hitPoints)
             ->withItems(...$items)
             ->build();
     }
@@ -46,8 +44,7 @@ final class CharacterMother
             ->map(static fn (string $name) => $spellBook[$name] ?? NoSpellByThatName::of($name))
             ->all();
 
-        return WizardBuilder::start($name, $hitPoints)
-            ->withMana($mana)
+        return WizardBuilder::start($name, $hitPoints, $mana)
             ->withSpells(...$spells)
             ->build();
     }

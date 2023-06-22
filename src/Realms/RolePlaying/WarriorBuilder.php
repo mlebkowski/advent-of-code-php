@@ -14,25 +14,15 @@ use loophp\collection\Collection;
 
 final class WarriorBuilder
 {
-    private string $name = "player";
-    private int $hitPoints = 100;
     private array $items = [];
 
-    public static function start(): self
+    public static function start(string $name, int $hp): self
     {
-        return new self();
+        return new self($name, $hp);
     }
 
-    public function withHitPoints(int $hitPoints): self
+    public function __construct(private readonly string $name, private readonly int $hp)
     {
-        $this->hitPoints = $hitPoints;
-        return $this;
-    }
-
-    public function withName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
     }
 
     public function withItems(Item ...$items): self
@@ -60,6 +50,6 @@ final class WarriorBuilder
         CannotWearMultipleArmors::whenMoreThanOneArmor($countByType(ItemType::Armor));
         CannotWearTooManyRings::whenMoreThanTwoRings($countByType(ItemType::Ring));
 
-        return Character::of($this->name, $this->hitPoints, 0, ...$this->items);
+        return Character::of($this->name, $this->hp, 0, ...$this->items);
     }
 }

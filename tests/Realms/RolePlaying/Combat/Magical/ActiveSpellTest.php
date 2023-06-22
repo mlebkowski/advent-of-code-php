@@ -19,7 +19,7 @@ final class ActiveSpellTest extends TestCase
         );
 
         self::assertFalse($sut->isExhausted());
-        $sut->apply();
+        iterator_to_array($sut->apply());
         self::assertTrue($sut->isExhausted());
     }
 }
