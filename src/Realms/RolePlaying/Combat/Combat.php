@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace App\Realms\RolePlaying\Combat;
 
 use App\Realms\RolePlaying\Character;
+use App\Realms\RolePlaying\Magic\Sorcery;
 use Generator;
 use loophp\collection\Collection;
 
 final class Combat
 {
     /** @return Generator<int,Turn> */
-    public static function ofCharacters(Character $alpha, Character $bravo): Generator
+    public static function ofCharacters(Character $alpha, Character $bravo, ?Sorcery $permanentEffect = null): Generator
     {
         $activeSpells = ActiveSpells::none();
+        if ($permanentEffect) {
+            $activeSpells->add($bravo, $permanentEffect);
+        }
 
         while (true) {
             $spellEffects = Collection::fromIterable($activeSpells->apply($alpha, $bravo))->all();

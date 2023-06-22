@@ -5,16 +5,21 @@ declare(strict_types=1);
 namespace App\Realms\RolePlaying\Evolution;
 
 use App\Realms\RolePlaying\Character;
+use App\Realms\RolePlaying\Magic\Sorcery;
 
 final readonly class Context
 {
-    public static function of(Character $enemy, int $hitPoints, int $mana): self
+    public static function of(Character $enemy, int $hitPoints, int $mana, ?Sorcery $effect): self
     {
-        return new self($enemy, $hitPoints, $mana);
+        return new self($enemy, $hitPoints, $mana, $effect);
     }
 
-    private function __construct(public Character $enemy, public int $hitPoints, public int $mana)
-    {
+    private function __construct(
+        public Character $enemy,
+        public int $hitPoints,
+        public int $mana,
+        public ?Sorcery $effect,
+    ) {
     }
 
     public function enemy(): Character

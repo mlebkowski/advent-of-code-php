@@ -21,7 +21,7 @@ final readonly class SpeciesResult implements Stringable
         $spellCount = count($species->spells);
         $enemy = $context->enemy();
         $originalHitPoints = $enemy->hitPoints();
-        $combat = Combat::ofCharacters($player, $enemy);
+        $combat = Combat::ofCharacters($player, $enemy, $context->effect);
         $turns = (int)ceil(count(iterator_to_array($combat)) / 2);
         $winner = $player === $combat->getReturn();
         $damageDealt = $originalHitPoints - $enemy->hitPoints();
