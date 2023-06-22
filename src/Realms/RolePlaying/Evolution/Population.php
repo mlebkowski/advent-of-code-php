@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace App\Realms\RolePlaying\Evolution;
 
-use App\Realms\RolePlaying\Magic\Spell;
 use App\Realms\RolePlaying\Magic\SpellFactory;
 use loophp\collection\Collection;
 
 final readonly class Population
 {
-    public static function some(Context $context, int $size): self
+    private const MaxPopulation = 100;
+
+    public static function some(Context $context): self
     {
         $spells = iterator_to_array(SpellFactory::all());
         $count = count($spells);
+        $spellPerSpecies = 4;
 
-        $species = Collection::range(0, $size)
+        $species = Collection::range(0, self::MaxPopulation * $spellPerSpecies)
             ->map(static fn (float $i) => $spells[$i % $count])
-            ->map(static fn (Spell $spell) => Species::of($spell))
+            ->shuffle()
+            ->chunk($spellPerSpecies)
+            ->map(static fn (iterable $spells) => Species::of(...$spells))
             ->all();
 
         return self::ofSpecies(PHP_INT_MAX, 0, $context, ...$species);
@@ -39,11 +43,12 @@ final readonly class Population
             ->first();
 
         $species = Collection::fromIterable($this->speciesResult)
-            ->slice(0, (int)round(count($this->speciesResult) / 2))
+            ->slice(0, (int)round(count($this->speciesResult) * 2 / 3))
             ->flatMap(static fn (SpeciesResult $result, int $idx) => [
                 $result->species,
                 $result->species->mutateIfNotBest($bestWinner === $idx, $result->turns),
             ])
+            ->slice(0, self::MaxPopulation)
             ->all();
 
         $solution = Collection::fromIterable($this->speciesResult)
@@ -58,9 +63,8 @@ final readonly class Population
 
     private static function ofSpecies(int $solution, int $generation, Context $context, Species ...$species): self
     {
-        assert(0 === count($species) % 10);
-
         $results = Collection::fromIterable($species)
+            ->distinct(accessorCallback: static fn (Species $species) => $species->name)
             ->map(static fn (Species $species) => SpeciesResult::of($context, $species))
             ->sort(callback: SpeciesResult::compare(...))
             ->all();
