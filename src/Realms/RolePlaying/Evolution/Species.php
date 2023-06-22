@@ -38,11 +38,12 @@ final readonly class Species
         $random = rand(1, 100);
 
         return match (true) {
-            $random < 2 => $this->withRandomMutations(rand(1, 3)),
-            $random < 4 => $this->withRandomMutations(rand(4, 6)),
-            $random < 35 => $this->withoutRandomSpell(),
+            $random < 10 => $this->withRandomMutations(rand(1, 3)),
+            $random < 20 => $this->withRandomMutations(rand(4, 6)),
+            $random < 40 => $this->withoutRandomSpell(),
             $random < 60 => $this->withReplacedSpell(),
-            default => $this->withAdditionalSpell($maxSpells),
+            $random < 80 => $this->withAdditionalSpell($maxSpells),
+            default => $this,
         };
     }
 
