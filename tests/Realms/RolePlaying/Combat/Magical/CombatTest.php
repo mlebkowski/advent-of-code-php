@@ -9,6 +9,8 @@ use App\Realms\RolePlaying\Combat\Attack;
 use App\Realms\RolePlaying\Combat\Combat;
 use App\Realms\RolePlaying\Combat\MagicalAttack;
 use App\Realms\RolePlaying\Combat\Turn;
+use App\Realms\RolePlaying\Magic\Effects\Curse;
+use App\Realms\RolePlaying\Magic\Sorcery;
 use loophp\collection\Collection;
 use PHPUnit\Framework\TestCase;
 
@@ -221,5 +223,35 @@ final class CombatTest extends TestCase
         self::assertTrue($player->isAlive());
         self::assertTrue($boss->isDead());
         self::assertSame(953, $manaSpent);
+    }
+
+    public function test winning condition part two(): void
+    {
+        $boss = CharacterMother::withItems('Boss', 55, 'Greataxe');
+        $player = CharacterMother::withSpells(
+            'Player',
+            50,
+            500,
+            'Poison',
+            'Recharge',
+            'Drain',
+            'Poison',
+            'Recharge',
+            'Shield',
+            'Poison',
+            'Drain',
+            'Magic Missile',
+        );
+
+        $sut = Combat::ofCharacters($player, $boss, Sorcery::permanent('Handicap', Curse::of(1)));
+        $manaSpent = Collection::fromGenerator($sut)
+            ->map(static fn (Turn $turn) => $turn->attack)
+            ->filter(static fn (?Attack $attack) => $attack instanceof MagicalAttack)
+            ->map(static fn (MagicalAttack $attack) => $attack->spell?->cost ?? 0)
+            ->reduce(static fn (int $sum, int $cost) => $sum + $cost, 0);
+
+        self::assertTrue($player->isAlive());
+        self::assertTrue($boss->isDead());
+        self::assertSame(1289, $manaSpent);
     }
 }
