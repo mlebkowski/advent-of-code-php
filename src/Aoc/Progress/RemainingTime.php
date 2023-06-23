@@ -14,9 +14,9 @@ final readonly class RemainingTime implements Stringable
     }
 
     public function __construct(
-        private int $iteration,
+        private int   $iteration,
         private float $start,
-        private ?int $expectedIterations,
+        private ?int  $expectedIterations,
     ) {
     }
 
@@ -24,7 +24,7 @@ final readonly class RemainingTime implements Stringable
     {
         $elapsed = microtime(true) - $this->start;
         if (null === $this->expectedIterations) {
-            return $elapsed . 's';
+            return sprintf('%ds', $elapsed);
         }
 
         $percentage = $this->iteration / $this->expectedIterations;
