@@ -21,6 +21,9 @@ final class OpeningTheTuringLock implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $processor = new Processor(Progress::unknown());
+        if ($challenge->isPartTwo()) {
+            $processor->setRegister(Register::A, 1);
+        }
         $processor->run(...$input->instructions);
 
         return $processor->readRegister(Register::B);
