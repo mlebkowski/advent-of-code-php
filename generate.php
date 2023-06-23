@@ -5,6 +5,7 @@ declare(strict_types=1);
 [, $year, $day, $name] = $argv;
 $source = __DIR__ . '/template/';
 
+$day = sprintf('%02d', $day);
 $name = implode("", array_map('ucfirst', explode(" ", $name)));
 $targetDir = __DIR__ . "/src/Solutions/Y$year/D$day";
 
