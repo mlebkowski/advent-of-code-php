@@ -7,7 +7,7 @@ use Generator;
 
 final readonly class Combinations
 {
-    public static function selectSetsWithSum(int $sum): self
+    public static function selectSmallestSetsWithSum(int $sum): self
     {
         return new self($sum);
     }
@@ -16,18 +16,23 @@ final readonly class Combinations
     {
     }
 
-    public function from(array $items): Generator
+    public function from(array $items, MaxCount $maxCount = null, int $depth = 1): Generator
     {
+        $maxCount ??= MaxCount::infinite();
+
         $count = count($items);
-        if ($count === 0) {
+        if ($count === 0 || $maxCount->exceeded($depth)) {
             return;
         }
 
         [$value] = $items;
         if ($value === $this->sum) {
+            $maxCount->update($depth);
             yield [$value];
             return;
         }
+
+        yield from $this->from(array_slice($items, 1), $maxCount, $depth);
 
         if ($value > $this->sum) {
             return;
@@ -35,10 +40,10 @@ final readonly class Combinations
 
         $remaining = $this->sum - $value;
         $items = array_slice($items, 1);
-        foreach (self::selectSetsWithSum($remaining)->from($items) as $combination) {
+        $combinations = self::selectSmallestSetsWithSum($remaining);
+
+        foreach ($combinations->from($items, $maxCount, $depth + 1) as $combination) {
             yield [$value, ...$combination];
         }
-
-        yield from $this->from($items);
     }
 }
