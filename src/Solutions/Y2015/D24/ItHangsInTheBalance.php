@@ -21,7 +21,8 @@ final class ItHangsInTheBalance implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $sum = (int)(array_sum($input->weights) / 3);
+        $groupCount = $challenge->isPartOne() ? 3 : 4;
+        $sum = (int)(array_sum($input->weights) / $groupCount);
         $progress = Progress::ofExpectedIterations(300)->withDelay(3_000);
 
         $gen = Combinations::selectSmallestSetsWithSum($sum)->from($input->weights);
