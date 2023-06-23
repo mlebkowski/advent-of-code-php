@@ -18,16 +18,10 @@ final class NoTimeForATaxicab implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        $x = 0;
-        $y = 0;
-        $orientation = Orientation::North;
+        $path = Path::of(...$input->instructions);
+        echo "\n", $path->map, "\n";
 
-        foreach ($input->instructions as $instruction) {
-            $orientation = $orientation->turn($instruction->turn);
-            $x += $instruction->distance * $orientation->xMultiplier();
-            $y += $instruction->distance * $orientation->yMultiplier();
-        }
-
-        return abs($x) + abs($y);
+        $position = $challenge->isPartOne() ? $path->lastPosition : $path->firstIntersection;
+        return $position->distanceFromStart();
     }
 }
