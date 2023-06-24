@@ -22,7 +22,7 @@ enum Orientation
         return $orientations[$index % count($orientations)];
     }
 
-    public function xMultiplier(): int
+    public function xDirection(): int
     {
         return match ($this) {
             self::North, self::South => 0,
@@ -31,7 +31,7 @@ enum Orientation
         };
     }
 
-    public function yMultiplier(): int
+    public function yDirection(): int
     {
         return match ($this) {
             self::East, self::West => 0,

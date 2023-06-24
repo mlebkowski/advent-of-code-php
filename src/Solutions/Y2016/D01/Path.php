@@ -5,11 +5,11 @@ namespace App\Solutions\Y2016\D01;
 
 use App\Solutions\Y2016\D01\Input\Instruction;
 
-final class Path
+final readonly class Path
 {
-    public readonly string $map;
-    public readonly Point $firstIntersection;
-    public readonly Point $lastPosition;
+    public string $map;
+    public Point $firstIntersection;
+    public Point $lastPosition;
 
     public static function of(Instruction ...$instructions): self
     {
@@ -18,14 +18,9 @@ final class Path
         $path = [];
         foreach ($instructions as $instruction) {
             $orientation = $orientation->turn($instruction->turn);
-            for ($step = 0; $step < $instruction->distance; $step++) {
-                $position = Point::of(
-                    $position->x + $orientation->xMultiplier(),
-                    $position->y + $orientation->yMultiplier(),
-                );
-
-                $path[] = $position;
-            }
+            $lineSegment = $position->lineSegment($orientation, $instruction->distance);
+            $path = array_merge($path, $lineSegment->rest());
+            $position = $lineSegment->end();
         }
 
         return new self(...$path);
