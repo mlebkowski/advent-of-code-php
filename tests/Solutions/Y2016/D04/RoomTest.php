@@ -14,4 +14,10 @@ final class RoomTest extends TestCase
         $sut = Room::of($name, $sectorId, $checksum);
         self::assertSame($expected, $sut->isValid());
     }
+
+    public function test decryption(): void
+    {
+        $sut = Room::of('qzmt-zixmtkozy-ivhz', 343, '');
+        self::assertSame('very encrypted name', $sut->decryptedName());
+    }
 }

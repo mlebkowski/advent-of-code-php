@@ -19,9 +19,17 @@ final class SecurityThroughObscurity implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return Collection::fromIterable($input->rooms)
-            ->filter(static fn (Room $room) => $room->isValid())
-            ->map(static fn (Room $room) => $room->sectorId)
-            ->reduce(static fn (int $sum, int $sectorId) => $sum + $sectorId, 0);
+        $validRooms = Collection::fromIterable($input->rooms)
+            ->filter(static fn (Room $room) => $room->isValid());
+
+        if ($challenge->isPartOne()) {
+            return $validRooms
+                ->map(static fn (Room $room) => $room->sectorId)
+                ->reduce(static fn (int $sum, int $sectorId) => $sum + $sectorId, 0);
+        }
+
+        return $validRooms
+            ->find(callbacks: static fn (Room $room) => "northpole object storage" === $room->decryptedName())
+            ->sectorId;
     }
 }

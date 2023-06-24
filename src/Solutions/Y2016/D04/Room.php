@@ -19,6 +19,20 @@ final readonly class Room
     {
     }
 
+    public function decryptedName(): string
+    {
+        $base = ord('a');
+        $space = ord('z') - $base + 1;
+        $key = $this->sectorId % $space;
+        return Collection::fromString($this->name)
+            ->map(
+                static fn (string $char) => $char === self::PartsSeparator
+                    ? ' '
+                    : chr((ord($char) - $base + $key) % $space + $base),
+            )
+            ->implode();
+    }
+
     public function isValid(): bool
     {
         $checksum = Collection::fromString($this->name)
