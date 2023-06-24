@@ -19,7 +19,7 @@ final class NoTimeForATaxicab implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
         $path = Path::of(...$input->instructions);
-        echo "\n", $path->map, "\n";
+        echo "\n", Map::ofPath($path), "\n";
 
         $position = $challenge->isPartOne() ? $path->lastPosition : $path->firstIntersection;
         return $position->distanceFromStart();

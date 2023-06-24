@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2016\D01;
 
-final readonly class Point
+use Stringable;
+
+final readonly class Point implements Stringable
 {
     public static function of(int $x, int $y): self
     {
@@ -47,4 +49,18 @@ final readonly class Point
         return self::of($this->x - $offset->x, $this->y - $offset->y);
     }
 
+    public function orientationBetween(Point $other): Orientation
+    {
+        return match ([$this->x <=> $other->x, $this->y <=> $other->y]) {
+            [0, -1] => Orientation::North,
+            [1, 0] => Orientation::East,
+            [0, 1] => Orientation::South,
+            [-1, 0] => Orientation::West,
+        };
+    }
+
+    public function __toString(): string
+    {
+        return "{$this->x}×{$this->y}";
+    }
 }

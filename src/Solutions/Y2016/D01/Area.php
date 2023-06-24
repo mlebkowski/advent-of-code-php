@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D18;
+namespace App\Solutions\Y2016\D01;
 
 use loophp\collection\Collection;
 use Stringable;
 
-final readonly class Rectangle implements Stringable
+final readonly class Area implements Stringable
 {
     public static function covering(Point ...$point): self
     {
@@ -32,6 +32,16 @@ final readonly class Rectangle implements Stringable
     {
         return $this->minCorner->x <= $point->x && $point->x <= $this->maxCorner->x
             && $this->minCorner->y <= $point->y && $point->y <= $this->maxCorner->y;
+    }
+
+    public function width(): int
+    {
+        return $this->maxCorner->x - $this->minCorner->x;
+    }
+
+    public function height(): int
+    {
+        return $this->maxCorner->y - $this->minCorner->y;
     }
 
     public function __toString()
