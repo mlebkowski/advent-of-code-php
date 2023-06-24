@@ -7,7 +7,7 @@ namespace App\Solutions\Y2016\D02;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
-use App\Solutions\Y2016\D02\Keypad\B5;
+use App\Solutions\Y2016\D02\Keypad\Keypad;
 
 /** @implements Solution<BathroomSecurityInput> */
 final class BathroomSecurity implements Solution
@@ -19,13 +19,28 @@ final class BathroomSecurity implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): string
     {
+        $standardLayout = <<<EOF
+        1 2 3
+        4 5 6
+        7 8 9
+        EOF;
+        $betterKeypadDesign = <<<EOF
+            1
+          2 3 4
+        5 6 7 8 9
+          A B C
+            D
+        EOF;
+
+        $layout = $challenge->isPartOne() ? $standardLayout : $betterKeypadDesign;
+
         $result = '';
-        $button = new B5();
+        $keypad = Keypad::ofLayout($layout);
         foreach ($input->moves as $move) {
             foreach ($move->directions as $direction) {
-                $button = $button->move($direction);
+                $keypad = $keypad->move($direction);
             }
-            $result .= $button->value();
+            $result .= $keypad->value();
         }
         return $result;
     }
