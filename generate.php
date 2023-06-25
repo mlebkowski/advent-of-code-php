@@ -2,9 +2,29 @@
 
 declare(strict_types=1);
 
-[, $year, $day, $name] = $argv;
-$source = __DIR__ . '/template/';
+use App\Aoc\SolutionFactory;
 
+require_once './vendor/autoload.php';
+
+[, $year, $day, $name] = array_pad($argv, 4, null);
+
+/** @var SolutionFactory $solutionsFactory */
+$solutionsFactory = require 'config/solutionFactory.php';
+$nextChallenge = $solutionsFactory->mostRecentChallenge()->next();
+
+$yearRange = range(2015, 2022);
+while (false === in_array((int)$year, $yearRange, true)) {
+    $year = readline(sprintf('Please specify year [%d]: ', $nextChallenge->year)) ?: $nextChallenge->year;
+}
+$dayRange = range(1, 25);
+while (false === in_array((int)$day, $dayRange, true)) {
+    $day = readline(sprintf('Please specify day [%d]: ', $nextChallenge->day)) ?: $nextChallenge->day;
+}
+while (!$name) {
+    $name = readline('Please specify the name: ');
+}
+
+$source = __DIR__ . '/template/';
 $day = sprintf('%02d', $day);
 $name = implode("", array_map('ucfirst', explode(" ", $name)));
 $targetDir = __DIR__ . "/src/Solutions/Y$year/D$day";

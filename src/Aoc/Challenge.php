@@ -6,14 +6,10 @@ namespace App\Aoc;
 
 use Stringable;
 
-enum Part: int
-{
-    case One = 1;
-    case Two = 2;
-}
-
 final readonly class Challenge implements Stringable
 {
+    private const LastDay = 25;
+
     public static function fromArgv(array $argv): self
     {
         return new self((int)$argv[1], (int)$argv[2], Part::from((int)$argv[3]));
@@ -30,6 +26,11 @@ final readonly class Challenge implements Stringable
     public static function of(int $year, int $day, Part $part): self
     {
         return new self($year, $day, $part);
+    }
+
+    public static function mostRecent(self $alpha, self $bravo): int
+    {
+        return $alpha->year <=> $bravo->year ?: $alpha->day <=> $bravo->day;
     }
 
     public function __construct(public int $year, public int $day, public Part $part)
@@ -53,6 +54,14 @@ final readonly class Challenge implements Stringable
         return $other->year === $this->year
             && $other->day === $this->day
             && $other->part === $this->part;
+    }
+
+    public function next(): Challenge
+    {
+        if ($this->day === self::LastDay) {
+            return self::of($this->year + 1, 1, Part::One);
+        }
+        return self::of($this->year, $this->day + 1, Part::One);
     }
 
     public function __toString(): string

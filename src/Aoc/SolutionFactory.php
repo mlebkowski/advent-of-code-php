@@ -19,9 +19,24 @@ final readonly class SolutionFactory
             static fn (Challenge $supports) => $supports->equals($challenge),
         );
 
-        return collect($this->implementations->findImplementations(Solution::class))
+        return $this->getSolutions()
             ->first(static fn (Solution $solution) => $supports($solution))
             ?? throw new RuntimeException(sprintf('No solution for %s', $challenge));
     }
 
+    public function mostRecentChallenge(): Challenge
+    {
+        return $this->getSolutions()
+            ->flatMap(static fn (Solution $solution) => $solution->challenges())
+            ->sort(
+                callback: Challenge::mostRecent(...),
+            )
+            ->last()
+            ?? throw new RuntimeException('No implementations yet');
+    }
+
+    public function getSolutions(): \Illuminate\Support\Collection
+    {
+        return collect($this->implementations->findImplementations(Solution::class));
+    }
 }
