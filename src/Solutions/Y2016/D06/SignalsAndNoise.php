@@ -9,6 +9,8 @@ use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use loophp\collection\Collection;
 use loophp\collection\Contract\Operation\Sortable;
+use loophp\collection\Operation\First;
+use loophp\collection\Operation\Last;
 
 /** @implements Solution<SignalsAndNoiseInput> */
 final class SignalsAndNoise implements Solution
@@ -20,6 +22,7 @@ final class SignalsAndNoise implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
+        $operation = $challenge->isPartOne() ? Last::of() : First::of();
         return Collection::fromIterable($input->messages)
             ->map(static fn (string $message) => Collection::fromString($message)->all())
             ->transpose()
@@ -27,7 +30,7 @@ final class SignalsAndNoise implements Solution
                 static fn (array $letters) => Collection::fromIterable($letters)
                     ->frequency()
                     ->sort(Sortable::BY_KEYS)
-                    ->last(),
+                    ->pipe($operation),
             )
             ->implode();
     }
