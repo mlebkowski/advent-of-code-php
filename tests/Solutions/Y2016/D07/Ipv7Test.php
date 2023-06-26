@@ -46,4 +46,12 @@ final class Ipv7Test extends TestCase
         $actual = $sut->supportsTransportLayerSnooping();
         self::assertSame($expected, $actual);
     }
+
+    #[DataProviderExternal(AreaBroadcastAccessorDataProvider::class, 'data')]
+    public function test ssl(string $address, bool $expected): void
+    {
+        $sut = Ipv7Factory::fromString($address);
+        $actual = $sut->supportsSuperSecretListening();
+        self::assertSame($expected, $actual);
+    }
 }

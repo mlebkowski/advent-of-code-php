@@ -19,8 +19,10 @@ final class InternetProtocolVersion7 implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return Collection::fromIterable($input->addresses)
-            ->filter(static fn (Ipv7 $ipv7) => $ipv7->supportsTransportLayerSnooping())
-            ->count();
+        $check = $challenge->isPartOne()
+            ? static fn (Ipv7 $ipv7) => $ipv7->supportsTransportLayerSnooping()
+            : static fn (Ipv7 $ipv7) => $ipv7->supportsSuperSecretListening();
+        
+        return Collection::fromIterable($input->addresses)->filter($check)->count();
     }
 }

@@ -24,4 +24,22 @@ final readonly class Ipv7
         return Collection::fromIterable($this->supernetSequences)->filter($containsAbba)->isNotEmpty()
             && Collection::fromIterable($this->hypernetSequences)->filter($containsAbba)->isEmpty();
     }
+
+    public function supportsSuperSecretListening(): bool
+    {
+        $abas = Collection::fromIterable($this->supernetSequences)
+            ->flatMap(AreaBroadcastAccessor::in(...));
+
+        if ($abas->isEmpty()) {
+            return false;
+        }
+
+        $candidates = $abas
+            ->map(static fn (AreaBroadcastAccessor $aba) => static fn (string $sequence) => str_contains(
+                $sequence,
+                (string)$aba->toByteAllocationBlock(),
+            ));
+
+        return Collection::fromIterable($this->hypernetSequences)->filter(...$candidates)->isNotEmpty();
+    }
 }
