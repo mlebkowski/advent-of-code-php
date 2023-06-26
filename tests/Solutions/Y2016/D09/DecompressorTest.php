@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 final class DecompressorTest extends TestCase
 {
     #[DataProviderExternal(DecompressorDataProvider::class, 'v1')]
-    public function testDecompress(string $input, string $expected): void
+    public function testDecompress(string $input, int $expected): void
     {
-        $actual = Decompressor::decompress($input, Format::V1);
+        $actual = Decompressor::getDecompressedLength($input, Format::V1);
 
         self::assertSame($expected, $actual);
     }
@@ -19,7 +19,7 @@ final class DecompressorTest extends TestCase
     #[DataProviderExternal(DecompressorDataProvider::class, 'v2')]
     public function testDecompressV2(string $input, int $expected): void
     {
-        $actual = strlen(Decompressor::decompress($input, Format::V2));
+        $actual = Decompressor::getDecompressedLength($input, Format::V2);
 
         self::assertSame($expected, $actual);
     }

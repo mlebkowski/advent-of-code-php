@@ -7,12 +7,12 @@ final class DecompressorDataProvider
 {
     public static function v1(): iterable
     {
-        yield ['ADVENT', 'ADVENT'];
-        yield ['A(1x5)BC', 'ABBBBBC'];
-        yield ['(3x3)XYZ', 'XYZXYZXYZ'];
-        yield ['A(2x2)BCD(2x2)EFG', 'ABCBCDEFEFG'];
-        yield ['(6x1)(1x3)A', '(1x3)A'];
-        yield ['X(8x2)(3x3)ABCY', 'X(3x3)ABC(3x3)ABCY'];
+        yield ['ADVENT', strlen('ADVENT')];
+        yield ['A(1x5)BC', strlen('ABBBBBC')];
+        yield ['(3x3)XYZ', strlen('XYZXYZXYZ')];
+        yield ['A(2x2)BCD(2x2)EFG', strlen('ABCBCDEFEFG')];
+        yield ['(6x1)(1x3)A', strlen('(1x3)A')];
+        yield ['X(8x2)(3x3)ABCY', strlen('X(3x3)ABC(3x3)ABCY')];
     }
 
     public static function v2(): iterable

@@ -7,17 +7,22 @@ use RuntimeException;
 
 final class Decompressor
 {
-    public static function decompress(string $input, Format $version): string
+    public static function getDecompressedLength(string $input, Format $version): int
     {
-        return implode('', iterator_to_array(self::decompressParts($input, $version)));
+        return array_sum(iterator_to_array(self::chunks($input, $version)));
     }
 
-    private static function decompressParts(string $input): iterable
+    private static function chunks(string $input, Format $version): iterable
     {
         while (true) {
-            $buffer = ('' === $input || $input[0] === '(') ? '' : (string)strtok($input, '(');
-            yield $buffer;
-            $input = substr($input, strlen($buffer));
+            $offset = strpos($input, '(');
+            if (false === $offset) {
+                yield strlen($input);
+                return;
+            }
+
+            yield $offset;
+            $input = substr($input, $offset);
 
             if ('' === $input) {
                 return;
@@ -35,7 +40,10 @@ final class Decompressor
 
             $buffer = substr($input, 0, $length);
             $input = substr($input, $length);
-            yield str_repeat($buffer, $times);
+            if (Format::V2 === $version) {
+                $length = self::getDecompressedLength($buffer, Format::V2);
+            }
+            yield $length * $times;
         }
 
     }

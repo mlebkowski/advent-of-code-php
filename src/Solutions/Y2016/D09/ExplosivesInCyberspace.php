@@ -19,8 +19,6 @@ final class ExplosivesInCyberspace implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $version = $challenge->isPartOne() ? Format::V1 : Format::V2;
-        return strlen(
-            Decompressor::decompress($input->input, $version),
-        );
+        return Decompressor::getDecompressedLength($input->input, $version);
     }
 }
