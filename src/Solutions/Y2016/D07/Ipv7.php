@@ -7,12 +7,8 @@ use loophp\collection\Collection;
 
 final readonly class Ipv7
 {
-    public static function fromString(string $address): self
+    public static function of(array $supernetSequences, array $hypernetSequences): self
     {
-        $hypernetSequenceRe = '/\[(?P<hypernetSequence>\w+)]/';
-        preg_match_all($hypernetSequenceRe, $address, $matches);
-        $supernetSequences = preg_split($hypernetSequenceRe, $address);
-        $hypernetSequences = $matches['hypernetSequence'];
         return new self($supernetSequences, $hypernetSequences);
     }
 

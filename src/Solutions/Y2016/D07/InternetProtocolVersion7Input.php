@@ -6,7 +6,7 @@ namespace App\Solutions\Y2016\D07;
 
 final readonly class InternetProtocolVersion7Input
 {
-    public function __construct(/** @var Ipv7[] */ public array $addresses)
+    public function __construct(/** @var Ipv7[] */ public iterable $addresses)
     {
     }
 }

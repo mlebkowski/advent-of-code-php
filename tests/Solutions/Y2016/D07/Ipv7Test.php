@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2016\D07;
 
+use App\Solutions\Y2016\D07\Factory\Ipv7Factory;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +18,7 @@ final class Ipv7Test extends TestCase
             . 'bbgugrcsmoasoxyymgz'
             . '[wjhbkirawxanrqf]'
             . 'palckvdfnlhficazmwm';
-        $actual = Ipv7::fromString($given);
+        $actual = Ipv7Factory::fromString($given);
 
         self::assertSame(
             [
@@ -41,7 +42,7 @@ final class Ipv7Test extends TestCase
     #[DataProviderExternal(AbbaDataProvider::class, 'data')]
     public function test tls(string $address, bool $expected): void
     {
-        $sut = Ipv7::fromString($address);
+        $sut = Ipv7Factory::fromString($address);
         $actual = $sut->supportsTransportLayerSnooping();
         self::assertSame($expected, $actual);
     }
