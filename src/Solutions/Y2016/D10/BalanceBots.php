@@ -27,10 +27,16 @@ final class BalanceBots implements Solution
         $high = $runMode->isSample() ? 5 : self::High;
 
         $factory = MicrochipFactory::ofInitialDisposition($input->rules, $input->values);
-        return Collection::fromGenerator($factory->run())
-            ->find(
-                callbacks: static fn (TransferOut $transfer) => $transfer->matches($low, $high),
-            )
+        $process = Collection::fromGenerator($factory->run());
+
+        if ($challenge->isPartTwo()) {
+            $process->squash();
+            return $factory->value();
+        }
+
+        return $process->find(
+            callbacks: static fn (TransferOut $transfer) => $transfer->matches($low, $high),
+        )
             ->botId ?? throw new RuntimeException('No such transfer occured');
     }
 }

@@ -49,6 +49,11 @@ final class MicrochipFactory
         } while ($transfers->isNotEmpty());
     }
 
+    public function value(): int
+    {
+        return $this->output[0] * $this->output[1] * $this->output[2];
+    }
+
     private function executeTransfer(TransferOut $transferOut): true
     {
         $rule = $this->rules[$transferOut->botId];
