@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2016\D10;
 
-final readonly class Target
+use Stringable;
+
+final readonly class Target implements Stringable
 {
     public static function fromString(string $target): self
     {
@@ -16,7 +18,17 @@ final readonly class Target
         return new self($type, $value);
     }
 
-    private function __construct(public TargetType $type, public int $value)
+    private function __construct(private TargetType $type, public int $value)
     {
+    }
+
+    public function isOutput(): bool
+    {
+        return $this->type === TargetType::Output;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('%s %d', $this->type->value, $this->value);
     }
 }
