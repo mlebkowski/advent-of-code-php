@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D23\Instruction;
+namespace App\Realms\Computing\Instruction;
 
-use App\Solutions\Y2015\D23\Processor;
+use App\Realms\Computing\Processor\Processor;
+use App\Realms\Computing\Processor\Register;
 
 final readonly class JumpIfOne implements Instruction
 {

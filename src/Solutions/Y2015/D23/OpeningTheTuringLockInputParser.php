@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D23\Input;
+namespace App\Solutions\Y2015\D23;
 
 use App\Aoc\Runner\InputParser;
-use App\Solutions\Y2015\D23\Instruction\Halve;
-use App\Solutions\Y2015\D23\Instruction\Inc;
-use App\Solutions\Y2015\D23\Instruction\Jump;
-use App\Solutions\Y2015\D23\Instruction\JumpIfEven;
-use App\Solutions\Y2015\D23\Instruction\JumpIfOne;
-use App\Solutions\Y2015\D23\Instruction\Register;
-use App\Solutions\Y2015\D23\Instruction\Triple;
+use App\Realms\Computing\Instruction\Halve;
+use App\Realms\Computing\Instruction\Inc;
+use App\Realms\Computing\Instruction\Jump;
+use App\Realms\Computing\Instruction\JumpIfEven;
+use App\Realms\Computing\Instruction\JumpIfOne;
+use App\Realms\Computing\Instruction\Triple;
+use App\Realms\Computing\Processor\Register;
 use loophp\collection\Collection;
 use RuntimeException;
 

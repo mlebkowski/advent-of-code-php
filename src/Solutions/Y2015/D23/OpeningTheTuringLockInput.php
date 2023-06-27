@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D23\Input;
+namespace App\Solutions\Y2015\D23;
 
-use App\Solutions\Y2015\D23\Instruction\Instruction;
+use App\Realms\Computing\Instruction\Instruction;
 
 final readonly class OpeningTheTuringLockInput
 {

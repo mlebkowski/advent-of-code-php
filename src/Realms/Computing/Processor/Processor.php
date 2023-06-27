@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D23;
+namespace App\Realms\Computing\Processor;
 
 use App\Aoc\Progress\Progress;
-use App\Solutions\Y2015\D23\Instruction\Instruction;
-use App\Solutions\Y2015\D23\Instruction\Register;
+use App\Realms\Computing\Instruction\Instruction;
 
 final class Processor
 {
-    private int $a = 0;
-    private int $b = 0;
+    private array $registers = [];
     private int $cursor = 0;
 
     public function __construct(private readonly Progress $progress)
@@ -20,18 +18,12 @@ final class Processor
 
     public function readRegister(Register $register): int
     {
-        return match ($register) {
-            Register::A => $this->a,
-            Register::B => $this->b,
-        };
+        return $this->registers[$register->value] ?? 0;
     }
 
     public function setRegister(Register $register, int $value): void
     {
-        match ($register) {
-            Register::A => $this->a = $value,
-            Register::B => $this->b = $value,
-        };
+        $this->registers[$register->value] = $value;
     }
 
     public function jump(int $jump): void
@@ -47,11 +39,10 @@ final class Processor
             $this->progress->step();
             $this->progress->report(
                 sprintf(
-                    '%d %s [a: %d, b: %d]',
+                    '%d %s %s',
                     $this->cursor,
                     $instructions[$this->cursor],
-                    $this->a,
-                    $this->b,
+                    json_encode($this->registers),
                 ),
             );
             $instruction = $instructions[$this->cursor++];

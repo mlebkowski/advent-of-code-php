@@ -8,9 +8,10 @@ use App\Aoc\Challenge;
 use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
-use App\Solutions\Y2015\D23\Instruction\Register;
+use App\Realms\Computing\Processor\Processor;
+use App\Realms\Computing\Processor\Register;
 
-/** @implements Solution<Input\OpeningTheTuringLockInput> */
+/** @implements Solution<OpeningTheTuringLockInput> */
 final class OpeningTheTuringLock implements Solution
 {
     public function challenges(): iterable

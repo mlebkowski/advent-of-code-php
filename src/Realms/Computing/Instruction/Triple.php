@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D23\Instruction;
+namespace App\Realms\Computing\Instruction;
 
-use App\Solutions\Y2015\D23\Processor;
+use App\Realms\Computing\Processor\Processor;
+use App\Realms\Computing\Processor\Register;
 
-final readonly class Inc implements Instruction
+final readonly class Triple implements Instruction
 {
     public static function of(Register $register): self
     {
@@ -20,12 +21,12 @@ final readonly class Inc implements Instruction
     public function apply(Processor $processor): void
     {
         $value = $processor->readRegister($this->register);
-        $processor->setRegister($this->register, $value + 1);
+        $processor->setRegister($this->register, $value * 3);
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         $register = $this->register->value;
-        return "inc $register";
+        return "tpl $register";
     }
 }

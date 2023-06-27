@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2015\D23\Instruction;
+namespace App\Realms\Computing\Processor;
 
 enum Register: string
 {
     case A = 'a';
     case B = 'b';
+    case C = 'c';
+    case D = 'd';
 }
