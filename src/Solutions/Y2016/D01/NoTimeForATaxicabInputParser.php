@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2016\D01\Input;
+namespace App\Solutions\Y2016\D01;
 
 use App\Aoc\Runner\InputParser;
-use App\Solutions\Y2016\D01\Turn;
+use App\Realms\Cartography\Turn;
 use loophp\collection\Collection;
 
 /** @implements InputParser<NoTimeForATaxicabInput> */

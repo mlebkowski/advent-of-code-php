@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2016\D01\Input;
+namespace App\Solutions\Y2016\D01;
 
 final readonly class NoTimeForATaxicabInput
 {

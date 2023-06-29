@@ -85,6 +85,7 @@
       <path value="$PROJECT_DIR$/vendor/loophp/collection" />
       <path value="$PROJECT_DIR$/vendor/loophp/iterators" />
       <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/vendor/blackscorp/astar" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

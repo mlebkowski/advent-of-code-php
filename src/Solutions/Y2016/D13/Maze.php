@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2016\D13;
 
+use App\Realms\Cartography\Map;
 use loophp\collection\Collection;
 use Stringable;
 
@@ -17,16 +18,20 @@ final readonly class Maze implements Stringable
         return new self($points, $width);
     }
 
-    private function __construct(private array $points, private int $width)
+    private function __construct(public array $points, public int $width)
     {
+    }
+
+    public function toMap(): Map
+    {
+        $map = Collection::fromIterable($this->points)
+            ->map(static fn (bool $state) => $state ? '█' : ' ')
+            ->all();
+        return Map::ofPoints($map, $this->width);
     }
 
     public function __toString(): string
     {
-        return "\n" . Collection::fromIterable($this->points)
-            ->map(static fn (bool $state) => $state ? '█' : ' ')
-            ->chunk($this->width)
-            ->map(static fn (array $row) => implode('', $row))
-            ->implode("\n");
+        return "\n" . $this->toMap();
     }
 }

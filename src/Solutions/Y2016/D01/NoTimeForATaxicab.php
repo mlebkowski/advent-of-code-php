@@ -7,8 +7,9 @@ namespace App\Solutions\Y2016\D01;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Realms\Cartography\Path;
 
-/** @implements Solution<Input\NoTimeForATaxicabInput> */
+/** @implements Solution<NoTimeForATaxicabInput> */
 final class NoTimeForATaxicab implements Solution
 {
     public function challenges(): iterable
@@ -19,7 +20,7 @@ final class NoTimeForATaxicab implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
         $path = Path::of(...$input->instructions);
-        echo "\n", Map::ofPath($path), "\n";
+        echo "\n", $path->toMap(), "\n";
 
         $position = $challenge->isPartOne() ? $path->lastPosition : $path->firstIntersection;
         return $position->distanceFromStart();

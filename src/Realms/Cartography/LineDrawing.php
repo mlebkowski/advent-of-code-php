@@ -1,13 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Solutions\Y2016\D01;
+namespace App\Realms\Cartography;
 
 final class LineDrawing
 {
     public static function of(Point $point, ?Point $previous, ?Point $next): string
     {
-        assert($previous || $next);
+        if (null === $previous && null === $next) {
+            return '•';
+        }
 
         if (null === $previous) {
             return self::starting($point, $next);

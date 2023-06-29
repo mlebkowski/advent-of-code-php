@@ -4,8 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4f392084bef1e9000253cdbebafe4b3",
+    "content-hash": "7f00355cb10629fd7914cbfd3a68ff0a",
     "packages": [
+        {
+            "name": "blackscorp/astar",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BlackScorp/astar.git",
+                "reference": "9b80d6135ac31947d246cf2e33ff45d4681a6a57"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BlackScorp/astar/zipball/9b80d6135ac31947d246cf2e33ff45d4681a6a57",
+                "reference": "9b80d6135ac31947d246cf2e33ff45d4681a6a57",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BlackScorp\\Astar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vitalij Mik",
+                    "email": "cccpmik+composer@gmail.com"
+                }
+            ],
+            "description": "AStar path finding implementation in php",
+            "support": {
+                "issues": "https://github.com/BlackScorp/astar/issues",
+                "source": "https://github.com/BlackScorp/astar/tree/v1.2.0"
+            },
+            "time": "2017-10-06T15:21:22+00:00"
+        },
         {
             "name": "illuminate/collections",
             "version": "v10.13.5",
@@ -2102,7 +2139,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-readline": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
 }

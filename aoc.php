@@ -8,7 +8,7 @@ namespace App\Aoc;
 use App\Aoc\Progress\Progress;
 
 require_once __DIR__ . '/vendor/autoload.php';
-
+ini_set('error_reporting', E_ALL & ~E_DEPRECATED);
 $fetcher = require 'config/fetcher.php';
 $factory = require 'config/solutionFactory.php';
 $runner = require 'config/runner.php';

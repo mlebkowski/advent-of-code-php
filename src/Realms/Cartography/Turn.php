@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Solutions\Y2016\D01;
+namespace App\Realms\Cartography;
 
 enum Turn: string
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Solutions\Y2016\D01;
+namespace App\Realms\Cartography;
 
 use loophp\collection\Collection;
 use Stringable;
@@ -24,8 +24,8 @@ final readonly class Area implements Stringable
 
     private function __construct(public Point $minCorner, public Point $maxCorner)
     {
-        assert($this->minCorner->x < $maxCorner->x);
-        assert($this->minCorner->y < $maxCorner->y);
+        assert($this->minCorner->x <= $maxCorner->x);
+        assert($this->minCorner->y <= $maxCorner->y);
     }
 
     public function contains(Point $point): bool
