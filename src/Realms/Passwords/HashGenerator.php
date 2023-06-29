@@ -7,11 +7,16 @@ use Generator;
 
 final readonly class HashGenerator
 {
-    public static function of(string $input): Generator
+    public static function of(string $input, int $rehashCount = 0): Generator
     {
         $i = 0;
         while (true) {
-            yield $i => md5($input . $i++);
+            yield $i => array_reduce(
+                array_fill(0, $rehashCount, null),
+                static fn (string $hash) => md5($hash),
+                md5($input . $i),
+            );
+            $i++;
         }
     }
 }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2016\D14;
 
-use App\Realms\Passwords\HashGenerator;
 use Generator;
 use loophp\collection\Collection;
 
@@ -11,17 +10,17 @@ final class Arbiter
 {
     private array $rollingWindow = [];
     private array $confirmationTokens = [];
-    private Generator $generator;
     private int $cursor = 0;
 
-    public static function of(string $salt, int $lookaheadWindow): self
+    public static function of(Generator $hashGenerator, int $lookaheadWindow): self
     {
-        return new self($salt, $lookaheadWindow);
+        return new self($hashGenerator, $lookaheadWindow);
     }
 
-    private function __construct(string $salt, private readonly int $lookaheadWindow)
-    {
-        $this->generator = HashGenerator::of($salt);
+    private function __construct(
+        private readonly Generator $hashGenerator,
+        private readonly int $lookaheadWindow,
+    ) {
     }
 
     public function hasCounterpart(string $hash, int $index): bool
@@ -50,14 +49,14 @@ final class Arbiter
         //            $gap = -800, $difference = 200,
         //  |--------[$c]---200---[$i]---1 000---------------[$t]-->
         //            $gap = 200, $difference = 1200,
-        $this->rollingWindow = Collection::fromGenerator($this->generator)
+        $this->rollingWindow = Collection::fromGenerator($this->hashGenerator)
             ->slice(
                 max(0, $gap),
                 min($this->lookaheadWindow, $difference),
             )
             ->map($extractConfirmationToken)
             ->merge($this->rollingWindow)
-            ->filter(static fn ($value, int $idx) => $idx > $index)
+            ->filter(static fn (array $values, int $idx) => $idx > $index && count($values) > 0)
             ->all(false);
 
         $this->confirmationTokens = Collection::fromIterable($this->rollingWindow)

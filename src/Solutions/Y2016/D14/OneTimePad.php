@@ -24,16 +24,20 @@ final class OneTimePad implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $progress = Progress::unknown()->reportInSteps(100);
+        $rehashCount = $challenge->isPartOne() ? 0 : 2016;
 
-        $state = Arbiter::of($input->salt, lookaheadWindow: 1000);
+        $state = Arbiter::of(
+            HashGenerator::of($input->salt, rehashCount: $rehashCount),
+            lookaheadWindow: 1000,
+        );
 
-        return Collection::fromGenerator(HashGenerator::of($input->salt))
+        return Collection::fromGenerator(HashGenerator::of($input->salt, rehashCount: $rehashCount))
             ->apply($progress->step(...))
             ->filter(static fn (string $hash) => 1 === preg_match(self::CandidateRe, $hash))
             ->apply($progress->report(...))
             ->filter($state->hasCounterpart(...))
             ->slice(0, 64)
             ->keys()
-            ->last() - 1;
+            ->last();
     }
 }
