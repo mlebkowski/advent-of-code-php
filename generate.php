@@ -25,14 +25,22 @@ while (!$name) {
 }
 
 $source = __DIR__ . '/template/';
-$day = sprintf('%02d', $day);
+$dayPad = sprintf('%02d', $day);
 $name = implode("", array_map('ucfirst', explode(" ", $name)));
-$targetDir = __DIR__ . "/src/Solutions/Y$year/D$day";
+$targetDir = __DIR__ . "/src/Solutions/Y$year/D$dayPad";
 
 is_dir($targetDir) || mkdir($targetDir, recursive: true);
 foreach (glob($source . '*.php') as $file) {
     file_put_contents(
         $targetDir . '/' . str_replace('NAME', $name, basename($file)),
-        strtr(file_get_contents($file), ['0000' => $year, '00' => $day, 'NAME' => $name]),
+        strtr(
+            file_get_contents($file),
+            [
+                '0000' => $year,
+                '00' => $dayPad,
+                '0' => $day,
+                'NAME' => $name,
+            ],
+        ),
     );
 }
