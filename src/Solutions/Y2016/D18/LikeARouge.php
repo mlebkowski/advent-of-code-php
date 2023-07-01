@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Solutions\Y2016\D18;
 
 use App\Aoc\Challenge;
+use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 
@@ -25,6 +26,8 @@ final class LikeARouge implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        return Room::populateFromFirstRow($input->row, 40)->safeTileCount();
+        $size = $challenge->isPartOne() ? 40 : 400_000;
+        $progress = Progress::ofExpectedIterations($size)->reportInSteps(1_000);
+        return Room::calculateSafeTilesCount($input->row, $size, $progress);
     }
 }
