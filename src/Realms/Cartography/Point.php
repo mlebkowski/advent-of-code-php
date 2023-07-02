@@ -59,6 +59,11 @@ final readonly class Point implements Stringable
         };
     }
 
+    public function equals(self $other): bool
+    {
+        return $this->x === $other->x && $this->y === $other->y;
+    }
+
     public function __toString(): string
     {
         return "{$this->x}×{$this->y}";

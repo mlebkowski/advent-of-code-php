@@ -7,6 +7,7 @@ namespace App\Solutions\Y2016\D22;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use loophp\collection\Collection;
 
 /**
  * @implements Solution<GridComputingInput>
@@ -25,6 +26,10 @@ final class GridComputing implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return count($input->nodes);
+        return Collection::fromIterable($input->nodes)
+            ->product($input->nodes)
+            ->unpack()
+            ->filter(Node::isViablePair(...))
+            ->count();
     }
 }
