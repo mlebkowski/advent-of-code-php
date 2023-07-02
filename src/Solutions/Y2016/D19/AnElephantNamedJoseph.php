@@ -23,20 +23,12 @@ final class AnElephantNamedJoseph implements Solution
         return Challenge::bothParts(2016, 19);
     }
 
-    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        $clearMostSignificantBit = static function (float $n): int {
-            assert($n < 2 ** 32);
-            $mask = $n;
-            $mask |= $mask >> 1;
-            $mask |= $mask >> 2;
-            $mask |= $mask >> 4;
-            $mask |= $mask >> 16;
+        if ($challenge->isPartOne()) {
+            return SimpleRules::of($input->numberOfElves);
+        }
 
-            $mask >>= 1;
-            return $n & $mask;
-        };
-
-        return 1 + ($clearMostSignificantBit($input->numberOfElves) << 1);
+        return AcrossRules::of($input->numberOfElves);
     }
 }

@@ -57,3 +57,56 @@ where the off-by-one comes in, since the elves are numbered from 1.
 
 The resulting elf *index* is `eraseMostSignificantBit($numberOfElves) << 1`, and I need to
 add one to that value to get the *elf name/number*.
+
+## Second part
+
+This was much harder, and much less elegant IMO. Or I’m missing something.
+
+The base for the solution is a geometric sequence: `3^n - 3^(n-1)`, eg `2, 6, 18, 54`.
+You can divide the solutions into ranges of those lengths. Each one has two equal parts
+(since `3^n` is always odd, the difference will be always even, thus divisible by 2).
+In the first part, the results simply increase by 1. In the second part, they start
+increasing by two. Example for integers between 10 and 27:
+
+```
+10 → 1  .
+11 → 2   \
+12 → 3    |
+13 → 4    |
+14 → 5     > increase by one
+15 → 6    |
+16 → 7    |
+17 → 8   /
+18 → 9  '
+
+19 → 11  .
+20 → 13   \
+21 → 15    |
+22 → 17    |
+23 → 19     > increase by two on top of
+24 → 21    |   the last result from part I
+25 → 23    |
+26 → 25   /
+27 → 27  '
+```
+
+Someone even found a nice and simple solution, but it works only for the results
+from the first part of the range, where the difference between the number and the
+solution is constant:
+
+https://www.reddit.com/r/adventofcode/comments/5j4lp1/2016_day_19_solutions/dbdf50n/
+
+Anyway, I’m glad I solved the challenge without brute-forcing (not that I did not
+implement the algo, but only to visualize the process).
+
+```
+1  2  3  4  5  6  7  8  9  
+'-----------^
+   '--------------^
+      '--------------^
+^--------'
+   ^-----------'
+         ^--------------'
+      '--------^
+      ^-----------------'
+```
