@@ -25,7 +25,12 @@ final readonly class Path
         return new self($points);
     }
 
-    public function __construct(public array $points)
+    public static function ofPoints(Point ...$points): self
+    {
+        return new self($points);
+    }
+
+    private function __construct(public array $points)
     {
         $places = [];
         foreach ($points as $point) {

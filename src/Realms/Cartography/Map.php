@@ -21,6 +21,11 @@ final readonly class Map implements Stringable
         $this->height = (int)(count($map) / $this->width);
     }
 
+    public function overlayPath(Path $path): self
+    {
+        return $this->overlay($path->toMap(), $path->area()->minCorner);
+    }
+
     public function overlay(Map $other, Point $offset): self
     {
         assert($offset->x >= 0 && $offset->y >= 0);

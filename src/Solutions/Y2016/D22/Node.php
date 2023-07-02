@@ -13,6 +13,11 @@ final class Node implements Stringable
         return new self(Point::of($x, $y), $size, $used);
     }
 
+    public static function sortForGrid(self $alpha, self $bravo): int
+    {
+        return $alpha->point->y <=> $bravo->point->y ?: $alpha->point->x <=> $bravo->point->x;
+    }
+
     public static function isViablePair(self $alpha, self $bravo): bool
     {
         return false === $alpha->isEmpty()
@@ -20,12 +25,12 @@ final class Node implements Stringable
             && $bravo->wouldFit($alpha);
     }
 
-    private function __construct(private Point $point, private int $size, private int $used)
+    private function __construct(public Point $point, public int $size, private int $used)
     {
         assert($size >= $used && $used >= 0);
     }
 
-    private function isEmpty(): bool
+    public function isEmpty(): bool
     {
         return 0 === $this->used;
     }

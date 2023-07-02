@@ -42,7 +42,8 @@ final readonly class PathFinding
         $path = $astar->search($startPosition, $endPosition);
         CannotFindPath::whenResultIsEmpty($path, $from, $to);
 
-        return new Path(
+        return Path::ofPoints(
+            ...
             Collection::fromIterable($path)
                 ->map(static fn (Node $node) => Point::of($node->getX(), $node->getY()))
                 ->all(),
