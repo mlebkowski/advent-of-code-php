@@ -27,5 +27,6 @@ final class ScramblerTest extends TestCase
         );
 
         self::assertSame('decab', $sut->scramble('abcde'));
+        self::assertSame('abcde', $sut->reverse('decab'));
     }
 }

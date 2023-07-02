@@ -17,10 +17,10 @@ final class MovePositionTest extends TestCase
     }
 
     #[DataProvider('data')]
-    public function test(string $given, int $from, int $to, string $expected)
+    public function test(string $plain, int $from, int $to, string $scrambled)
     {
         $sut = MovePosition::of($from, $to);
-        $actual = $sut->apply($given);
-        self::assertSame($expected, $actual);
+        self::assertSame($scrambled, $sut->scramble($plain));
+        self::assertSame($plain, $sut->reverse($scrambled));
     }
 }

@@ -16,7 +16,7 @@ final readonly class SwapLetters implements Operation
         assert($this->alpha !== $this->bravo);
     }
 
-    public function apply(string $input): string
+    public function scramble(string $input): string
     {
         assert(str_contains($input, $this->alpha));
         assert(str_contains($input, $this->bravo));
@@ -24,7 +24,12 @@ final readonly class SwapLetters implements Operation
         return SwapPositions::of(
             alpha: strpos($input, $this->alpha),
             bravo: strpos($input, $this->bravo),
-        )->apply($input);
+        )->scramble($input);
+    }
+
+    public function reverse(string $input): string
+    {
+        return $this->scramble($input);
     }
 
     public function __toString(): string

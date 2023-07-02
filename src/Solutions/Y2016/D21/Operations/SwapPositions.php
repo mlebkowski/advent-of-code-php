@@ -15,7 +15,7 @@ final readonly class SwapPositions implements Operation
         assert($alpha >= 0 && $bravo >= 0);
     }
 
-    public function apply(string $input): string
+    public function scramble(string $input): string
     {
         assert($this->alpha < strlen($input) && $this->bravo < strlen($input));
         $alpha = $input[$this->alpha];
@@ -23,6 +23,11 @@ final readonly class SwapPositions implements Operation
         $input[$this->alpha] = $bravo;
         $input[$this->bravo] = $alpha;
         return $input;
+    }
+
+    public function reverse(string $input): string
+    {
+        return $this->scramble($input);
     }
 
     public function __toString(): string

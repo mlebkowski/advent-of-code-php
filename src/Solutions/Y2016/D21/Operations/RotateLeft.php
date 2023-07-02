@@ -15,10 +15,15 @@ final readonly class RotateLeft implements Operation
         assert($this->steps > 0);
     }
 
-    public function apply(string $input): string
+    public function scramble(string $input): string
     {
         $size = $this->steps % strlen($input);
         return substr($input, $size) . substr($input, 0, $size);
+    }
+
+    public function reverse(string $input): string
+    {
+        return RotateRight::of($this->steps)->scramble($input);
     }
 
     public function __toString(): string

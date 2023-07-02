@@ -16,7 +16,7 @@ final readonly class ReverseRange implements Operation
         assert($this->start <= $this->end);
     }
 
-    public function apply(string $input): string
+    public function scramble(string $input): string
     {
         assert($this->end < strlen($input));
         $length = $this->end - $this->start + 1;
@@ -27,6 +27,11 @@ final readonly class ReverseRange implements Operation
             offset: $this->start,
             length: $length,
         );
+    }
+
+    public function reverse(string $input): string
+    {
+        return $this->scramble($input);
     }
 
     public function __toString(): string

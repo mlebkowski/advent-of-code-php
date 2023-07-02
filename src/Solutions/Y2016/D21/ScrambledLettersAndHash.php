@@ -25,6 +25,12 @@ final class ScrambledLettersAndHash implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): string
     {
-        return Scrambler::of(...$input->operations)->scramble('abcdefgh');
+        $scrambler = Scrambler::of(...$input->operations);
+
+        if ($challenge->isPartOne()) {
+            return $scrambler->scramble('abcdefgh');
+        }
+
+        return $scrambler->reverse('fbgdceah');
     }
 }

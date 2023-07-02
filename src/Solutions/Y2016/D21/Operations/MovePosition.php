@@ -15,7 +15,7 @@ final readonly class MovePosition implements Operation
         assert($this->from >= 0 && $this->to >= 0);
     }
 
-    public function apply(string $input): string
+    public function scramble(string $input): string
     {
         assert($this->to < strlen($input) && $this->from < strlen($input));
 
@@ -24,10 +24,15 @@ final readonly class MovePosition implements Operation
         $op = $this->from > $this->to ? RotateRight::of(1) : RotateLeft::of(1);
         return substr_replace(
             $input,
-            $op->apply(substr($input, $start, $length)),
+            $op->scramble(substr($input, $start, $length)),
             offset: $start,
             length: $length,
         );
+    }
+
+    public function reverse(string $input): string
+    {
+        return self::of($this->to, $this->from)->scramble($input);
     }
 
     public function __toString(): string

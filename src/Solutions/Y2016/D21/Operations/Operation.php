@@ -7,5 +7,7 @@ use Stringable;
 
 interface Operation extends Stringable
 {
-    public function apply(string $input): string;
+    public function scramble(string $input): string;
+
+    public function reverse(string $input): string;
 }

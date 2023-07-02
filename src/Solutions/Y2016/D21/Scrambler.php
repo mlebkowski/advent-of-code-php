@@ -20,7 +20,16 @@ final class Scrambler
     {
         return array_reduce(
             $this->operations,
-            static fn (string $value, Operation $operation) => $operation->apply($value),
+            static fn (string $value, Operation $operation) => $operation->scramble($value),
+            $input,
+        );
+    }
+
+    public function reverse(string $input): string
+    {
+        return array_reduce(
+            array_reverse($this->operations),
+            static fn (string $value, Operation $operation) => $operation->reverse($value),
             $input,
         );
     }
