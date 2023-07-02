@@ -14,6 +14,11 @@ final class Matcher
         return new self();
     }
 
+    public static function simple(string $pattern, callable $factory): self
+    {
+        return self::create()->startsWith('', $pattern, $factory);
+    }
+
     private function __construct()
     {
     }
@@ -24,7 +29,7 @@ final class Matcher
         return $this;
     }
 
-    public function parse(string $line): mixed
+    public function __invoke(string $line): mixed
     {
         $line = trim($line);
         foreach ($this->prefixes as $prefix => [$pattern, $factory]) {

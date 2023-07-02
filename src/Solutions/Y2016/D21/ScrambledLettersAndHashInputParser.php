@@ -32,7 +32,7 @@ final class ScrambledLettersAndHashInputParser implements InputParser
         return new ScrambledLettersAndHashInput(
             Collection::fromString($input)
                 ->lines()
-                ->map($matcher->parse(...))
+                ->map($matcher)
                 ->all(),
         );
     }
