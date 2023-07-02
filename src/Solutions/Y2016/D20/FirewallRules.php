@@ -26,11 +26,17 @@ final class FirewallRules implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return Collection::fromIterable($input->ranges)
+        $result = Collection::fromIterable($input->ranges)
             ->sort(callback: Range::lowest(...))
             ->reduce(
-                static fn (int $min, Range $range) => $range->blocks($min) ? $range->max + 1 : $min,
-                0,
+                static fn (IpSpace $state, Range $range) => $state->applyRange($range),
+                IpSpace::empty(),
             );
+
+        if ($challenge->isPartOne()) {
+            return $result->minValue;
+        }
+
+        return $result->allowedCount;
     }
 }
