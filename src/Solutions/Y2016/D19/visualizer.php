@@ -7,7 +7,7 @@ const Start = "'";
 const Middle = "-";
 const End = '^';
 const ColumnWidth = 3;
-const Count = 28;
+const Count = 8;
 
 echo implode(
     "",
@@ -18,10 +18,24 @@ echo implode(
 ),
 "\n";
 
+$pad = static fn (int $n) => str_pad((string)$n, 3, ' ', STR_PAD_BOTH);
 $elves = range(1, Count);
 while (count($elves) > 1) {
     $elf = array_shift($elves);
     $across = (int)ceil(count($elves) / 2) - 1;
+    $comment = Count >= 10 ? '' : sprintf(
+        ' % 3d → %s',
+        $elf,
+        str_pad(
+            implode(' ', array_filter([
+                implode(' ', array_map($pad, array_slice($elves, 0, $across))),
+                '(' . $elves[$across] . ')',
+                implode(' ', array_map($pad, array_slice($elves, $across + 1))),
+            ])),
+            length: Count * 4,
+            pad_type: STR_PAD_BOTH,
+        ),
+    );
     [$takesFrom] = array_splice($elves, $across, 1);
     $elves = [...$elves, $elf];
 
@@ -31,7 +45,12 @@ while (count($elves) > 1) {
     );
     $offset = (min($elf, $takesFrom) - 1) * ColumnWidth;
 
-    echo substr_replace(str_repeat(' ', $offset), $arrow, $offset, strlen($arrow)), "\n";
+    echo str_pad(
+        substr_replace(str_repeat(' ', $offset), $arrow, $offset, strlen($arrow)),
+        Count * ColumnWidth,
+    ),
+    $comment,
+    "\n";
 }
 
 $count = Count;
