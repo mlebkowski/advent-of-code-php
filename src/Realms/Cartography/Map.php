@@ -15,7 +15,7 @@ final readonly class Map implements Stringable
         return new self($map, $width);
     }
 
-    private function __construct(private array $map, private int $width)
+    private function __construct(public array $map, public int $width)
     {
         assert(count($map) % $this->width === 0);
         $this->height = (int)(count($map) / $this->width);

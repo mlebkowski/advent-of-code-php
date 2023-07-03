@@ -30,8 +30,34 @@ final readonly class Path
         return new self($points);
     }
 
+    public static function empty(): self
+    {
+        return new self([]);
+    }
+
+    public static function combine(self $alpha, self $bravo): Path
+    {
+        if ($alpha->isEmpty()) {
+            return $bravo;
+        }
+        if ($bravo->isEmpty()) {
+            return $alpha;
+        }
+
+        assert($alpha->lastPosition->equals($bravo->points[0]));
+        return Path::ofPoints(...$alpha->points, ...array_slice($bravo->points, 1));
+    }
+
+    public static function shortest(self $alpha, self $bravo): int
+    {
+        return $alpha->steps() <=> $bravo->steps();
+    }
+
     private function __construct(public array $points)
     {
+        if (!$this->points) {
+            return;
+        }
         $places = [];
         foreach ($points as $point) {
             $key = (string)$point;
@@ -72,5 +98,10 @@ final readonly class Path
         }
 
         return Map::ofPoints($map, $width);
+    }
+
+    private function isEmpty(): bool
+    {
+        return 0 === count($this->points);
     }
 }
