@@ -22,13 +22,13 @@ final class LeonardosMonorail implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $progress = Progress::unknown()->reportInSteps(100_000);
-        $processor = new Processor($progress);
+        $processor = Processor::of($progress, ...$input->instructions);
 
         if ($challenge->isPartTwo()) {
             $processor->setRegister(Register::C, 1);
         }
 
-        $processor->run(...$input->instructions);
+        $processor->run();
         return $processor->readRegister(Register::A);
     }
 }

@@ -21,7 +21,7 @@ final readonly class Copy implements Instruction
     {
         $processor->setRegister(
             $this->target,
-            $this->value instanceof Register ? $processor->readRegister($this->value) : $this->value,
+            $processor->readValue($this->value),
         );
     }
 
