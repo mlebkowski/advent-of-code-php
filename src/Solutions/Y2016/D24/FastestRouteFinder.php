@@ -13,13 +13,21 @@ final readonly class FastestRouteFinder
 {
     private array $distances;
 
-    public static function ofPoints(PathFinding $pathFinding, Point $start, Point ...$points): self
-    {
-        return new self($pathFinding, $start, $points);
+    public static function ofPoints(
+        PathFinding $pathFinding,
+        Point $start,
+        bool $goBackToStart,
+        Point ...$points,
+    ): self {
+        return new self($pathFinding, $start, $points, $goBackToStart);
     }
 
-    private function __construct(PathFinding $pathFinding, private Point $start, private array $points)
-    {
+    private function __construct(
+        PathFinding $pathFinding,
+        private Point $start,
+        private array $points,
+        private bool $goBackToStart,
+    ) {
         $this->distances = DistanceCalculator::betweenEachPoint($pathFinding, $start, ...$points);
     }
 
@@ -34,7 +42,12 @@ final readonly class FastestRouteFinder
 
     private function convertSetToPath(array $points): Path
     {
-        return Collection::fromIterable([$this->start, ...$points])
+        $waypoints = [
+            $this->start,
+            ...$points,
+            ...($this->goBackToStart ? [$this->start] : []),
+        ];
+        return Collection::fromIterable($waypoints)
             ->window(1)
             ->reject(static fn (array $set) => count($set) === 1)
             ->map($this->findPathBetweenTwoPoints(...))

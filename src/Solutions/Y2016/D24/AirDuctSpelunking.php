@@ -38,7 +38,9 @@ final class AirDuctSpelunking implements Solution
         );
 
         $start = array_shift($pois);
-        $route = FastestRouteFinder::ofPoints($pathFinding, $start, ...$pois)->findFastestRoute();
+        $goBackToStart = $challenge->isPartTwo();
+        $route = FastestRouteFinder::ofPoints($pathFinding, $start, $goBackToStart, ...$pois)
+            ->findFastestRoute();
 
         $map = $map->overlayPath($route);
 
