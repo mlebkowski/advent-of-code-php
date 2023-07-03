@@ -17,6 +17,11 @@ final readonly class Point implements Stringable
         return self::of(0, 0);
     }
 
+    public static function sortForGrid(self $alpha, self $bravo): int
+    {
+        return $alpha->y <=> $bravo->y ?: $alpha->x <=> $bravo->x;
+    }
+
     public function __construct(public int $x, public int $y)
     {
     }
@@ -37,6 +42,20 @@ final readonly class Point implements Stringable
             $points[] = $point = $point->inDirection($direction);
         }
         return LineSegment::of(...$points);
+    }
+
+    public function adjacent(): array
+    {
+        return [
+            self::of(x: $this->x - 1, y: $this->y - 1),
+            self::of(x: $this->x + 0, y: $this->y - 1),
+            self::of(x: $this->x + 1, y: $this->y - 1),
+            self::of(x: $this->x - 1, y: $this->y + 0),
+            self::of(x: $this->x + 1, y: $this->y + 0),
+            self::of(x: $this->x - 1, y: $this->y + 1),
+            self::of(x: $this->x + 0, y: $this->y + 1),
+            self::of(x: $this->x + 1, y: $this->y + 1),
+        ];
     }
 
     public function distanceFromStart(): int

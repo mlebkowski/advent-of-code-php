@@ -35,3 +35,11 @@ Ok, so the solution is to calculate the distance to the nearest edge center, whi
 be a negative number. This way when applying `abs()` we will get the desired v-shaped
 line. And then, add the ring number — because that is the distance in straight line from
 the edge center to the spiral center.
+
+## Part II
+
+For the second part I decided to use the „brute-force” approach, or rather more precisely,
+to create the spiral builder itself. It has two responsibilities: to lay out values in
+spiral (doh!) and to calculate those values based on… Things. This is why `ValueFactory`
+is extracted. Same spiral builder can either create a chain of sequential integers, or
+calculate the values based on current point neighbours.

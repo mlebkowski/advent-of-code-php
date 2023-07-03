@@ -7,6 +7,8 @@ namespace App\Solutions\Y2017\D03;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Solutions\Y2017\D03\Builder\SpiralBuilder;
+use loophp\collection\Collection;
 
 /**
  * @implements Solution<SpiralMemoryInput>
@@ -25,6 +27,11 @@ final class SpiralMemory implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return Spiral::findDistanceToCenter($input->number);
+        if ($challenge->isPartOne()) {
+            return Spiral::findDistanceToCenter($input->number);
+        }
+
+        return Collection::fromGenerator(SpiralBuilder::adjacent())
+            ->find(callbacks: static fn (int $value) => $value > $input->number);
     }
 }
