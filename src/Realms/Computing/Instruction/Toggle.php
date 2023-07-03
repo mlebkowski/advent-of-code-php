@@ -42,7 +42,9 @@ final readonly class Toggle implements Instruction
      */
     private function toggle(Instruction $instruction): Instruction
     {
-        [$name, $alpha, $bravo] = array_pad(explode(" ", (string)$instruction), 3, null);
+        // remove the debugger breakpoint
+        $assembly = str_replace('• ', '', (string)$instruction);
+        [$name, $alpha, $bravo] = array_pad(explode(" ", $assembly), 3, null);
         if ($bravo) {
             return match ($name) {
                 'jnz' => Copy::of(

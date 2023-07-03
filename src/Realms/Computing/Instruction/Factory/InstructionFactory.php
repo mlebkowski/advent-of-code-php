@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Realms\Computing\Instruction\Factory;
 
+use App\Realms\Computing\Instruction\Breakpoint;
 use App\Realms\Computing\Instruction\Copy;
 use App\Realms\Computing\Instruction\Dec;
 use App\Realms\Computing\Instruction\Halve;
@@ -13,9 +14,15 @@ use App\Realms\Computing\Instruction\JumpIfOne;
 use App\Realms\Computing\Instruction\JumpNotZero;
 use App\Realms\Computing\Instruction\Toggle;
 use App\Realms\Computing\Instruction\Triple;
+use App\Realms\Computing\Processor\InputMatcher;
 
 final class InstructionFactory
 {
+    public static function debugger(string $instruction): Breakpoint
+    {
+        return Breakpoint::of(InputMatcher::getInstructions($instruction)[0]);
+    }
+
     public static function copy(string $alpha, string $bravo): Copy
     {
         return Copy::of(

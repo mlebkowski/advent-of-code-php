@@ -12,6 +12,7 @@ final class InputMatcher
     public static function getInstructions(string $input): array
     {
         $matcher = Matcher::create()
+            ->startsWith('•', '', InstructionFactory::debugger(...))
             ->startsWith('cpy', '%s %s', InstructionFactory::copy(...))
             ->startsWith('dec', '%s', InstructionFactory::dec(...))
             ->startsWith('hlf', '%s', InstructionFactory::halve(...))
