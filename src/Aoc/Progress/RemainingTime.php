@@ -14,9 +14,9 @@ final readonly class RemainingTime implements Stringable
     }
 
     public function __construct(
-        private int   $iteration,
+        private int $iteration,
         private float $start,
-        private ?int  $expectedIterations,
+        private ?int $expectedIterations,
     ) {
     }
 
@@ -31,7 +31,7 @@ final readonly class RemainingTime implements Stringable
         $expectedTime = (round($elapsed) / $percentage) * (1 - $percentage);
 
         if ($percentage > 1) {
-            return '??% / %%s';
+            return '??% / ??s';
         }
 
         return sprintf(
