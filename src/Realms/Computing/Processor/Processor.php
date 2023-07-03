@@ -12,6 +12,7 @@ final class Processor
 {
     private array $registers = [];
     private int $cursor = 0;
+    private int $steps = 0;
     private array $outputBuffer = [];
 
     public static function ofInstructions(Instruction ...$instructions): self
@@ -72,6 +73,11 @@ final class Processor
         return $this->cursor;
     }
 
+    public function steps(): int
+    {
+        return $this->steps;
+    }
+
     public function jump(int $jump): void
     {
         $this->cursor += $jump - 1; // -1, because it already advanced to the next instruction
@@ -89,6 +95,7 @@ final class Processor
             $instruction = $this->instructions[$this->cursor++];
 
             $instruction->apply($this);
+            $this->steps++;
             if ($this->outputBuffer) {
                 yield from $this->consumeOutputBuffer();
             }
