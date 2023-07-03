@@ -12,13 +12,21 @@ final class Processor
     private array $registers = [];
     private int $cursor = 0;
 
-    public static function of(Progress $progress, Instruction ...$instructions): self
+    public static function ofInstructions(Instruction ...$instructions): self
     {
-        return new self($progress, array_values($instructions));
+        return new self($instructions);
     }
 
-    public function __construct(private readonly Progress $progress, private array $instructions)
+    public static function of(Progress $progress, Instruction ...$instructions): self
     {
+        return new self(array_values($instructions), $progress);
+    }
+
+    public function __construct(
+        /** @var Instruction[] */
+        private array $instructions,
+        private readonly ?Progress $progress = null,
+    ) {
         foreach (Register::cases() as $register) {
             $this->setRegister($register, 0);
         }
@@ -65,25 +73,26 @@ final class Processor
     public function run(): void
     {
         while ($this->cursor < count($this->instructions)) {
-            $this->progress->step();
-            $this->progress->report(
-                fn () => sprintf(
-                    '%d %s [%s]',
-                    $this->cursor,
-                    $this->instructions[$this->cursor],
-                    implode(
-                        ', ',
-                        array_map(
-                            static fn (int $value, string $key) => "$key: $value",
-                            $this->registers,
-                            array_keys($this->registers),
-                        ),
-                    ),
-                ),
-            );
+            $this->progress?->iterate($this->stateAsString(...));
             $instruction = $this->instructions[$this->cursor++];
 
             $instruction->apply($this);
         }
+    }
+
+    private function stateAsString(): string
+    {
+        $registers = array_map(
+            static fn (int $value, string $key) => "$key: $value",
+            $this->registers,
+            array_keys($this->registers),
+        );
+
+        return sprintf(
+            '%d %s [%s]',
+            $this->cursor,
+            $this->instructions[$this->cursor],
+            implode(', ', $registers),
+        );
     }
 }

@@ -8,6 +8,7 @@ use App\Aoc\Challenge;
 use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Realms\Computing\Optimizer\OptimizerFactory;
 use App\Realms\Computing\Processor\Processor;
 use App\Realms\Computing\Processor\Register;
 
@@ -28,9 +29,12 @@ final class SafeCracking implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        $progress = Progress::ofExpectedIterations(count($input->instructions));
-        $processor = Processor::of($progress, ...$input->instructions);
-        $processor->setRegister(Register::A, 7);
+        $progress = Progress::ofExpectedIterations(1_380_000_000)->reportInSteps(1_000_000);
+        $optimizer = OptimizerFactory::make();
+        $instructions = $optimizer->optimize(...$input->instructions);
+        $processor = Processor::of($progress, ...$instructions);
+        $value = $challenge->isPartOne() ? 7 : 12;
+        $processor->setRegister(Register::A, $value);
         $processor->run();
         return $processor->readRegister(Register::A);
     }
