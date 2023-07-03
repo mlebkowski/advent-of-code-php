@@ -38,7 +38,7 @@ final class Matcher
             }
 
             $data = trim(substr($line, strlen($prefix)));
-            $payload = sscanf($data, $pattern);
+            $payload = $pattern ? sscanf($data, $pattern) : [$data];
             return $factory(...$payload);
         }
 
