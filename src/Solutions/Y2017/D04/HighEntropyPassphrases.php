@@ -26,8 +26,14 @@ final class HighEntropyPassphrases implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
+        $additionalSecurity = strval(...);
+        if ($challenge->isPartTwo()) {
+            $additionalSecurity = static fn (string $word) => Collection::fromString($word)->sort()->implode();
+        }
+
         return Collection::fromIterable($input->passphrases)
             ->map(static fn (string $passphrase) => explode(' ', $passphrase))
+            ->map(static fn (array $words) => array_map($additionalSecurity, $words))
             ->filter(static fn (array $words) => array_unique($words) === $words)
             ->count();
     }
