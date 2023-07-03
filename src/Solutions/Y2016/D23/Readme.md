@@ -64,6 +64,20 @@ I actually added a debugger statement to my assembly! How cool is that?!
 I mean, it just wraps an operation in a `Breakpoint` class and then I use my IDE’s
 conditional breakpoint feature, but cool nonetheless.
 
+Since I have my inputs cached locally, I can actually modify them, and this is how
+I marked breakpoints:
+
+```
+15. inc c
+15. jnz d -2
+17. • tgl c
+18. • cpy -16 c
+19. • jnz 1 c
+20. • cpy 95 c
+21. jnz 91 d
+22. inc a
+```
+
 ## Optimization result
 
 The solution is very crude. It literally looks for exact set of instructions and
