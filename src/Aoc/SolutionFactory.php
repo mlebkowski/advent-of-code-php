@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Aoc;
 
 use App\Aoc\Discovery\ImplementationsDiscovery;
+use loophp\collection\Collection;
 use RuntimeException;
 
 final readonly class SolutionFactory
@@ -15,12 +16,11 @@ final readonly class SolutionFactory
 
     public function make(Challenge $challenge): Solution
     {
-        $supports = static fn (Solution $solution) => collect($solution->challenges())->contains(
-            static fn (Challenge $supports) => $supports->equals($challenge),
-        );
+        $supports = static fn (Solution $solution) => null !== Collection::fromIterable($solution->challenges())
+            ->find(callbacks: static fn (Challenge $supports) => $supports->equals($challenge));
 
         return $this->getSolutions()
-            ->first(static fn (Solution $solution) => $supports($solution))
+            ->find(callbacks: static fn (Solution $solution) => $supports($solution))
             ?? throw new RuntimeException(sprintf('No solution for %s', $challenge));
     }
 
@@ -35,8 +35,8 @@ final readonly class SolutionFactory
             ?? throw new RuntimeException('No implementations yet');
     }
 
-    public function getSolutions(): \Illuminate\Support\Collection
+    public function getSolutions(): Collection
     {
-        return collect($this->implementations->findImplementations(Solution::class));
+        return Collection::fromIterable($this->implementations->findImplementations(Solution::class));
     }
 }

@@ -32,7 +32,6 @@ final class ImplementationsDiscovery
     {
         return $this->classes
             ->filter(static fn (ReflectionClass $ref) => $ref->implementsInterface($interface))
-            ->map(static fn (ReflectionClass $ref) => $ref->newInstance())
             ->all();
     }
 
