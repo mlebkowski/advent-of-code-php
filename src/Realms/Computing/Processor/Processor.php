@@ -14,11 +14,14 @@ final class Processor
 
     public function __construct(private readonly Progress $progress)
     {
+        foreach (Register::cases() as $register) {
+            $this->setRegister($register, 0);
+        }
     }
 
     public function readRegister(Register $register): int
     {
-        return $this->registers[$register->value] ?? 0;
+        return $this->registers[$register->value];
     }
 
     public function setRegister(Register $register, int $value): void
@@ -38,11 +41,18 @@ final class Processor
         while ($this->cursor < count($instructions)) {
             $this->progress->step();
             $this->progress->report(
-                sprintf(
-                    '%d %s %s',
+                fn () => sprintf(
+                    '%d %s [%s]',
                     $this->cursor,
                     $instructions[$this->cursor],
-                    json_encode($this->registers),
+                    implode(
+                        ', ',
+                        array_map(
+                            static fn (int $value, string $key) => "$key: $value",
+                            $this->registers,
+                            array_keys($this->registers),
+                        ),
+                    ),
                 ),
             );
             $instruction = $instructions[$this->cursor++];
