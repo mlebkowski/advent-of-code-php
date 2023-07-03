@@ -27,6 +27,6 @@ final readonly class Dec implements Instruction
     public function __toString(): string
     {
         $register = $this->register->value;
-        return "dev $register";
+        return "dec $register";
     }
 }
