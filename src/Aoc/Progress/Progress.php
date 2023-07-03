@@ -69,6 +69,13 @@ final class Progress
         return true;
     }
 
+    public function iterate(mixed $value): true
+    {
+        $this->step();
+        $this->report($value);
+        return true;
+    }
+
     public function report(mixed $value): true
     {
         if ($this->iteration % $this->inSteps) {
