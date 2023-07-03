@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Aoc;
 
+use loophp\collection\Collection;
 use Stringable;
 
 final readonly class Challenge implements Stringable
@@ -37,6 +38,13 @@ final readonly class Challenge implements Stringable
     {
         assert(in_array($year, range(2015, 2022), true));
         assert(in_array($day, range(1, 31), true));
+    }
+
+    public function isSolvedBy(Solution $solution): bool
+    {
+        return Collection::fromIterable($solution->challenges())
+            ->filter(fn (Challenge $challenge) => $challenge->equals($this))
+            ->isNotEmpty();
     }
 
     public function isPartOne(): bool

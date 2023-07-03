@@ -34,7 +34,7 @@ final class ScienceForHungryPeople implements Solution
             : static fn () => true;
 
         $scoreCounter = new ScoreCounter($input->ingredients);
-        $progress = Progress::ofExpectedIterations($expectedIterations);
+        $progress = Progress::ofExpectedIterations($expectedIterations)->reportInSteps(100);
         return Collection::fromGenerator($partitions)
             ->map($scoreCounter->calculateScore(...))
             ->apply($progress->step(...))

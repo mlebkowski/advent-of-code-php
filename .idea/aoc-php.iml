@@ -32,10 +32,6 @@
       <excludeFolder url="file://$MODULE_DIR$/tools/php-cs-fixer/vendor/symfony/stopwatch" />
       <excludeFolder url="file://$MODULE_DIR$/tools/php-cs-fixer/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/collections" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/conditionable" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/macroable" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/loophp/collection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/loophp/iterators" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
@@ -49,8 +45,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-text-template" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-timer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/phpunit" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/container" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/cli-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/code-unit" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/code-unit-reverse-lookup" />

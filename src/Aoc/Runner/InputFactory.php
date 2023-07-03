@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Aoc\Runner;
 
 use App\Aoc\Discovery\ImplementationsDiscovery;
-use loophp\collection\Collection;
 use RuntimeException;
 
 final readonly class InputFactory
@@ -15,11 +14,13 @@ final readonly class InputFactory
 
     public function __construct(ImplementationsDiscovery $discovery)
     {
-        $this->parsers = Collection::fromIterable($discovery->findImplementations(InputParser::class))
-            ->map(static fn (InputParser $parser) => [
-                TargetClassEvaluator::getTargetClass($parser),
-                $parser,
-            ])
+        $this->parsers = $discovery->findImplementations(InputParser::class)
+            ->map(
+                static fn (InputParser $parser) => [
+                    TargetClassEvaluator::getTargetClass($parser),
+                    $parser,
+                ],
+            )
             ->unpack()
             ->all(false);
     }

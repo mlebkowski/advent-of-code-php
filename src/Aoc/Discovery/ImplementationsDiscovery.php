@@ -28,12 +28,11 @@ final class ImplementationsDiscovery
             ->map(static fn (string $className) => new ReflectionClass($className));
     }
 
-    public function findImplementations(string $interface): array
+    public function findImplementations(string $interface): Collection
     {
         return $this->classes
             ->filter(static fn (ReflectionClass $ref) => $ref->implementsInterface($interface))
-            ->map(static fn (ReflectionClass $ref) => $ref->newInstance())
-            ->all();
+            ->map(static fn (ReflectionClass $ref) => $ref->newInstance());
     }
 
     private function rsearch(string $folder): Collection

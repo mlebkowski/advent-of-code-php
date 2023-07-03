@@ -10,6 +10,7 @@ use App\Realms\RolePlaying\Inventory\ItemPrice;
 use App\Realms\RolePlaying\Inventory\ItemsFactory;
 use App\Realms\RolePlaying\Inventory\ItemType;
 use Generator;
+use loophp\collection\Collection;
 
 final readonly class InventoriesSatisfyingRequirements
 {
@@ -19,7 +20,7 @@ final readonly class InventoriesSatisfyingRequirements
             return static fn (ItemPrice $price) => $price->item->type->is($type);
         };
 
-        $items = Collect(ItemsFactory::all());
+        $items = Collection::fromIterable(iterator_to_array(ItemsFactory::all()));
         $weapons = $items->filter($ofType(ItemType::Weapon))->all();
         $armors = $items->filter($ofType(ItemType::Armor))->all();
         $rings = $items->filter($ofType(ItemType::Ring))->all();

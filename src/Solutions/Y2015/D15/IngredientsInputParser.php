@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Solutions\Y2015\D15;
 
 use App\Aoc\Runner\InputParser;
+use loophp\collection\Collection;
 
 /** @implements InputParser<IngredientsInput> */
 final class IngredientsInputParser implements InputParser
@@ -12,11 +13,11 @@ final class IngredientsInputParser implements InputParser
     public function parse(string $input): IngredientsInput
     {
         $knownAttributes = ['capacity', 'durability', 'flavor', 'texture', 'calories'];
-        $re = collect($knownAttributes)
+        $re = Collection::fromIterable($knownAttributes)
             ->map(
                 static fn (string $attribute) => sprintf('%1$s (?P<%1$s>-?\d+)', $attribute),
             )
-            ->join(', ');
+            ->implode(', ');
 
         preg_match_all(
             sprintf('/^(?P<name>\w+): %s$/m', $re),
@@ -27,15 +28,21 @@ final class IngredientsInputParser implements InputParser
 
         return IngredientsInput::of(
             ...
-            collect($matches)
+            Collection::fromIterable($matches)
                 ->map(
-                    static fn (array $ingredient) => collect($ingredient)
-                        ->only($knownAttributes)
+                    static fn (array $ingredient) => Collection::fromIterable($ingredient)
+                        ->filter(
+                            static fn ($value, string|int $key) => in_array(
+                                $key,
+                                $knownAttributes,
+                                true,
+                            ),
+                        )
                         ->map(static fn (string $value) => intval($value))
-                        ->toArray(),
+                        ->all(false),
                 )
                 ->map(static fn (array $ingredient) => new Ingredient(...$ingredient))
-                ->toArray(),
+                ->all(),
         );
     }
 }
