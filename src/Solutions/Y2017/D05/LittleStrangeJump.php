@@ -10,16 +10,23 @@ final readonly class LittleStrangeJump implements Instruction
 {
     public static function of(int $offset): self
     {
-        return new self($offset);
+        return new self($offset, PHP_INT_MAX);
     }
 
-    private function __construct(private int $offset)
+    public static function withCap(int $offset): self
+    {
+        return new self($offset, 3);
+    }
+
+    private function __construct(private int $offset, private int $cap)
     {
     }
 
     public function apply(Processor $processor): void
     {
-        $processor->updateInstruction($processor->cursor() - 1, self::of($this->offset + 1));
+        $offset = $this->offset + ($this->offset >= $this->cap ? -1 : +1);
+        $instruction = new self($offset, $this->cap);
+        $processor->updateInstruction($processor->cursor() - 1, $instruction);
         $processor->jump($this->offset);
     }
 

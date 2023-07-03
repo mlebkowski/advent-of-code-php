@@ -27,9 +27,12 @@ final class AMazeOfTwistyTrampolinesAllAlike implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $instructions = Collection::fromIterable($input->jumps)
-            ->map(LittleStrangeJump::of(...))
-            ->all();
+        $jumpType = $challenge->isPartOne()
+            ? LittleStrangeJump::of(...)
+            : LittleStrangeJump::withCap(...);
+        
+        $instructions = Collection::fromIterable($input->jumps)->map($jumpType)->all();
+
         $processor = Processor::ofInstructions(...$instructions);
         $processor->run();
         return $processor->steps();
