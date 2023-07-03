@@ -12,15 +12,20 @@ use App\Realms\Computing\Instruction\Jump;
 use App\Realms\Computing\Instruction\JumpIfEven;
 use App\Realms\Computing\Instruction\JumpIfOne;
 use App\Realms\Computing\Instruction\JumpNotZero;
+use App\Realms\Computing\Instruction\SignalTransmission;
 use App\Realms\Computing\Instruction\Toggle;
 use App\Realms\Computing\Instruction\Triple;
-use App\Realms\Computing\Processor\InputMatcher;
 
 final class InstructionFactory
 {
     public static function debugger(string $instruction): Breakpoint
     {
         return Breakpoint::of(InputMatcher::getInstructions($instruction)[0]);
+    }
+
+    public static function out(string $value): SignalTransmission
+    {
+        return SignalTransmission::of(ArgumentFactory::registerOrValue($value));
     }
 
     public static function copy(string $alpha, string $bravo): Copy

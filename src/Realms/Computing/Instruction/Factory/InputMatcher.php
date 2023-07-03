@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Realms\Computing\Processor;
+namespace App\Realms\Computing\Instruction\Factory;
 
 use App\Aoc\Parser\Matcher;
-use App\Realms\Computing\Instruction\Factory\InstructionFactory;
 use loophp\collection\Collection;
 
 final class InputMatcher
@@ -21,6 +20,7 @@ final class InputMatcher
             ->startsWith('jio', '%s %d', InstructionFactory::jumpIfOne(...))
             ->startsWith('jmp', '%d', InstructionFactory::jump(...))
             ->startsWith('jnz', '%s %s', InstructionFactory::jumpNotZero(...))
+            ->startsWith('out', '%s', InstructionFactory::out(...))
             ->startsWith('tgl', '%s', InstructionFactory::toggle(...))
             ->startsWith('tpl', '%s', InstructionFactory::triple(...));
 

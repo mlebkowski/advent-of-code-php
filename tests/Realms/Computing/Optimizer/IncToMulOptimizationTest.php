@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Realms\Computing\Optimizer;
 
-use App\Realms\Computing\Processor\InputMatcher;
+use App\Realms\Computing\Instruction\Factory\InputMatcher;
 use App\Realms\Computing\Processor\Processor;
 use App\Realms\Computing\Processor\Register;
 use loophp\collection\Collection;

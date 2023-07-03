@@ -6,11 +6,13 @@ namespace App\Realms\Computing\Processor;
 
 use App\Aoc\Progress\Progress;
 use App\Realms\Computing\Instruction\Instruction;
+use Generator;
 
 final class Processor
 {
     private array $registers = [];
     private int $cursor = 0;
+    private array $outputBuffer = [];
 
     public static function ofInstructions(Instruction ...$instructions): self
     {
@@ -30,6 +32,11 @@ final class Processor
         foreach (Register::cases() as $register) {
             $this->setRegister($register, 0);
         }
+    }
+
+    public function writeOutput(mixed $value): void
+    {
+        $this->outputBuffer[] = $value;
     }
 
     public function readValue(Register|int $value): int
@@ -72,12 +79,25 @@ final class Processor
 
     public function run(): void
     {
+        iterator_to_array($this->start());
+    }
+
+    public function start(): Generator
+    {
         while ($this->cursor < count($this->instructions)) {
             $this->progress?->iterate($this->stateAsString(...));
             $instruction = $this->instructions[$this->cursor++];
 
             $instruction->apply($this);
+            if ($this->outputBuffer) {
+                yield from $this->consumeOutputBuffer();
+            }
         }
+    }
+
+    private function consumeOutputBuffer(): array
+    {
+        return array_splice($this->outputBuffer, 0);
     }
 
     private function stateAsString(): string

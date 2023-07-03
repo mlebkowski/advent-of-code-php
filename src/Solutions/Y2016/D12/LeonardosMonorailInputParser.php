@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Solutions\Y2016\D12;
 
 use App\Aoc\Runner\InputParser;
-use App\Realms\Computing\Processor\InputMatcher;
+use App\Realms\Computing\Instruction\Factory\InputMatcher;
 
 /** @implements InputParser<LeonardosMonorailInput> */
 final class LeonardosMonorailInputParser implements InputParser
