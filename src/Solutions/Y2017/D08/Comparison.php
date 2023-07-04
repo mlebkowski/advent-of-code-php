@@ -11,4 +11,16 @@ enum Comparison: string
     case LessThanOrEqual = '<=';
     case Equal = '==';
     case NotEqual = '!=';
+
+    public function evaluate(int $alpha, int $bravo): bool
+    {
+        return match ($this) {
+            self::GreaterThan => $alpha > $bravo,
+            self::GreaterThanOrEqual => $alpha >= $bravo,
+            self::LessThan => $alpha < $bravo,
+            self::LessThanOrEqual => $alpha <= $bravo,
+            self::Equal => $alpha === $bravo,
+            self::NotEqual => $alpha !== $bravo,
+        };
+    }
 }

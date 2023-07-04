@@ -7,6 +7,7 @@ namespace App\Solutions\Y2017\D08;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use ArrayObject;
 
 /**
  * @implements Solution<IHeardYouLikeRegistersInput>
@@ -25,6 +26,17 @@ final class IHeardYouLikeRegisters implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return null;
+        $registers = new ArrayObject();
+        $getHighestValue = static fn () => $registers->count() ? max(
+            array_values(iterator_to_array($registers)),
+        ) : 0;
+
+        $highestValue = 0;
+        foreach ($input->instructions as $instruction) {
+            $instruction->apply($registers);
+            $highestValue = max($highestValue, $getHighestValue());
+        }
+
+        return $challenge->isPartOne() ? $getHighestValue() : $highestValue;
     }
 }
