@@ -29,11 +29,32 @@ final class StreamParserTest extends TestCase
         yield ['{{<a!>},{<a!>},{<a!>},{<ab>}}', '{{}}'];
     }
 
+    public static function garbage(): iterable
+    {
+        yield ['{<>}', ''];
+        yield ['{<!!>}', ''];
+        yield ['{<!!!>>}', ''];
+        yield ['{<random characters>}', 'random characters'];
+        yield ['{<<<<>}', '<<<'];
+        yield ['{<{!>}>}', '{}'];
+        yield ['{<{o"i!a,<{i<a>}', '{o"i,<{i<a'];
+    }
+
     #[DataProvider('data')]
     public function test(string $input, string $expected): void
     {
         $sut = StreamParser::parse(...);
         $actual = $sut($input);
         self::assertSame($expected, (string)$actual);
+    }
+
+    #[DataProvider('garbage')]
+    public function test garbage(string $input, string $expected): void
+    {
+        $garbageListener = GarbageListener::empty();
+        $sut = StreamParser::parseWithMetadata(...);
+        $sut($input, $garbageListener);
+        $actual = implode("\n", $garbageListener->garbage());
+        self::assertSame($expected, $actual);
     }
 }

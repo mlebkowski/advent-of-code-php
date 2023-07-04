@@ -75,7 +75,7 @@ final class Tokenizer
             $chr = $this->input->next();
             switch ($chr) {
                 case self::EscapeCharacter:
-                    $garbage .= $this->input->next();
+                    $this->input->next();
                     break;
                 case self::GarbageClose:
                     return Token::of(Type::Garbage, $garbage);
