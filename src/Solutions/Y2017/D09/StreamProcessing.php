@@ -7,6 +7,7 @@ namespace App\Solutions\Y2017\D09;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Solutions\Y2017\D09\Parser\GarbageListener;
 use App\Solutions\Y2017\D09\Parser\StreamParser;
 
 /**
@@ -26,7 +27,13 @@ final class StreamProcessing implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $group = StreamParser::parse($input->stream);
-        return $group->score();
+        $garbageListener = GarbageListener::empty();
+        $group = StreamParser::parseWithMetadata($input->stream, $garbageListener);
+
+        if ($challenge->isPartOne()) {
+            return $group->score();
+        }
+
+        return strlen(implode("", $garbageListener->garbage()));
     }
 }

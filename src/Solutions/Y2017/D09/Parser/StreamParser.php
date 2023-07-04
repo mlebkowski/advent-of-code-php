@@ -12,13 +12,18 @@ final readonly class StreamParser
 {
     public static function parse(string $stream): Group
     {
+        return self::parseWithMetadata($stream, GarbageListener::empty());
+    }
+
+    public static function parseWithMetadata(string $stream, GarbageListener $garbageListener): Group
+    {
         $inputStream = InputStream::of($stream);
         $tokenizer = Tokenizer::of($inputStream);
-        $parser = new self($tokenizer);
+        $parser = new self($tokenizer, $garbageListener);
         return $parser->parseGroup();
     }
 
-    private function __construct(private Tokenizer $tokenizer)
+    private function __construct(private Tokenizer $tokenizer, private GarbageListener $garbageListener)
     {
     }
 
@@ -35,6 +40,7 @@ final readonly class StreamParser
                     $this->tokenizer->next();
                     return Group::of(...$groups);
                 case Type::Garbage:
+                    $this->garbageListener->push($token);
                     $this->tokenizer->next(); // discard!
                     $this->expectDelimiterOrGroupEnd();
                     break;
