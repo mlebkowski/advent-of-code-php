@@ -12,8 +12,13 @@ final readonly class Program implements Stringable
         return new self($name, $weight);
     }
 
-    private function __construct(public string $name, public int $weight)
+    private function __construct(public string $name, private int $weight)
     {
+    }
+
+    public function weight(): int
+    {
+        return $this->weight;
     }
 
     public function toTree(): array

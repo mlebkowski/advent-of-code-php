@@ -25,6 +25,24 @@ final class RecursiveCircus implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return TowerBuilder::buildFromShouts(...$input->shouts)->root->name;
+        $tower = TowerBuilder::buildFromShouts(...$input->shouts);
+        if ($challenge->isPartOne()) {
+            return $tower->root->name;
+        }
+
+        $parent = null;
+        while (true) {
+            $path[] = $tower->root->name;
+            $next = $tower->findImbalancedTower();
+            if (!$next) {
+                break;
+            }
+            $parent = $tower;
+            $tower = $next;
+        }
+
+        echo "\n", implode(" → ", $path), "\n\n";
+
+        return $tower->root->weight() + $parent->balance();
     }
 }
