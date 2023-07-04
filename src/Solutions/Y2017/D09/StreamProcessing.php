@@ -7,6 +7,7 @@ namespace App\Solutions\Y2017\D09;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Solutions\Y2017\D09\Parser\StreamParser;
 
 /**
  * @implements Solution<StreamProcessingInput>
@@ -25,6 +26,7 @@ final class StreamProcessing implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return null;
+        $group = StreamParser::parse($input->stream);
+        return $group->score();
     }
 }
