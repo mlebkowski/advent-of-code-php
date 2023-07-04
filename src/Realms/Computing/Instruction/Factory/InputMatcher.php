@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace App\Realms\Computing\Instruction\Factory;
 
-use App\Aoc\Parser\Matcher;
-use loophp\collection\Collection;
+use App\Aoc\Parser\MatcherBuilder;
 
 final class InputMatcher
 {
     public static function getInstructions(string $input): array
     {
-        $matcher = Matcher::create()
-            ->startsWith('•', '', InstructionFactory::debugger(...))
+        $matcher = MatcherBuilder::create()
+            ->prefixed('•', InstructionFactory::debugger(...))
             ->startsWith('cpy', '%s %s', InstructionFactory::copy(...))
             ->startsWith('dec', '%s', InstructionFactory::dec(...))
             ->startsWith('hlf', '%s', InstructionFactory::halve(...))
@@ -22,10 +21,9 @@ final class InputMatcher
             ->startsWith('jnz', '%s %s', InstructionFactory::jumpNotZero(...))
             ->startsWith('out', '%s', InstructionFactory::out(...))
             ->startsWith('tgl', '%s', InstructionFactory::toggle(...))
-            ->startsWith('tpl', '%s', InstructionFactory::triple(...));
+            ->startsWith('tpl', '%s', InstructionFactory::triple(...))
+            ->getMatcher();
 
-        return Collection::fromIterable(explode("\n", trim($input)))
-            ->map($matcher)
-            ->all();
+        return $matcher->matchLines($input);
     }
 }

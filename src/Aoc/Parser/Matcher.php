@@ -3,43 +3,39 @@ declare(strict_types=1);
 
 namespace App\Aoc\Parser;
 
+use Closure;
 use RuntimeException;
 
-final class Matcher
+final readonly class Matcher
 {
-    private array $prefixes = [];
-
-    public static function create(): self
+    public static function of(LinePattern ...$linePatterns): self
     {
-        return new self();
+        return new self($linePatterns);
     }
 
-    public static function simple(string $pattern, callable $factory): self
+    public static function simple(string $pattern, Closure $factory): self
     {
-        return self::create()->startsWith('', $pattern, $factory);
+        return self::of(LinePattern::withoutPrefix($pattern, $factory));
     }
 
-    private function __construct()
+    private function __construct(/** @var LinePattern[] */ private array $linePatterns)
     {
     }
 
-    public function startsWith(string $prefix, string $pattern, callable $factory): self
+    public function matchLines(string $iput, int $skip = 0): array
     {
-        $this->prefixes[trim($prefix)] = [$pattern, $factory];
-        return $this;
+        return array_map($this, array_slice(explode("\n", trim($iput)), $skip));
     }
 
     public function __invoke(string $line): mixed
     {
         $line = trim($line);
-        foreach ($this->prefixes as $prefix => [$pattern, $factory]) {
-            if (false === str_starts_with($line, $prefix)) {
+        foreach ($this->linePatterns as $linePattern) {
+            if (false === $linePattern->matches($line)) {
                 continue;
             }
 
-            $data = trim(substr($line, strlen($prefix)));
-            $payload = $pattern ? sscanf($data, $pattern) : [$data];
-            return $factory(...$payload);
+            return $linePattern->create($line);
         }
 
         throw new RuntimeException("Unable to parse: $line");
