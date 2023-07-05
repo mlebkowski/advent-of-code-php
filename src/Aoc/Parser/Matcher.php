@@ -22,9 +22,9 @@ final readonly class Matcher
     {
     }
 
-    public function matchLines(string $iput, int $skip = 0): array
+    public function matchLines(string $iput, int $skip = 0, string $delim = "\n"): array
     {
-        return array_map($this, array_slice(explode("\n", trim($iput)), $skip));
+        return array_map($this, array_slice(explode($delim, trim($iput)), $skip));
     }
 
     public function __invoke(string $line): mixed
