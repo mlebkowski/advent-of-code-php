@@ -27,7 +27,7 @@ final class KnotHash implements Solution
     {
         $list = $runMode->isSample() ? range(0, 4) : range(0, 255);
         $i = 0;
-        foreach ($input->lengths as $skipSize => $length) {
+        foreach ($input->asIntegers as $skipSize => $length) {
             $selection = array_slice($list, 0, $length);
 
             $list = array_merge(
