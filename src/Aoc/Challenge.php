@@ -31,7 +31,9 @@ final readonly class Challenge implements Stringable
 
     public static function mostRecent(self $alpha, self $bravo): int
     {
-        return $alpha->year <=> $bravo->year ?: $alpha->day <=> $bravo->day;
+        return $alpha->year <=> $bravo->year
+            ?: $alpha->day <=> $bravo->day
+                ?: $bravo->part->value <=> $alpha->part->value;
     }
 
     public function __construct(public int $year, public int $day, public Part $part)
@@ -70,6 +72,11 @@ final readonly class Challenge implements Stringable
             return self::of($this->year + 1, 1, Part::One);
         }
         return self::of($this->year, $this->day + 1, Part::One);
+    }
+
+    public function secondPart(): self
+    {
+        return new self($this->year, $this->day, Part::Two);
     }
 
     public function __toString(): string
