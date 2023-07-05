@@ -27,16 +27,16 @@ final class HexEd implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
+        $path = StepCounter::count(...$input->directions);
+
         if ($challenge->isPartOne()) {
-            return StepCounter::count(...$input->directions);
+            iterator_to_array($path);
+            return $path->getReturn();
         }
 
         $progress = Progress::ofExpectedIterations(count($input->directions));
-        return Collection::fromIterable($input->directions)
-            ->window(-1)
-            ->apply($progress->step(...))
-            ->map(static fn (array $directions) => StepCounter::count(...$directions))
-            ->apply($progress->report(...))
+        return Collection::fromGenerator($path)
+            ->apply($progress->iterate(...))
             ->max();
     }
 }

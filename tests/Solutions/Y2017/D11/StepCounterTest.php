@@ -10,17 +10,19 @@ final class StepCounterTest extends TestCase
 {
     public static function data(): iterable
     {
-        yield ['ne,ne,ne', 3, 'ne,ne,ne'];
-        yield ['ne,ne,sw,sw', 0, ''];
-        yield ['ne,ne,s,s', 2, 'se,se'];
-        yield ['se,sw,se,sw,sw', 3, 's,s,sw'];
+        yield ['ne,ne,ne', 3];
+        yield ['ne,ne,sw,sw', 0];
+        yield ['ne,ne,s,s', 2];
+        yield ['se,sw,se,sw,sw', 3];
     }
 
     #[DataProvider('data')]
     public function test(string $input, int $expected): void
     {
         $directions = (new HexEdInputParser())->parse($input)->directions;
-        $actual = StepCounter::count(...$directions);
+        $sut = StepCounter::count(...$directions);
+        iterator_to_array($sut);
+        $actual = $sut->getReturn();
         self::assertSame($expected, $actual);
     }
 }

@@ -3,25 +3,11 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2017\D11;
 
-use loophp\collection\Collection;
-
 final readonly class Path
 {
-    public static function of(array $counts): self
+    public static function empty(): self
     {
-        $counts += array_map(static fn () => 0, self::expectedKeys());
-
-        return new self($counts);
-    }
-
-    public static function ofDirections(HexDirection ...$directions): self
-    {
-        return self::of(
-            Collection::fromIterable($directions)
-                ->groupBy(static fn (HexDirection $direction) => $direction->value)
-                ->map(static fn (array $directions) => count($directions))
-                ->all(false),
-        );
+        return self::of([]);
     }
 
     private function __construct(public array $counts)
@@ -59,6 +45,18 @@ final readonly class Path
             $bravo->value => $this->counts[$bravo->value] - $diff,
         ];
         return new self($counts + $this->counts);
+    }
+
+    public function add(HexDirection $dir): self
+    {
+        return new self([$dir->value => $this->counts[$dir->value] + 1] + $this->counts);
+    }
+
+    private static function of(array $counts): self
+    {
+        $counts += array_map(static fn () => 0, self::expectedKeys());
+
+        return new self($counts);
     }
 
     private static function expectedKeys(): array
