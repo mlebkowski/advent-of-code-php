@@ -7,6 +7,7 @@ namespace App\Solutions\Y2017\D10;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use loophp\collection\Collection;
 
 /**
  * @implements Solution<KnotHashInput>
@@ -18,6 +19,9 @@ use App\Aoc\Solution;
  */
 final class KnotHash implements Solution
 {
+    private const FixedLengthsToAdd = [17, 31, 73, 47, 23];
+    private const IterationsCount = 64;
+
     public function challenges(): iterable
     {
         return Challenge::bothParts(2017, 10);
@@ -26,9 +30,17 @@ final class KnotHash implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $list = $runMode->isSample() ? range(0, 4) : range(0, 255);
+
+        $asCharCodes = Collection::range(0, self::IterationsCount)
+            ->flatMap(static fn () => [...$input->asCharCodes, ...self::FixedLengthsToAdd])
+            ->all();
+
+        $lengths = $challenge->isPartOne() ? $input->asIntegers : $asCharCodes;
+
         $i = 0;
-        foreach ($input->asIntegers as $skipSize => $length) {
+        foreach ($lengths as $skipSize => $length) {
             $selection = array_slice($list, 0, $length);
+            $skipSize %= count($list);
 
             $list = array_merge(
                 array_slice($list, $length),
@@ -38,15 +50,28 @@ final class KnotHash implements Solution
                 array_slice($list, $skipSize),
                 array_slice($list, 0, $skipSize),
             );
-            $i += $length + $skipSize;
+            $i = ($i + $length + $skipSize) % count($list);
         }
-        $i %= count($list);
 
-        $list = array_merge(
+        $sparseHash = array_merge(
             array_slice($list, -$i),
             array_slice($list, 0, -$i),
         );
 
-        return $list[0] * $list[1];
+        if ($challenge->isPartOne()) {
+            return $list[0] * $list[1];
+        }
+
+        $xor = static fn (array $elements) => array_reduce(
+            $elements,
+            static fn (int $alpha, int $bravo) => $alpha ^ $bravo,
+            0,
+        );
+        $toHex = static fn (int $number) => str_pad(dechex($number), 2, '0', STR_PAD_LEFT);
+
+        return Collection::fromIterable($sparseHash)
+            ->chunk(16)
+            ->mapN($xor, $toHex)
+            ->implode();
     }
 }
