@@ -28,7 +28,8 @@ final readonly class Visualizer
     {
         $specs = Collection::fromIterable($specs);
 
-        $this->width = min(10, $specs->map(static fn (Spec $spec) => $spec->depth)->max() + 1);
+        $actualWidth = $specs->map(static fn (Spec $spec) => $spec->depth)->max() + 1;
+        $this->width = min(10, $actualWidth);
 
         $this->height = $specs->map(static fn (Spec $spec) => $spec->range)->max();
         $verticalJumpLength = $this->height + 2;
@@ -40,7 +41,7 @@ final readonly class Visualizer
             ->unpack()
             ->all(false);
 
-        $this->layers = Collection::range(0, $this->width)
+        $this->layers = Collection::range(0, $actualWidth)
             ->map(static fn (float $idx) => [$idx, $specs[$idx] ?? null])
             ->unpack()
             ->map(
@@ -56,11 +57,11 @@ final readonly class Visualizer
         yield self::HideCursor;
         $picosecond = 0;
         $speed = 2;
-        while ($picosecond < $this->width) {
-            usleep($speed * 250_000);
+        while ($picosecond < count($this->layers)) {
+            usleep($speed * 25_000);
 
             yield $this->createMove(Move::Scanner, $picosecond);
-            usleep($speed * 150_000);
+            usleep($speed * 15_000);
             yield $this->createMove(Move::Packet, $picosecond);
 
             ++$picosecond;
@@ -75,6 +76,7 @@ final readonly class Visualizer
         $packetDepth = $move->delayedPacketDepth() ? $picosecond - 1 : $picosecond;
 
         $firewall = Collection::fromIterable($this->layers)
+            ->slice((int)floor($picosecond / $this->width) * $this->width, $this->width)
             ->map(
                 static fn (ColumnPrinter $printer, int $layer) => [
                     str_pad((string)($layer % 10), 3, pad_type: STR_PAD_BOTH),

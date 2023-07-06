@@ -2,6 +2,8 @@
 
 Those challenges are becoming more and more about the visualization. :)
 
+https://user-images.githubusercontent.com/848731/251570227-83eb93bb-d7dd-432d-8b95-82bcccefb2ac.mov
+
 But along the way I figured out the smart solution. I like smart solutions.
 So the scanner oscilates. Goes up and down, and arrives at its starting position,
 and then loops. How much steps does it take it to do one loop? Well, it starts
