@@ -22,11 +22,16 @@ final readonly class InputFetcher
         );
 
         $inputPath = sprintf('%s.txt', $fileBasePath);
+        foreach (Part::cases() as $part) {
+            $samplePath = sprintf('%s-%d-%s.txt', $fileBasePath, $part->value, 'sample');
+            $expectedPath = sprintf('%s-%d-%s.txt', $fileBasePath, $part->value, 'expected');
+
+            file_exists($samplePath) || touch($samplePath);
+            file_exists($expectedPath) || touch($expectedPath);
+        }
+
         $samplePath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part->value, 'sample');
         $expectedPath = sprintf('%s-%d-%s.txt', $fileBasePath, $challenge->part->value, 'expected');
-
-        file_exists($samplePath) || touch($samplePath);
-        file_exists($expectedPath) || touch($expectedPath);
 
         if (false === file_exists($inputPath)) {
             is_dir(dirname($inputPath)) || mkdir(dirname($inputPath), recursive: true);
