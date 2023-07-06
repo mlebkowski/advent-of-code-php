@@ -109,4 +109,18 @@ final class MatcherTest extends TestCase
             CatchAllValueObject::extractArguments(...$actual),
         );
     }
+
+    public function test flattens(): void
+    {
+        $given = <<<EOF
+        1, 2, 3
+        4, 5, 6
+        EOF;
+        $sut = Matcher::simple('%...', static fn (string $s) => array_map(intval(...), explode(', ', $s)));
+        $actual = $sut->matchLines($given, flatten: true);
+        self::assertSame([1, 2, 3, 4, 5, 6], $actual);
+
+        $actual = $sut->matchLines($given, flatten: false);
+        self::assertSame([[1, 2, 3], [4, 5, 6]], $actual);
+    }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Aoc\Parser;
 
 use Closure;
+use loophp\collection\Collection;
+use loophp\collection\Operation\FlatMap;
+use loophp\collection\Operation\Map;
 use RuntimeException;
 
 final readonly class Matcher
@@ -22,9 +25,13 @@ final readonly class Matcher
     {
     }
 
-    public function matchLines(string $iput, int $skip = 0, string $delim = "\n"): array
+    public function matchLines(string $iput, int $skip = 0, string $delim = "\n", bool $flatten = false): array
     {
-        return array_map($this, array_slice(explode($delim, trim($iput)), $skip));
+        $op = false === $flatten ? Map::of() : FlatMap::of();
+        return Collection::fromIterable(explode($delim, trim($iput)))
+            ->slice($skip)
+            ->pipe($op($this))
+            ->all();
     }
 
     public function __invoke(string $line): mixed
