@@ -27,4 +27,50 @@ final class MapTest extends TestCase
         );
 
     }
+
+    public function test from string(): void
+    {
+        $given = <<<EOF
+        ##.#.#..
+        .#.#.#.#
+        ....#.#.
+        #.#.##.#
+        .##.#...
+        ##..#..#
+        .#...#..
+        ##.#.##.
+        EOF;
+
+        $actual = Map::fromString($given);
+
+        self::assertSame($given, (string)$actual);
+
+    }
+
+    public function test cut out(): void
+    {
+        $given = Map::fromString(
+            <<<EOF
+            ##.#.#..
+            .#.#.#.#
+            ....#.#.
+            #.#.##.#
+            .##.#...
+            ##..#..#
+            .#...#..
+            ##.#.##.
+            EOF,
+        );
+
+        $actual = $given->cutOut(Area::covering(Point::center(), Point::of(x: 3, y: 3)));
+        self::assertSame(
+            <<<EOF
+            ##.#
+            .#.#
+            ....
+            #.#.
+            EOF,
+            (string)$actual,
+        );
+    }
 }

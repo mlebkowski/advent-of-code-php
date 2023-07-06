@@ -10,6 +10,17 @@ final readonly class Map implements Stringable
 {
     private int $height;
 
+    public static function fromString(string $map): self
+    {
+        $rows = explode("\n", $map);
+        $widths = Collection::fromIterable($rows)
+            ->map(static fn (string $row) => strlen($row))
+            ->distinct()
+            ->all();
+        assert(1 === count($widths));
+        return self::ofPoints(str_split(strtr($map, ["\n" => ""])), $widths[0]);
+    }
+
     public static function ofPoints(array $map, int $width): self
     {
         return new self($map, $width);
@@ -43,6 +54,31 @@ final readonly class Map implements Stringable
             ->all(false);
 
         return self::ofPoints(array_replace($this->map, $overlay), $this->width);
+    }
+
+    public function cutOut(Area $area): Map
+    {
+        return self::ofPoints(
+            $this->withCoordinates()
+                ->filter(static fn (string $value, Point $point) => $area->contains($point))
+                ->all(),
+            $area->width() + 1,
+        );
+    }
+
+    public function withCoordinates(): Collection
+    {
+        return Collection::fromIterable($this->map)
+            ->map(
+                fn (string $value, int $idx) => [
+                    Point::of(
+                        x: $idx % $this->width,
+                        y: (int)floor($idx / $this->width),
+                    ),
+                    $value,
+                ],
+            )
+            ->unpack();
     }
 
     public function __toString(): string
