@@ -27,6 +27,10 @@ final class DigitalPlumber implements Solution
     {
         $system = PlumbingSystem::ofPipes(...$input->pipes);
 
-        return $system->connectedTo(0);
+        if ($challenge->isPartOne()) {
+            return $system->connectedTo(0);
+        }
+
+        return $system->numberOfGroups();
     }
 }

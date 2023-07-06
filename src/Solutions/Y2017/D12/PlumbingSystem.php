@@ -9,13 +9,18 @@ final readonly class PlumbingSystem
 {
     public static function ofPipes(Pipe ...$pipe): self
     {
-        return new self(
+        return self::ofConnections(
             Collection::fromIterable($pipe)
-                ->flatMap(static fn (Pipe $pipe) => [[$pipe->alpha, $pipe->bravo], [$pipe->bravo, $pipe->alpha]])
+                ->map(static fn (Pipe $pipe) => [$pipe->alpha, $pipe->bravo])
                 ->unpack()
                 ->groupBy(static fn (int $target, int $source) => $source)
                 ->all(false),
         );
+    }
+
+    public static function ofConnections(array $connections): self
+    {
+        return new self($connections);
     }
 
     private function __construct(private array $connections)
@@ -23,6 +28,26 @@ final readonly class PlumbingSystem
     }
 
     public function connectedTo(int $pipeId): int
+    {
+        return count($this->expandGroup($pipeId));
+    }
+
+    public function numberOfGroups(): int
+    {
+        $head = key($this->connections);
+        if (null === $head) {
+            return 0;
+        }
+
+        $group = $this->expandGroup($head);
+        $rest = Collection::fromIterable($this->connections)
+            ->reject(static fn ($values, int $source) => in_array($source, $group, true))
+            ->all(false);
+
+        return 1 + self::ofConnections($rest)->numberOfGroups();
+    }
+
+    private function expandGroup(int $pipeId): array
     {
         $seen = [$pipeId];
         $toExplore = $this->connections[$pipeId];
@@ -36,7 +61,6 @@ final readonly class PlumbingSystem
             $toExplore = array_diff($connections, $seen);
         }
 
-        return count($seen);
+        return $seen;
     }
-
 }
