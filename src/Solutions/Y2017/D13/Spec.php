@@ -14,9 +14,9 @@ final readonly class Spec
     {
     }
 
-    public function catchesPacket(): bool
+    public function catchesPacket(int $delay = 0): bool
     {
-        return $this->depth % $this->term() === 0;
+        return ($delay + $this->depth) % $this->term() === 0;
     }
 
     public function severity(): int

@@ -30,4 +30,7 @@ their depth without remainder.
 ## Some learnings from today
 
 * You can disable terminal cursor using ANSI codes, useful for animations
-* It’s easier to plot something in columns, and `transpose()` for row-based output 
+* It’s easier to plot something in columns, and `transpose()` for row-based output
+* The second part solution could be faster, but I can’t be bothered by that optimization.
+  Some great discussions on reddit, as
+  usual: https://www.reddit.com/r/adventofcode/comments/7jgyrt/2017_day_13_solutions/

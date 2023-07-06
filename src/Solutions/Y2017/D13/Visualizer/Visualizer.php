@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2017\D13\Visualizer;
 
+use App\Solutions\Y2017\D13\Firewall;
 use App\Solutions\Y2017\D13\Spec;
 use Generator;
 use loophp\collection\Collection;
@@ -19,24 +20,22 @@ final readonly class Visualizer
     private string $moveCursorToTop;
     private string $moveCursorToBottom;
 
-    public static function ofSpecs(Spec ...$specs): self
+    public static function ofSpecs(Firewall $firewall): self
     {
-        return new self($specs);
+        return new self($firewall);
     }
 
-    private function __construct(array $specs)
+    private function __construct(Firewall $firewall)
     {
-        $specs = Collection::fromIterable($specs);
-
-        $actualWidth = $specs->map(static fn (Spec $spec) => $spec->depth)->max() + 1;
+        $actualWidth = $firewall->maxDepth() + 1;
         $this->width = min(10, $actualWidth);
 
-        $this->height = $specs->map(static fn (Spec $spec) => $spec->range)->max();
+        $this->height = $firewall->maxRange();
         $verticalJumpLength = $this->height + 2;
         $this->moveCursorToTop = "\033[{$verticalJumpLength}A";
         $this->moveCursorToBottom = "\033[{$verticalJumpLength}B";
 
-        $specs = $specs
+        $specs = Collection::fromIterable($firewall->specs)
             ->map(static fn (Spec $spec) => [$spec->depth, $spec])
             ->unpack()
             ->all(false);
@@ -52,31 +51,32 @@ final readonly class Visualizer
             ->all(false);
     }
 
-    public function start(): Generator
+    public function start(int $delay): Generator
     {
         yield self::HideCursor;
-        $picosecond = 0;
-        $speed = 2;
-        while ($picosecond < count($this->layers)) {
+        $picosecond = $delay;
+        $packet = $picosecond - $delay;
+        $speed = 5;
+        while ($packet < count($this->layers)) {
             usleep($speed * 25_000);
 
-            yield $this->createMove(Move::Scanner, $picosecond);
+            yield $this->createMove(Move::Scanner, $picosecond, $packet);
             usleep($speed * 15_000);
-            yield $this->createMove(Move::Packet, $picosecond);
+            yield $this->createMove(Move::Packet, $picosecond, $packet);
 
             ++$picosecond;
+            ++$packet;
         }
 
-        sleep(1);
         yield $this->moveCursorToBottom . self::RestoreCursor;
     }
 
-    public function createMove(Move $move, int $picosecond): string
+    public function createMove(Move $move, int $picosecond, int $packet): string
     {
-        $packetDepth = $move->delayedPacketDepth() ? $picosecond - 1 : $picosecond;
+        $packetDepth = $move->delayedPacketDepth() ? $packet - 1 : $packet;
 
         $firewall = Collection::fromIterable($this->layers)
-            ->slice((int)floor($picosecond / $this->width) * $this->width, $this->width)
+            ->slice((int)floor(max(0, $packetDepth) / $this->width) * $this->width, $this->width)
             ->map(
                 static fn (ColumnPrinter $printer, int $layer) => [
                     str_pad((string)($layer % 10), 3, pad_type: STR_PAD_BOTH),

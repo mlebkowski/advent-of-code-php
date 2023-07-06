@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Solutions\Y2017\D13;
 
 use App\Aoc\Challenge;
+use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use App\Solutions\Y2017\D13\Visualizer\Visualizer;
@@ -27,14 +28,30 @@ final class PacketScanners implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $visualizer = Visualizer::ofSpecs(...$input->specs);
+        $firewall = Firewall::of(...$input->specs);
+        $visualizer = Visualizer::ofSpecs($firewall);
+        $progress = Progress::unknown()->reportInSteps(10_000);
+
+        $delay = 0;
+        if ($challenge->isPartTwo()) {
+            $delay = (int)Collection::range()
+                ->apply($progress->iterate(...))
+                ->find(
+                    PHP_INT_MAX,
+                    static fn (float $delay) => $firewall->avoidsDetection((int)$delay),
+                );
+        }
+
         echo "\n";
-        Collection::fromGenerator($visualizer->start())
+        Collection::fromGenerator($visualizer->start($delay))
             ->apply(static fn (string $output) => print($output))
             ->squash();
         echo "\n";
-        return Collection::fromIterable($input->specs)
-            ->filter(static fn (Spec $spec) => $spec->catchesPacket())
-            ->reduce(static fn (int $sum, Spec $spec) => $sum + $spec->severity(), 0);
+
+        if ($challenge->isPartOne()) {
+            return $firewall->tripSeverity();
+        }
+
+        return $delay;
     }
 }
