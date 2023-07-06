@@ -37,44 +37,34 @@ $chartHeight = $height - $chartGutter - $axis;
 $chunkSize = (int)ceil($stepCount / $chartWidth);
 // endregion
 // region helpers
-$withValue = static fn (string $top, string $bottom, Closure $fn) => Collection::range(0, $chartHeight)
+$withValue = static fn (Closure $fn) => Collection::range(0, $chartHeight)
     ->mapN(
         static fn (float $chartRowNo) => (int)floor(
             $max * ($chartHeight - $chartRowNo) / $chartHeight,
         ),
         $fn,
     )
-    ->prepend($top)
-    ->append($bottom)
     ->all();
 // endregion
 $canvas = [
     // legend
-    array_fill(0, $height, ' '),
+    array_fill(0, $chartHeight, ' '),
     $withValue(
-        str_repeat(' ', $labelWidth),
-        str_repeat(' ', $labelWidth),
         static fn (int $value, int $idx) => str_pad(
             $idx % 3 === 0 ? (string)$value : '',
             $labelWidth,
             pad_type: STR_PAD_LEFT,
         ),
     ),
-    array_fill(0, $height, ' '),
-    ['^', ...array_fill(0, $height - 2, $left), $corner],
-    [...array_fill(0, $height - 1, ' '), $bottom],
+    array_fill(0, $chartHeight, ' '),
+    array_fill(0, $chartHeight, $left),
+    array_fill(0, $chartHeight, ' '),
     ...
     Collection::fromIterable($path)
         ->chunk($chunkSize)
-        ->map(static function (array $chunk) use ($withValue, $bottom) {
-            $value = (int)floor(array_sum($chunk) / count($chunk));
-
-            return $withValue(
-                ' ',
-                $bottom,
-                static fn (int $chartValue) => $value >= $chartValue ? '▓' : ' ',
-            );
-        })
+        ->map(static fn (array $chunk) => $withValue(
+            static fn (int $chartValue) => floor(array_sum($chunk) / count($chunk)) >= $chartValue ? '▓' : ' ',
+        ))
         ->all(),
 
 ];
@@ -82,4 +72,6 @@ $canvas = [
 echo Collection::fromIterable($canvas)
     ->transpose()
     ->map(static fn (array $elements) => implode('', $elements))
+    ->prepend(str_repeat(' ', $legendWidth) . '^')
+    ->append(str_repeat(' ', $legendWidth) . $corner . str_repeat($bottom, $chartWidth + 2))
     ->implode("\n"), "\n";
