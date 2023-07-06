@@ -1,15 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Solutions\Y2017\D10;
+namespace App\Realms\Passwords;
 
-use App\Aoc\Challenge;
-use App\Aoc\Part;
-use App\Aoc\Runner\RunMode;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-final class KnotHashTest extends TestCase
+final class KnotHashBuilderTest extends TestCase
 {
     public static function data(): iterable
     {
@@ -22,10 +19,8 @@ final class KnotHashTest extends TestCase
     #[DataProvider('data')]
     public function test dense hash(string $input, string $expected): void
     {
-        $challenge = Challenge::of(2016, 10, Part::Two);
-        $input = (new KnotHashInputParser())->parse($input);
-        $sut = new KnotHash();
-        $actual = $sut->solve($challenge, $input, RunMode::Actual);
-        self::assertSame($expected, $actual);
+        $sut = KnotHashBuilder::standard();
+        $actual = $sut->build($input);
+        self::assertSame($expected, $actual->denseHash);
     }
 }
