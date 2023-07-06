@@ -26,3 +26,5 @@ explore some of the solutions below:
 * [Optimized combinations calculator](src/Solutions/Y2015/D24/Readme.md)
 * [Folding the medicine molecule](src/Solutions/Y2015/D19/Readme.md) — this one was one of the first
   real challenges to find the *smart* solution. Some explorations there, but ultimately, no happy ending.
+
+[src/Solutions/Y2015/D22/Readme.md]: src/Solutions/Y2015/D22/Readme.md
