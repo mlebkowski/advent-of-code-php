@@ -32,4 +32,19 @@ final class PathTest extends TestCase
             (string)$actual->toMap(),
         );
     }
+
+    public function test around area(): void
+    {
+        $given = Area::covering(Point::of(0, 0), Point::of(4, 1));
+        $actual = Path::aroundArea($given);
+        self::assertSame(
+            <<<PATH
+            ┌─────┐
+            │     │
+            │     │
+            └─────┘
+            PATH,
+            (string)$actual->toMap(),
+        );
+    }
 }

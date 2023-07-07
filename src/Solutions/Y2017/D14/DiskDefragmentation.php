@@ -7,6 +7,10 @@ namespace App\Solutions\Y2017\D14;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Realms\Cartography\Area;
+use App\Realms\Cartography\Point;
+use App\Solutions\Y2017\D14\Visualizer\GroupExpandingVisualizer;
+use loophp\collection\Collection;
 
 /**
  * @implements Solution<DiskDefragmentationInput>
@@ -26,6 +30,23 @@ final class DiskDefragmentation implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $disk = DiskBuilder::fromKeyString($input->keyString);
-        return substr_count((string)$disk, '#');
+        $area = Area::covering(Point::center(), Point::of(x: 20, y: 10));
+        $sampleForVisualization = $runMode->isSample() ? $disk->cutOut($area) : $disk;
+
+        if ($challenge->isPartOne()) {
+            echo "\n\n", $sampleForVisualization->framed()->withBoxDrawing(), "\n\n";
+            return substr_count((string)$disk, '#');
+        }
+
+        $delay = $runMode->isSample() ? 25_000 : 0;
+        echo "\n\n";
+        $result = GroupExpandingVisualizer::ofMap($sampleForVisualization, $delay);
+
+        Collection::fromIterable($result)
+            ->apply(static fn (string $output) => print($output))
+            ->squash();
+        echo "\n\n";
+
+        return $result->getReturn();
     }
 }

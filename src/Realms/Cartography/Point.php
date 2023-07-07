@@ -58,6 +58,16 @@ final readonly class Point implements Stringable
         ];
     }
 
+    public function orthogonallyAdjacent(): array
+    {
+        return [
+            self::of(x: $this->x + 0, y: $this->y - 1),
+            self::of(x: $this->x - 1, y: $this->y + 0),
+            self::of(x: $this->x + 1, y: $this->y + 0),
+            self::of(x: $this->x + 0, y: $this->y + 1),
+        ];
+    }
+
     public function distanceFromStart(): int
     {
         return abs($this->x) + abs($this->y);

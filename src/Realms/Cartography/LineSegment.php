@@ -12,6 +12,25 @@ final readonly class LineSegment
         return new self($points);
     }
 
+    public static function between(Point $alpha, Point $bravo): self
+    {
+        $xDiff = $bravo->x <=> $alpha->x;
+        $yDiff = $bravo->y <=> $alpha->y;
+        assert(($xDiff === 0) ^ ($yDiff === 0));
+
+        $count = max(abs($bravo->x - $alpha->x), abs($bravo->y - $alpha->y)) + 1;
+
+        return self::of(
+            ...
+            Collection::range(0, $count)
+                ->map(static fn (float $diff) => Point::of(
+                    x: $alpha->x + (int)($xDiff * $diff),
+                    y: $alpha->y + (int)($yDiff * $diff),
+                ))
+                ->all(),
+        );
+    }
+
     private function __construct(public array $points)
     {
         assert(count($this->points) > 1);

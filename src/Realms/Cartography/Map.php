@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Realms\Cartography;
 
+use Closure;
 use loophp\collection\Collection;
 use Stringable;
 
 final readonly class Map implements Stringable
 {
-    private int $height;
+    public int $height;
 
     public static function fromString(string $map): self
     {
@@ -91,9 +92,21 @@ final readonly class Map implements Stringable
             ->unpack();
     }
 
+    public function framed(): self
+    {
+        $area = Area::covering(Point::center(), $this->withCoordinates()->keys()->last());
+        $path = Path::aroundArea($area);
+        return $path->toMap()->overlay($this, Point::of(x: 1, y: 1));
+    }
+
     public function withBoxDrawing(): string
     {
         return strtr((string)$this, ['.' => ' ', '#' => '█']);
+    }
+
+    public function apply(Closure $fn): self
+    {
+        return self::ofPoints(array_map($fn, $this->map), $this->width);
     }
 
     public function __toString(): string

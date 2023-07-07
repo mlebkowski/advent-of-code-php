@@ -73,4 +73,28 @@ final class MapTest extends TestCase
             (string)$actual,
         );
     }
+
+    public function test frame(): void
+    {
+        $given = Map::fromString(
+            <<<MAP
+            ##.#
+            .#.#
+            ....
+            #.#.
+            MAP,
+        );
+        $actual = $given->framed();
+        self::assertSame(
+            <<<MAP
+            ┌────┐
+            │##.#│
+            │.#.#│
+            │....│
+            │#.#.│
+            └────┘
+            MAP,
+            (string)$actual,
+        );
+    }
 }

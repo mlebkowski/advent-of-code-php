@@ -4,11 +4,34 @@ declare(strict_types=1);
 namespace App\Realms\Cartography;
 
 use App\Solutions\Y2016\D01\Instruction;
+use loophp\collection\Collection;
 
 final readonly class Path
 {
     public Point $firstIntersection;
     public Point $lastPosition;
+
+    public static function aroundArea(Area $area): self
+    {
+        $minCorner = $area->minCorner->inDirection(Orientation::West)->inDirection(Orientation::South);
+        $maxCorner = $area->maxCorner->inDirection(Orientation::East)->inDirection(Orientation::North);
+        $corners = [
+            $minCorner,
+            Point::of(x: $maxCorner->x, y: $minCorner->y),
+            Point::of(x: $maxCorner->x, y: $maxCorner->y),
+            Point::of(x: $minCorner->x, y: $maxCorner->y),
+            $minCorner,
+        ];
+
+        $points = Collection::fromIterable($corners)
+            ->window(1)
+            ->reject(static fn (array $points) => 1 === count($points))
+            ->flatMap(static fn (array $corners) => LineSegment::between(...$corners)->rest())
+            ->prepend($minCorner) // path needs to overlap for it to be closed
+            ->all();
+
+        return new self($points, closed: true);
+    }
 
     public static function of(Instruction ...$instructions): self
     {
@@ -53,7 +76,7 @@ final readonly class Path
         return $alpha->steps() <=> $bravo->steps();
     }
 
-    private function __construct(public array $points)
+    private function __construct(public array $points, private bool $closed = false)
     {
         if (!$this->points) {
             return;
@@ -67,6 +90,9 @@ final readonly class Path
             $places[$key] = true;
         }
         $this->lastPosition = end($points);
+        if ($this->closed) {
+            assert($this->lastPosition->equals($this->points[0]));
+        }
     }
 
     public function area(): Area
@@ -93,7 +119,7 @@ final readonly class Path
             $map[$dot->y * $width + $dot->x] = LineDrawing::of(
                 point: $point,
                 previous: $this->points[$idx - 1] ?? null,
-                next: $this->points[$idx + 1] ?? null,
+                next: $this->points[$idx + 1] ?? ($this->closed ? $this->points[1] : null),
             );
         }
 

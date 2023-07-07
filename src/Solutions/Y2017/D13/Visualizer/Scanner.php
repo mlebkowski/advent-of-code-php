@@ -8,7 +8,7 @@ use loophp\collection\Collection;
 final readonly class Scanner implements ColumnPrinter
 {
     private const HighlightColor = "\033[0;41m";
-    private const RrestoreColor = "\033[0m";
+    private const RestoreColor = "\033[0m";
 
     public static function of(int $height, int $range): self
     {
@@ -32,7 +32,7 @@ final readonly class Scanner implements ColumnPrinter
                 $rowNo === 0 => match ([true, true]) {
                     [$position === 0, $hasPacket] => match ($move->highlightCollisions()) {
                         false => '(S)',
-                        true => self::HighlightColor . '(S)' . self::RrestoreColor,
+                        true => self::HighlightColor . '(S)' . self::RestoreColor,
                     },
                     [$position === 0, false === $hasPacket] => '[S]',
                     [$position !== 0, $hasPacket] => '(.)',
