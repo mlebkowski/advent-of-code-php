@@ -27,11 +27,20 @@ final class PermutationPromenade implements Solution
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
         $programs = $runMode->isSample() ? range('a', 'e') : range('a', 'p');
-        $result = array_reduce(
-            $input->moves,
-            static fn (array $programs, DanceMove $move) => $move->apply($programs),
-            $programs,
-        );
-        return implode('', $result);
+        $iterations = $challenge->isPartOne() ? 1 : 1_000_000_000;
+
+        $step = $programs;
+        $results = [];
+        do {
+            $step = array_reduce(
+                $input->moves,
+                static fn (array $programs, DanceMove $move) => $move->apply($programs),
+                $step,
+            );
+            $results[] = implode('', $step);
+        } while ($step !== $programs);
+
+        array_unshift($results, array_pop($results));
+        return $results[$iterations % count($results)];
     }
 }
