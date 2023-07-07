@@ -26,10 +26,20 @@ final readonly class Map implements Stringable
         return new self($map, $width);
     }
 
-    private function __construct(public array $map, public int $width)
+    private function __construct(private array $map, public int $width)
     {
         assert(count($map) % $this->width === 0);
         $this->height = (int)(count($map) / $this->width);
+    }
+
+    public function toPathFinding(string ...$blocked): PathFinding
+    {
+        return PathFinding::of(
+            Collection::fromIterable($this->map)
+                ->map(static fn (string $char) => in_array($char, $blocked, true))
+                ->all(),
+            $this->width,
+        );
     }
 
     public function overlayPath(Path $path): self
@@ -79,6 +89,11 @@ final readonly class Map implements Stringable
                 ],
             )
             ->unpack();
+    }
+
+    public function withBoxDrawing(): string
+    {
+        return strtr((string)$this, ['.' => ' ', '#' => '█']);
     }
 
     public function __toString(): string

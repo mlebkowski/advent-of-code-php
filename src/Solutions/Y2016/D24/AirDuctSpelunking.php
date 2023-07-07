@@ -7,8 +7,6 @@ namespace App\Solutions\Y2016\D24;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
-use App\Realms\Cartography\PathFinding;
-use loophp\collection\Collection;
 
 /**
  * @implements Solution<AirDuctSpelunkingInput>
@@ -30,12 +28,7 @@ final class AirDuctSpelunking implements Solution
         $map = $input->map;
 
         $pois = PointsOfInterest::fromMap($map);
-        $pathFinding = PathFinding::of(
-            Collection::fromIterable($map->map)
-                ->map(static fn (string $char) => '#' === $char)
-                ->all(),
-            $map->width,
-        );
+        $pathFinding = $map->toPathFinding('#');
 
         $start = array_shift($pois);
         $goBackToStart = $challenge->isPartTwo();
@@ -44,7 +37,7 @@ final class AirDuctSpelunking implements Solution
 
         $map = $map->overlayPath($route);
 
-        echo "\n" . $map, "\n\n";
+        echo "\n" . $map->withBoxDrawing(), "\n\n";
         return $route->steps();
     }
 }
