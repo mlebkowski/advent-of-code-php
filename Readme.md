@@ -3,6 +3,7 @@
 My adventures with [Advent of Code](https://adventofcode.com/), written in PHP. You can
 explore some of the solutions below:
 
+* [Implementing disk defragmentator](src/Solutions/Y2017/D14/Readme.md) — with some nice and colourful animations
 * [The visualizations become animated and colored!](src/Solutions/Y2017/D13/Readme.md)
 * [Finding isolated groups within a larger set of connected members](src/Solutions/Y2017/D12/Readme.md)
 * [Plotting some graphs](src/Solutions/Y2017/D11/Readme.md) — as well as an optimization
