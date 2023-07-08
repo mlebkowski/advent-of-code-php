@@ -10,4 +10,7 @@ enum Register: string
     case B = 'b';
     case C = 'c';
     case D = 'd';
+    case F = 'f';
+    case I = 'i';
+    case P = 'p';
 }

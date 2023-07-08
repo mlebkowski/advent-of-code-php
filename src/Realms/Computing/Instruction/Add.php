@@ -8,12 +8,12 @@ use App\Realms\Computing\Processor\Register;
 
 final readonly class Add implements Instruction
 {
-    public static function of(Register|int $value, Register $target): self
+    public static function of(Register $target, Register|int $value): self
     {
-        return new self($value, $target);
+        return new self($target, $value);
     }
 
-    private function __construct(private Register|int $value, private Register $target)
+    private function __construct(private Register $target, private Register|int $value)
     {
     }
 
@@ -28,6 +28,6 @@ final readonly class Add implements Instruction
     {
         $value = $this->value?->value ?? $this->value;
         $register = $this->target->value;
-        return "add $value $register";
+        return "add $register $value";
     }
 }

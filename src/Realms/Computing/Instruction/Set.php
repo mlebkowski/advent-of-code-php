@@ -3,24 +3,24 @@ declare(strict_types=1);
 
 namespace App\Realms\Computing\Instruction;
 
-use App\Realms\Computing\IO\Stdout;
 use App\Realms\Computing\Processor\Processor;
 use App\Realms\Computing\Processor\Register;
 
-final readonly class SignalTransmission implements Instruction
+final readonly class Set implements Instruction
 {
-    public static function of(Register|int $value): self
+    public static function of(Register $target, Register|int $value): self
     {
-        return new self($value);
+        return new self($target, $value);
     }
 
-    private function __construct(private Register|int $value)
+    private function __construct(private Register $target, private Register|int $value)
     {
     }
 
     public function apply(Processor $processor): void
     {
-        $processor->getDevice(Stdout::class)->write(
+        $processor->setRegister(
+            $this->target,
             $processor->readValue($this->value),
         );
     }
@@ -28,6 +28,6 @@ final readonly class SignalTransmission implements Instruction
     public function __toString(): string
     {
         $value = $this->value?->value ?? $this->value;
-        return "out $value";
+        return "set {$this->target->value} $value";
     }
 }

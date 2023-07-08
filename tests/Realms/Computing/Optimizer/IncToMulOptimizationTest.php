@@ -42,8 +42,8 @@ final class IncToMulOptimizationTest extends TestCase
         self::assertSame(
             <<<EOF
             cpy 5 c
-            mul 7 c
-            add c a
+            mul c 7
+            add a c
             cpy 0 d
             cpy 0 c
             noop

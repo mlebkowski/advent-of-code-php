@@ -50,12 +50,12 @@ final class IncToMulOptimization implements Optimization
 
         return [
             Multiply::of(
-                ArgumentFactory::registerOrValue($matches['value']),
                 ArgumentFactory::expectRegister($matches['regBravo']),
+                ArgumentFactory::registerOrValue($matches['value']),
             ),
             Add::of(
-                ArgumentFactory::expectRegister($matches['regBravo']),
                 ArgumentFactory::expectRegister($matches['regTarget']),
+                ArgumentFactory::expectRegister($matches['regBravo']),
             ),
             Copy::of(0, ArgumentFactory::expectRegister($matches['regAlpha'])),
             Copy::of(0, ArgumentFactory::expectRegister($matches['regBravo'])),

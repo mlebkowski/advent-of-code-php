@@ -5,6 +5,8 @@ namespace App\Solutions\Y2016\D25;
 
 use App\Aoc\Progress\Progress;
 use App\Realms\Computing\Instruction\Instruction;
+use App\Realms\Computing\IO\InputOutputListener;
+use App\Realms\Computing\IO\Stdout;
 use App\Realms\Computing\Processor\Processor;
 use App\Realms\Computing\Processor\Register;
 use loophp\collection\Collection;
@@ -34,7 +36,8 @@ final class SeedFinder
 
     private static function getSignal(Processor $processor): string
     {
-        return Collection::fromGenerator($processor->start())
+        $stdout = InputOutputListener::of($processor, new Stdout());
+        return Collection::fromGenerator($stdout)
             ->slice(0, self::SampleSize * 2)
             ->map(static fn (mixed $value) => (string)$value)
             ->implode();

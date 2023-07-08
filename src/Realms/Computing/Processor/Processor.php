@@ -6,14 +6,16 @@ namespace App\Realms\Computing\Processor;
 
 use App\Aoc\Progress\Progress;
 use App\Realms\Computing\Instruction\Instruction;
+use App\Realms\Computing\IO\Device;
 use Generator;
+use RuntimeException;
 
 final class Processor
 {
     private array $registers = [];
     private int $cursor = 0;
     private int $steps = 0;
-    private array $outputBuffer = [];
+    private array $devices = [];
 
     public static function ofInstructions(Instruction ...$instructions): self
     {
@@ -35,9 +37,23 @@ final class Processor
         }
     }
 
+    public function attachIODevice(Device $device): void
+    {
+        $this->devices[get_class($device)] = $device;
+    }
+
+    /**
+     * @template T as Device
+     * @param class-string<T> $class
+     * @return T
+     */
+    public function getDevice(string $class): Device
+    {
+        return $this->devices[$class] ?? throw new RuntimeException("No such device connected: $class");
+    }
+
     public function writeOutput(mixed $value): void
     {
-        $this->outputBuffer[] = $value;
     }
 
     public function readValue(Register|int $value): int
@@ -96,15 +112,8 @@ final class Processor
 
             $instruction->apply($this);
             $this->steps++;
-            if ($this->outputBuffer) {
-                yield from $this->consumeOutputBuffer();
-            }
+            yield $this->steps;
         }
-    }
-
-    private function consumeOutputBuffer(): array
-    {
-        return array_splice($this->outputBuffer, 0);
     }
 
     private function stateAsString(): string
