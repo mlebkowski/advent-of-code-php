@@ -31,8 +31,16 @@ final class Spinlock implements Solution
                 static fn (CircularBuffer $buffer) => $buffer->iterate(),
                 CircularBuffer::of($input->step),
             );
-        $values = $buffer->values();
-        $idx = array_search(2017, $values, true);
-        return $values[$idx + 1];
+
+        if ($challenge->isPartOne()) {
+            return $buffer->after(2017);
+        }
+
+        $iterations = 50_000_000;
+        $buffer = CircularBuffer::simulate($input->step);
+        while ($buffer->count() < $iterations) {
+            $buffer->iterate();
+        }
+        return $buffer->secondValue();
     }
 }
