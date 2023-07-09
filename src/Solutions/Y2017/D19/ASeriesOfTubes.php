@@ -23,9 +23,13 @@ final class ASeriesOfTubes implements Solution
         return Challenge::bothParts(2017, 19);
     }
 
-    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): string
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): string|int
     {
         $path = PathFactory::of($input->map)->fromShittyLineDrawing();
-        return LettersAlongPath::of($input->map, $path);
+        if ($challenge->isPartOne()) {
+            return LettersAlongPath::of($input->map, $path);
+        }
+
+        return $path->steps() + 1;
     }
 }
