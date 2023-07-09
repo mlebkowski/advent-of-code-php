@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2017\D20;
 
-final readonly class Vector
+use Stringable;
+
+final readonly class Vector implements Stringable
 {
     public static function of(int $x, int $y, int $z): self
     {
@@ -14,8 +16,18 @@ final readonly class Vector
     {
     }
 
+    public function add(self $other): self
+    {
+        return new self($this->x + $other->x, $this->y + $other->y, $this->z + $other->z);
+    }
+
     public function value(): int
     {
         return abs($this->x) + abs($this->y) + abs($this->z);
+    }
+
+    public function __toString(): string
+    {
+        return "<$this->x,$this->y,$this->z>";
     }
 }
