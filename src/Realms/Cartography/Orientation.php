@@ -22,6 +22,16 @@ enum Orientation
         return $orientations[$index % count($orientations)];
     }
 
+    public function opposite(): self
+    {
+        return match ($this) {
+            self::North => self::South,
+            self::East => self::West,
+            self::South => self::North,
+            self::West => self::East,
+        };
+    }
+
     public function xDirection(): int
     {
         return match ($this) {
@@ -37,6 +47,14 @@ enum Orientation
             self::East, self::West => 0,
             self::North => 1,
             self::South => -1,
+        };
+    }
+
+    public function perpendicular(): array
+    {
+        return match ($this) {
+            self::East, self::West => [self::North, self::South],
+            self::North, self::South => [self::East, self::West],
         };
     }
 }

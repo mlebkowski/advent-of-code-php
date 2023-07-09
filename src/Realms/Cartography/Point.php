@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Realms\Cartography;
 
+use App\Realms\Cartography\Distance\Distance;
 use Stringable;
 
 final readonly class Point implements Stringable
@@ -68,9 +69,9 @@ final readonly class Point implements Stringable
         ];
     }
 
-    public function distanceFromStart(): int
+    public function distance(self $other): Distance
     {
-        return abs($this->x) + abs($this->y);
+        return Distance::between($this, $other);
     }
 
     public function offset(self $offset): self

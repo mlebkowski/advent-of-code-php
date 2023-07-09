@@ -33,7 +33,7 @@ final readonly class Path
         return new self($points, closed: true);
     }
 
-    public static function of(Instruction ...$instructions): self
+    public static function ofInstructions(Instruction ...$instructions): self
     {
         $position = Point::center();
         $orientation = Orientation::North;

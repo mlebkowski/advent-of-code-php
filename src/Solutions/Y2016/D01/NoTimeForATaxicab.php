@@ -8,6 +8,7 @@ use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use App\Realms\Cartography\Path;
+use App\Realms\Cartography\Point;
 
 /** @implements Solution<NoTimeForATaxicabInput> */
 final class NoTimeForATaxicab implements Solution
@@ -19,10 +20,10 @@ final class NoTimeForATaxicab implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        $path = Path::of(...$input->instructions);
+        $path = Path::ofInstructions(...$input->instructions);
         echo "\n", $path->toMap(), "\n";
 
         $position = $challenge->isPartOne() ? $path->lastPosition : $path->firstIntersection;
-        return $position->distanceFromStart();
+        return $position->distance(Point::center())->manhattan;
     }
 }
