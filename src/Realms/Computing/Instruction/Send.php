@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace App\Realms\Computing\Instruction;
 
-use App\Realms\Computing\IO\SoundDevice;
 use App\Realms\Computing\Processor\Processor;
 use App\Realms\Computing\Processor\Register;
 
-final readonly class Sound implements Instruction
+final readonly class Send implements Instruction
 {
     public static function of(Register|int $value): self
     {
@@ -20,7 +19,7 @@ final readonly class Sound implements Instruction
 
     public function apply(Processor $processor): void
     {
-        $processor->getDevice(SoundDevice::class)->play(
+        $processor->getOutputDevice()->write(
             $processor->readValue($this->value),
         );
     }

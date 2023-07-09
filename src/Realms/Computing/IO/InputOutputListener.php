@@ -8,9 +8,9 @@ use Generator;
 
 final class InputOutputListener
 {
-    public static function of(Processor $processor, Device $device): Generator
+    public static function of(Processor $processor, OutputDevice $device): Generator
     {
-        $processor->attachIODevice($device);
+        $processor->attachOutputDevice($device);
         $thread = $processor->start();
         while ($thread->valid()) {
             $thread->send(null);

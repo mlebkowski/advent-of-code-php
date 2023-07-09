@@ -6,16 +6,19 @@ namespace App\Realms\Computing\Processor;
 
 use App\Aoc\Progress\Progress;
 use App\Realms\Computing\Instruction\Instruction;
-use App\Realms\Computing\IO\Device;
+use App\Realms\Computing\IO\InputDevice;
+use App\Realms\Computing\IO\IoInstructionRunner;
+use App\Realms\Computing\IO\NullDevice;
+use App\Realms\Computing\IO\OutputDevice;
 use Generator;
-use RuntimeException;
 
 final class Processor
 {
     private array $registers = [];
     private int $cursor = 0;
     private int $steps = 0;
-    private array $devices = [];
+    private InputDevice $inputDevice;
+    private OutputDevice $outputDevice;
 
     public static function ofInstructions(Instruction ...$instructions): self
     {
@@ -35,25 +38,27 @@ final class Processor
         foreach (Register::cases() as $register) {
             $this->setRegister($register, 0);
         }
+        $this->inputDevice = $this->outputDevice = new NullDevice();
     }
 
-    public function attachIODevice(Device $device): void
+    public function attachOutputDevice(OutputDevice $device): void
     {
-        $this->devices[get_class($device)] = $device;
+        $this->outputDevice = $device;
     }
 
-    /**
-     * @template T as Device
-     * @param class-string<T> $class
-     * @return T
-     */
-    public function getDevice(string $class): Device
+    public function attachInputDevice(InputDevice $device): void
     {
-        return $this->devices[$class] ?? throw new RuntimeException("No such device connected: $class");
+        $this->inputDevice = $device;
     }
 
-    public function writeOutput(mixed $value): void
+    public function getInputDevice(): InputDevice
     {
+        return $this->inputDevice;
+    }
+
+    public function getOutputDevice(): OutputDevice
+    {
+        return $this->outputDevice;
     }
 
     public function readValue(Register|int $value): int
@@ -108,12 +113,20 @@ final class Processor
     {
         while ($this->cursor < count($this->instructions)) {
             $this->progress?->iterate($this->stateAsString(...));
-            $instruction = $this->instructions[$this->cursor++];
 
-            $instruction->apply($this);
+            yield from IoInstructionRunner::run(
+                $this->instructions[$this->cursor++],
+                $this,
+            );
+
             $this->steps++;
             yield $this->steps;
         }
+    }
+
+    public function halt(): void
+    {
+        $this->cursor = count($this->instructions);
     }
 
     private function stateAsString(): string

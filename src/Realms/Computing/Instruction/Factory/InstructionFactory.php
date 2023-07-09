@@ -16,10 +16,10 @@ use App\Realms\Computing\Instruction\JumpIfOne;
 use App\Realms\Computing\Instruction\JumpNotZero;
 use App\Realms\Computing\Instruction\Modulo;
 use App\Realms\Computing\Instruction\Multiply;
-use App\Realms\Computing\Instruction\RecoverSoundFrequency;
+use App\Realms\Computing\Instruction\Receive;
+use App\Realms\Computing\Instruction\Send;
 use App\Realms\Computing\Instruction\Set;
 use App\Realms\Computing\Instruction\SignalTransmission;
-use App\Realms\Computing\Instruction\Sound;
 use App\Realms\Computing\Instruction\Toggle;
 use App\Realms\Computing\Instruction\Triple;
 
@@ -131,13 +131,13 @@ final class InstructionFactory
         );
     }
 
-    public static function sound(string $value): Sound
+    public static function sound(string $value): Send
     {
-        return Sound::of(ArgumentFactory::registerOrValue($value));
+        return Send::of(ArgumentFactory::registerOrValue($value));
     }
 
-    public static function recoverFrequency(string $value): RecoverSoundFrequency
+    public static function receive(string $value): Receive
     {
-        return RecoverSoundFrequency::of(ArgumentFactory::registerOrValue($value));
+        return Receive::of(ArgumentFactory::expectRegister($value));
     }
 }

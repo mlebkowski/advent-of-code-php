@@ -26,7 +26,7 @@ final class InputMatcher
             ->startsWith('out', '%s', InstructionFactory::out(...))
             ->startsWith('set', '%s %s', InstructionFactory::set(...))
             ->startsWith('snd', '%s', InstructionFactory::sound(...))
-            ->startsWith('rcv', '%s', InstructionFactory::recoverFrequency(...))
+            ->startsWith('rcv', '%s', InstructionFactory::receive(...))
             ->startsWith('tgl', '%s', InstructionFactory::toggle(...))
             ->startsWith('tpl', '%s', InstructionFactory::triple(...))
             ->getMatcher();

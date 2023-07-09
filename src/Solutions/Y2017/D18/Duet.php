@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Solutions\Y2017\D18;
 
 use App\Aoc\Challenge;
+use App\Aoc\Part;
 use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
-use App\Realms\Computing\IO\InputOutputListener;
-use App\Realms\Computing\IO\SoundDevice;
+use App\Realms\Computing\IO\EnterpriseMessageBus;
 use App\Realms\Computing\IO\Stdout;
+use App\Realms\Computing\IO\StreamCopy;
 use App\Realms\Computing\Processor\Processor;
+use App\Realms\Computing\Processor\Register;
 use loophp\collection\Collection;
 
 /**
@@ -26,14 +28,25 @@ final class Duet implements Solution
 {
     public function challenges(): iterable
     {
-        return Challenge::bothParts(2017, 18);
+        yield Challenge::of(2017, 18, Part::Two);
     }
 
-    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        $processor = Processor::of(Progress::unknown(), ...$input->instructions);
-        $processor->attachIODevice(SoundDevice::muted());
-        $io = InputOutputListener::of($processor, new Stdout());
-        return Collection::fromGenerator($io)->first();
+        $progress = Progress::unknown()->reportInSteps(10);
+        $ioDevice = StreamCopy::of(new Stdout());
+
+        $alpha = Processor::of($progress, ...$input->instructions);
+        $alpha->setRegister(Register::P, 0);
+        $alpha->attachOutputDevice(new Stdout());
+
+        $bravo = Processor::of($progress, ...$input->instructions);
+        $bravo->setRegister(Register::P, 1);
+        $bravo->attachOutputDevice($ioDevice);
+
+        EnterpriseMessageBus::between($alpha, $bravo);
+
+        $buffer = $ioDevice->other->consumeOutputBuffer();
+        return Collection::fromIterable($buffer)->count();
     }
 }

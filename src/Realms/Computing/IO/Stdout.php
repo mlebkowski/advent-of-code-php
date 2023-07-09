@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Realms\Computing\IO;
 
-final class Stdout implements Device
+final class Stdout implements OutputDevice
 {
     private array $outputBuffer = [];
 
