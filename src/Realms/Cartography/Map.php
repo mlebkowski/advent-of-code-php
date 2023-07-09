@@ -27,6 +27,11 @@ final readonly class Map implements Stringable
         return new self($map, $width);
     }
 
+    public static function empty(int $width, int $height): self
+    {
+        return self::ofPoints(array_fill(0, $width * $height, ' '), $width);
+    }
+
     private function __construct(private array $map, public int $width)
     {
         assert(count($map) % $this->width === 0);
@@ -38,6 +43,45 @@ final readonly class Map implements Stringable
         return PathFinding::of(
             Collection::fromIterable($this->map)
                 ->map(static fn (string $char) => in_array($char, $blocked, true))
+                ->all(),
+            $this->width,
+        );
+    }
+
+    public function flipHorizontal(): self
+    {
+        return self::ofPoints(
+            Collection::fromIterable($this->map)
+                ->chunk($this->width)
+                ->transpose()
+                ->reverse()
+                ->transpose()
+                ->flatten()
+                ->all(),
+            $this->width,
+        );
+    }
+
+    public function flipVertical(): self
+    {
+        return self::ofPoints(
+            Collection::fromIterable($this->map)
+                ->chunk($this->width)
+                ->reverse()
+                ->flatten()
+                ->all(),
+            $this->width,
+        );
+    }
+
+    public function rotate(): self
+    {
+        return self::ofPoints(
+            Collection::fromIterable($this->map)
+                ->chunk($this->width)
+                ->transpose()
+                ->reverse()
+                ->flatten()
                 ->all(),
             $this->width,
         );

@@ -97,4 +97,67 @@ final class MapTest extends TestCase
             (string)$actual,
         );
     }
+
+    public function test rotate(): void
+    {
+        $given = Map::fromString(
+            <<<MAP
+            .#.
+            ..#
+            ###
+            MAP
+        );
+
+        $actual = $given->rotate();
+        self::assertSame(
+            <<<MAP
+            .##
+            #.#
+            ..#
+            MAP,
+            (string)$actual,
+        );
+    }
+
+    public function test flip vertical(): void
+    {
+        $given = Map::fromString(
+            <<<MAP
+            .#.
+            ..#
+            ###
+            MAP
+        );
+
+        $actual = $given->flipVertical();
+        self::assertSame(
+            <<<MAP
+            ###
+            ..#
+            .#.
+            MAP,
+            (string)$actual,
+        );
+    }
+
+    public function test flip horizontal(): void
+    {
+        $given = Map::fromString(
+            <<<MAP
+            .#.
+            ..#
+            ###
+            MAP
+        );
+
+        $actual = $given->flipHorizontal();
+        self::assertSame(
+            <<<MAP
+            .#.
+            #..
+            ###
+            MAP,
+            (string)$actual,
+        );
+    }
 }
