@@ -51,11 +51,11 @@ final readonly class SpiralBuilder
                 $sideLength += 2;
                 $ringEnd = $sideLength ** 2;
                 $cornerValue = $i + $sideLength - 2;
-                $direction = $direction->turn(Turn::Right);
+                $direction = $direction->turn(Turn::Left);
             }
 
             if ($i === $cornerValue && $i !== $ringEnd) {
-                $direction = $direction->turn(Turn::Right);
+                $direction = $direction->turn(Turn::Left);
                 $cornerValue += $sideLength - 1;
             }
         }

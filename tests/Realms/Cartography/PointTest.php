@@ -15,4 +15,17 @@ final class PointTest extends TestCase
         self::assertSame(0, $actual->x);
         self::assertSame(3, $actual->y);
     }
+
+    public function test orientation between(): void
+    {
+        $sut = Point::of(x: 1, y: 1);
+        $toSouth = $sut->inDirection(Orientation::South);
+        $toEast = $sut->inDirection(Orientation::East);
+        $toNorth = $sut->inDirection(Orientation::North);
+        $toWest = $sut->inDirection(Orientation::West);
+        self::assertSame(Orientation::North, $sut->orientationBetween($toNorth));
+        self::assertSame(Orientation::East, $sut->orientationBetween($toEast));
+        self::assertSame(Orientation::South, $sut->orientationBetween($toSouth));
+        self::assertSame(Orientation::West, $sut->orientationBetween($toWest));
+    }
 }

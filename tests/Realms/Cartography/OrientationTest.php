@@ -11,6 +11,6 @@ final class OrientationTest extends TestCase
     #[DataProviderExternal(OrientationTurnsDataProvider::class, 'turns')]
     public function test(Orientation $sut, Turn $given, Orientation $expected): void
     {
-        self::assertSame($expected, $sut->turn($given));
+        self::assertSame($expected->name, $sut->turn($given)->name);
     }
 }

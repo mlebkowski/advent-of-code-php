@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Realms\Cartography;
 
 use App\Realms\Cartography\Distance\Distance;
+use RuntimeException;
 use Stringable;
 
 final readonly class Point implements Stringable
@@ -81,12 +82,15 @@ final readonly class Point implements Stringable
 
     public function orientationBetween(Point $other): Orientation
     {
-        return match ([$this->x <=> $other->x, $this->y <=> $other->y]) {
-            [0, -1] => Orientation::North,
-            [1, 0] => Orientation::East,
-            [0, 1] => Orientation::South,
-            [-1, 0] => Orientation::West,
-        };
+        $xDirection = $other->x <=> $this->x;
+        $yDirection = $other->y <=> $this->y;
+        foreach (Orientation::cases() as $orientation) {
+            if ($orientation->xDirection() === $xDirection && $orientation->yDirection() === $yDirection) {
+                return $orientation;
+            }
+        }
+
+        throw new RuntimeException("Points $this and $other are on a diagonal");
     }
 
     public function equals(self $other): bool

@@ -44,7 +44,7 @@ final readonly class PathFactory
 
         $path = [$start];
 
-        $direction = Orientation::North;
+        $direction = Orientation::South;
         while (true) {
             $next = $this->findNextTurn($start, $direction);
             $path = [...$path, ...LineSegment::between($start, $next)->rest()];
@@ -61,9 +61,9 @@ final readonly class PathFactory
     private function findNextTurn(Point $point, Orientation $direction): ?Point
     {
         $lastPoint = match ($direction) {
-            Orientation::North => Point::of($point->x, $this->corner->y),
+            Orientation::North => Point::of($point->x, 0),
             Orientation::East => Point::of($this->corner->x, $point->y),
-            Orientation::South => Point::of($point->x, 0),
+            Orientation::South => Point::of($point->x, $this->corner->y),
             Orientation::West => Point::of(0, $point->y),
         };
 

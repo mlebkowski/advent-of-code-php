@@ -45,8 +45,8 @@ enum Orientation
     {
         return match ($this) {
             self::East, self::West => 0,
-            self::North => 1,
-            self::South => -1,
+            self::South => 1,
+            self::North => -1,
         };
     }
 

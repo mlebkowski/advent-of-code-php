@@ -20,15 +20,15 @@ final class LineDrawing
         }
 
         $enter = $previous->orientationBetween($point);
-        $exit = $next->orientationBetween($point);
+        $exit = $point->orientationBetween($next);
 
         return match ([$enter, $exit]) {
-            [Orientation::North, Orientation::East], [Orientation::East, Orientation::North] => '└',
-            [Orientation::North, Orientation::South], [Orientation::South, Orientation::North] => '│',
-            [Orientation::North, Orientation::West], [Orientation::West, Orientation::North] => '┘',
-            [Orientation::South, Orientation::East], [Orientation::East, Orientation::South] => '┌',
-            [Orientation::South, Orientation::West], [Orientation::West, Orientation::South] => '┐',
-            [Orientation::East, Orientation::West], [Orientation::West, Orientation::East] => '─',
+            [Orientation::South, Orientation::East], [Orientation::West, Orientation::North] => '└',
+            [Orientation::North, Orientation::North], [Orientation::South, Orientation::South] => '│',
+            [Orientation::South, Orientation::West], [Orientation::East, Orientation::North] => '┘',
+            [Orientation::North, Orientation::East], [Orientation::West, Orientation::South] => '┌',
+            [Orientation::North, Orientation::West], [Orientation::East, Orientation::South] => '┐',
+            [Orientation::East, Orientation::East], [Orientation::West, Orientation::West] => '─',
             default => '█',
         };
     }
@@ -36,20 +36,20 @@ final class LineDrawing
     private static function starting(Point $point, Point $next): string
     {
         return match ($point->orientationBetween($next)) {
-            Orientation::South => '╵',
-            Orientation::West => '╶',
-            Orientation::North => '╷',
-            Orientation::East => '╴',
+            Orientation::North => '╵',
+            Orientation::East => '╶',
+            Orientation::South => '╷',
+            Orientation::West => '╴',
         };
     }
 
     private static function ending(Point $previous, Point $point): string
     {
         return match ($previous->orientationBetween($point)) {
-            Orientation::South => '╷',
-            Orientation::West => '╴',
-            Orientation::North => '╵',
-            Orientation::East => '╶',
+            Orientation::North => '╷',
+            Orientation::East => '╴',
+            Orientation::South => '╵',
+            Orientation::West => '╶',
         };
     }
 }

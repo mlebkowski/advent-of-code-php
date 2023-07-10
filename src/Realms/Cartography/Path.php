@@ -13,8 +13,8 @@ final readonly class Path
 
     public static function aroundArea(Area $area): self
     {
-        $minCorner = $area->minCorner->inDirection(Orientation::West)->inDirection(Orientation::South);
-        $maxCorner = $area->maxCorner->inDirection(Orientation::East)->inDirection(Orientation::North);
+        $minCorner = $area->minCorner->inDirection(Orientation::West)->inDirection(Orientation::North);
+        $maxCorner = $area->maxCorner->inDirection(Orientation::East)->inDirection(Orientation::South);
         $corners = [
             $minCorner,
             Point::of(x: $maxCorner->x, y: $minCorner->y),
