@@ -7,6 +7,9 @@ final class OptimizerFactory
 {
     public static function make(): Optimizer
     {
-        return Optimizer::of(new IncToMulOptimization());
+        return Optimizer::of(
+            IncToMulOptimizationFactory::make(),
+            IsPrimeOptimizationFactory::make(),
+        );
     }
 }

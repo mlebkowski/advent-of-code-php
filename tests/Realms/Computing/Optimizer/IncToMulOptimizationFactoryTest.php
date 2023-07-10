@@ -9,7 +9,7 @@ use App\Realms\Computing\Processor\Register;
 use loophp\collection\Collection;
 use PHPUnit\Framework\TestCase;
 
-final class IncToMulOptimizationTest extends TestCase
+final class IncToMulOptimizationFactoryTest extends TestCase
 {
     public function test()
     {
@@ -26,7 +26,7 @@ final class IncToMulOptimizationTest extends TestCase
             EOF
         );
 
-        $sut = new IncToMulOptimization();
+        $sut = IncToMulOptimizationFactory::make();
         $instructions = $sut->optimize(...$given);
 
         $processor = Processor::ofInstructions(...$instructions);

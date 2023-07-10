@@ -20,6 +20,7 @@ use App\Realms\Computing\Instruction\Receive;
 use App\Realms\Computing\Instruction\Send;
 use App\Realms\Computing\Instruction\Set;
 use App\Realms\Computing\Instruction\SignalTransmission;
+use App\Realms\Computing\Instruction\Sub;
 use App\Realms\Computing\Instruction\Toggle;
 use App\Realms\Computing\Instruction\Triple;
 
@@ -115,6 +116,14 @@ final class InstructionFactory
         );
     }
 
+    public static function sub(string $alpha, string $bravo): Sub
+    {
+        return Sub::of(
+            ArgumentFactory::expectRegister($alpha),
+            ArgumentFactory::registerOrValue($bravo),
+        );
+    }
+
     public static function multiply(string $alpha, string $bravo): Multiply
     {
         return Multiply::of(
@@ -131,7 +140,7 @@ final class InstructionFactory
         );
     }
 
-    public static function sound(string $value): Send
+    public static function send(string $value): Send
     {
         return Send::of(ArgumentFactory::registerOrValue($value));
     }
