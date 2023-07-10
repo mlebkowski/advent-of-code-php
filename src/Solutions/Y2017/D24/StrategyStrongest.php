@@ -5,8 +5,13 @@ namespace App\Solutions\Y2017\D24;
 
 final class StrategyStrongest
 {
-    public static function reduce(?int $strongest, int $strength)
+    public static function of(): self
     {
-        return max($strongest ?? 0, $strength);
+        return new self();
+    }
+
+    public function reduce(?int $strongest, Bridge $bridge): int
+    {
+        return max($strongest ?? 0, $bridge->strength());
     }
 }

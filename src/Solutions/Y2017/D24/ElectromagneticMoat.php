@@ -29,9 +29,9 @@ final class ElectromagneticMoat implements Solution
     {
         $progress = Progress::ofExpectedIterations(650_000)->reportInSteps(10_000);
         $builder = BridgeBuilder::of(...$input->components);
+        $strategy = $challenge->isPartOne() ? StrategyStrongest::of() : StrategyLongest::of();
         return Collection::fromGenerator($builder->build())
-            ->map(static fn (Bridge $bridge) => $bridge->strength())
             ->apply($progress->iterate(...))
-            ->reduce(StrategyStrongest::reduce(...));
+            ->reduce($strategy->reduce(...));
     }
 }

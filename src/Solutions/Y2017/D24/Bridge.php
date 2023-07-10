@@ -40,6 +40,11 @@ final readonly class Bridge implements Stringable
         return new self([...$this->components, $component], $component->in);
     }
 
+    public function length(): int
+    {
+        return count($this->components);
+    }
+
     public function strength(): int
     {
         return array_reduce(
