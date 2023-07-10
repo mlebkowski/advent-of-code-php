@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Solutions\Y2017\D21;
 
 use App\Aoc\Challenge;
+use App\Aoc\Part;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use App\Realms\Cartography\Map;
+use App\Solutions\Y2017\D21\Simulator\ArtGeneratorSimulator;
 
 /**
  * @implements Solution<FractalArtInput>
@@ -17,16 +19,16 @@ use App\Realms\Cartography\Map;
  * @see file://var/2017-21-2-sample.txt
  * @see file://var/2017-21-2-expected.txt
  */
-final class FractalArt implements Solution
+final class FractalArtPartTwo implements Solution
 {
     public function challenges(): iterable
     {
-        return Challenge::bothParts(2017, 21);
+        yield Challenge::of(2017, 21, Part::Two);
     }
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        $iterations = $runMode->isSample() ? 2 : 5;
+        $iterations = 18;
 
         $start = Map::fromString(
             <<<MAP
@@ -35,13 +37,8 @@ final class FractalArt implements Solution
             ###
             MAP
         );
-        $generator = ArtGenerator::of(...$input->rules)->enchance($start);
-        while ($iterations-- > 1) {
-            $generator->next();
-            echo "\n\n", $generator->current(), "\n";
-        }
-        $target = $generator->current();
 
-        return substr_count((string)$target, '#');
+        $simulator = ArtGeneratorSimulator::of($start, ...$input->rules);
+        return $simulator->afterIterations($iterations);
     }
 }
