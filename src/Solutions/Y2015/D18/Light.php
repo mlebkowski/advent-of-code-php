@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D18;
 
+use App\Realms\Cartography\Point;
 use Stringable;
 
 final readonly class Light implements Stringable

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Solutions\Y2015\D18;
 
 use App\Aoc\Progress\Progress;
+use App\Realms\Cartography\Point;
 use loophp\collection\Collection;
 
 final readonly class LightMatrix
@@ -74,6 +75,10 @@ final readonly class LightMatrix
     public function at(Point $point): Light|null
     {
         if ($point->x >= $this->sideLength || $point->y >= $this->sideLength) {
+            return null;
+        }
+
+        if ($point->x < 0 || $point->y < 0) {
             return null;
         }
 

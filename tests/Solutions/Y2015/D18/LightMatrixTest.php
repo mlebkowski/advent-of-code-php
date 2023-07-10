@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2015\D18;
 
+use App\Realms\Cartography\Point;
 use loophp\collection\Collection;
 use PHPUnit\Framework\TestCase;
 

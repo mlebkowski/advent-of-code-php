@@ -38,7 +38,7 @@ final class LikeAGifForYourYard implements Solution
             $matrix = $matrix->withStuckPoints(...$matrix->corners());
         }
 
-        $progress = Progress::ofExpectedIterations($matrix->count() * $steps);
+        $progress = Progress::ofExpectedIterations($matrix->count() * $steps)->reportInSteps(10_000);
         return Collection::range(0, $steps)
             ->reduce(static fn (LightMatrix $matrix) => $matrix->update($progress), $matrix)
             ->countLightsOn();
