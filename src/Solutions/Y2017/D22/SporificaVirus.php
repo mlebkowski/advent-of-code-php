@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Solutions\Y2017\D22;
 
 use App\Aoc\Challenge;
+use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use App\Realms\Cartography\Point;
@@ -32,8 +33,12 @@ final class SporificaVirus implements Solution
             y: (int)floor($input->infectionMap->height / 2),
         );
         $carrier = VirusCarrier::ofCluster($cluster, $startingPoint);
-        $iterations = 10_000;
-        while (--$iterations > 0) {
+        $carrier->useEvolvedStrategy = $challenge->isPartTwo();
+        $iterations = $challenge->isPartOne() ? 10_000 : 10_000_000;
+        $progress = Progress::ofExpectedIterations($iterations)->reportInSteps(100_000);
+
+        while ($iterations-- > 0) {
+            $progress->iterate($iterations);
             $carrier->burst();
         }
         return $cluster->infectionCount();

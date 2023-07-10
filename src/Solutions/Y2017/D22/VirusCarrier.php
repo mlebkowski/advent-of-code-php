@@ -9,6 +9,8 @@ use App\Realms\Cartography\Turn;
 
 final class VirusCarrier
 {
+    public bool $useEvolvedStrategy = false;
+
     public static function ofCluster(Cluster $cluster, Point $startingPoint): self
     {
         return new self($cluster, $startingPoint, Orientation::North);
@@ -24,14 +26,24 @@ final class VirusCarrier
     public function burst(): void
     {
         $currentState = $this->cluster->stateAt($this->position);
-        $turn = match ($currentState) {
-            InfectionState::Infected => Turn::Right,
-            InfectionState::Clean => Turn::Left,
+        $this->direction = match ($currentState) {
+            InfectionState::Infected => $this->direction->turn(Turn::Right),
+            InfectionState::Clean => $this->direction->turn(Turn::Left),
+            InfectionState::Weakened => $this->direction,
+            InfectionState::Flagged => $this->direction->opposite(),
         };
-        $this->direction = $this->direction->turn($turn);
+
         match ($currentState) {
-            InfectionState::Infected => $this->cluster->clean($this->position),
-            InfectionState::Clean => $this->cluster->infect($this->position),
+            InfectionState::Clean => match ($this->useEvolvedStrategy) {
+                false => $this->cluster->infect($this->position),
+                true => $this->cluster->weaken($this->position),
+            },
+            InfectionState::Infected => match ($this->useEvolvedStrategy) {
+                false => $this->cluster->clean($this->position),
+                true => $this->cluster->flag($this->position),
+            },
+            InfectionState::Weakened => $this->cluster->infect($this->position),
+            InfectionState::Flagged => $this->cluster->clean($this->position),
         };
         $this->position = $this->position->inDirection($this->direction);
     }

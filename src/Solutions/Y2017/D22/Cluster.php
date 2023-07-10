@@ -8,7 +8,7 @@ use App\Realms\Cartography\Point;
 
 final class Cluster
 {
-    private $infectionCount = 0;
+    private int $infectionCount = 0;
 
     public static function ofMap(Map $map): self
     {
@@ -46,5 +46,15 @@ final class Cluster
     public function clean(Point $point): void
     {
         $this->nodes[(string)$point] = InfectionState::Clean;
+    }
+
+    public function weaken(Point $point): void
+    {
+        $this->nodes[(string)$point] = InfectionState::Weakened;
+    }
+
+    public function flag(Point $point): void
+    {
+        $this->nodes[(string)$point] = InfectionState::Flagged;
     }
 }
