@@ -8,6 +8,7 @@ use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use loophp\collection\Collection;
+use RuntimeException;
 
 /**
  * @implements Solution<NoMatterHowYouSliceItInput>
@@ -36,9 +37,24 @@ final class NoMatterHowYouSliceIt implements Solution
             }
         }
 
-        return Collection::fromIterable($map)
-            ->flatten()
-            ->filter(static fn (int $claims) => $claims > 1)
-            ->count();
+        if ($challenge->isPartOne()) {
+            return Collection::fromIterable($map)
+                ->flatten()
+                ->filter(static fn (int $claims) => $claims > 1)
+                ->count();
+        }
+
+        foreach ($input->claims as $claim) {
+            for ($x = $claim->area->minCorner->x; $x <= $claim->area->maxCorner->x; $x++) {
+                for ($y = $claim->area->minCorner->y; $y <= $claim->area->maxCorner->y; $y++) {
+                    if ($map[$x][$y] > 1) {
+                        continue 3;
+                    }
+                }
+            }
+            return $claim->id;
+        }
+
+        throw new RuntimeException('Non-overlapping claim not found');
     }
 }
