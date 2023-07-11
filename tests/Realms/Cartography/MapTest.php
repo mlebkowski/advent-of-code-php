@@ -160,4 +160,38 @@ final class MapTest extends TestCase
             (string)$actual,
         );
     }
+
+    public function test border(): void
+    {
+        $given = Map::fromString(
+            <<<EOF
+            ##.#.#..
+            .#.#.#.#
+            ....#.#.
+            #.#.##.#
+            .##.#...
+            ##..#..#
+            .#...#..
+            ##.#.##.
+            EOF,
+        );
+
+        $border = $given->border();
+        $actual = $given->overlayPath($border);
+
+        self::assertSame(
+            <<<EOF
+            ┌──────┐
+            │#.#.#.│
+            │...#.#│
+            │.#.##.│
+            │##.#..│
+            │#..#..│
+            │#...#.│
+            └──────┘
+            EOF,
+            (string)$actual,
+        );
+
+    }
 }

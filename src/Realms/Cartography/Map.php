@@ -27,15 +27,25 @@ final readonly class Map implements Stringable
         return new self($map, $width);
     }
 
-    public static function empty(int $width, int $height): self
+    public static function empty(int $width, int $height, string $fill = ' '): self
     {
-        return self::ofPoints(array_fill(0, $width * $height, ' '), $width);
+        return self::ofPoints(array_fill(0, $width * $height, $fill), $width);
     }
 
     private function __construct(private array $map, public int $width)
     {
         assert(count($map) % $this->width === 0);
         $this->height = (int)(count($map) / $this->width);
+    }
+
+    public function border(): Path
+    {
+        return Path::aroundArea(
+            Area::covering(
+                Point::of(x: 1, y: 1),
+                Point::of(x: $this->width - 2, y: $this->height - 2),
+            ),
+        );
     }
 
     public function toPathFinding(string ...$blocked): PathFinding
@@ -90,6 +100,18 @@ final readonly class Map implements Stringable
     public function overlayPath(Path $path): self
     {
         return $this->overlay($path->toMap(), $path->area()->minCorner);
+    }
+
+    public function overlayPoints(iterable $points): self
+    {
+        $map = $this->map;
+        /** @var Point $point */
+        foreach ($points as [$point, $value]) {
+            $idx = $point->y * $this->width + $point->x;
+            $map[$idx] = $value;
+        }
+
+        return self::ofPoints($map, $this->width);
     }
 
     public function overlay(Map $other, Point $offset): self
@@ -150,7 +172,8 @@ final readonly class Map implements Stringable
 
     public function apply(Closure $fn): self
     {
-        return self::ofPoints(array_map($fn, $this->map), $this->width);
+        $map = $this->withCoordinates()->map($fn)->all();
+        return self::ofPoints($map, $this->width);
     }
 
     public function __toString(): string

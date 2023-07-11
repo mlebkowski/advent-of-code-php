@@ -28,8 +28,12 @@ final readonly class Area implements Stringable
         assert($this->minCorner->y <= $maxCorner->y);
     }
 
-    public function contains(Point $point): bool
+    public function contains(Area|Point $point): bool
     {
+        if ($point instanceof Area) {
+            return $this->contains($point->minCorner) && $this->contains($point->maxCorner);
+        }
+
         return $this->minCorner->x <= $point->x && $point->x <= $this->maxCorner->x
             && $this->minCorner->y <= $point->y && $point->y <= $this->maxCorner->y;
     }
