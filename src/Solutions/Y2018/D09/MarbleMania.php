@@ -25,6 +25,7 @@ final class MarbleMania implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return null;
+        $game = Game::of($input->players);
+        return $game->play($input->lastMarble);
     }
 }
