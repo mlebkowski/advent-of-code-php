@@ -68,6 +68,7 @@ return $config
                     'method_public',
                     'method_protected',
                     'method_private',
+                    'method_private_static',
                     'phpunit',
                     'magic',
                 ],

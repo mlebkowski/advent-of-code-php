@@ -37,3 +37,5 @@ explore some of the solutions below:
 [src/Solutions/Y2017/D21/Readme.md]: src/Solutions/Y2017/D21/Readme.md
 
 [src/Solutions/Y2017/D23/Readme.md]: src/Solutions/Y2017/D23/Readme.md
+
+[src/Solutions/Y2018/D01/Readme.md]: src/Solutions/Y2018/D01/Readme.md
