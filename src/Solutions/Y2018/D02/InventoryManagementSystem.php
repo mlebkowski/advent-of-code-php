@@ -7,6 +7,8 @@ namespace App\Solutions\Y2018\D02;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use loophp\collection\Collection;
+use RuntimeException;
 
 /**
  * @implements Solution<InventoryManagementSystemInput>
@@ -23,9 +25,23 @@ final class InventoryManagementSystem implements Solution
         return Challenge::bothParts(2018, 2);
     }
 
-    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): string|int
     {
         $boxes = Boxes::of(...$input->ids);
-        return $boxes->count(2) * $boxes->count(3);
+
+        if ($challenge->isPartOne()) {
+            return $boxes->count(2) * $boxes->count(3);
+        }
+
+        foreach (range(0, 25) as $idx) {
+            $duplicate = Collection::fromIterable($boxes->withoutNthLetter($idx))
+                ->duplicate()
+                ->first();
+            if ($duplicate) {
+                return $duplicate;
+            }
+        }
+
+        throw new RuntimeException('No duplicates found');
     }
 }

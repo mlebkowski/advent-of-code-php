@@ -26,4 +26,11 @@ final readonly class Id
     {
         return in_array($n, $this->frequencies, true);
     }
+
+    public function withoutNthLetter(int $idx): self
+    {
+        return new self(
+            substr_replace($this->value, '', $idx, 1),
+        );
+    }
 }
