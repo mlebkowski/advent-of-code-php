@@ -42,7 +42,7 @@ The idea was simple: every step of group finding will be plotted with a color. A
 once the search is complete, I remove the group entirely to search for next ones. This is
 how it looks:
 
-<video src="https://raw.githubusercontent.com/mlebkowski/advent-of-code-php/main/src/Solutions/Y2017/D14/assets/defrag.mov" />
+https://github.com/mlebkowski/advent-of-code-php/assets/848731/f71aa30f-6599-48f8-9bee-830755f60a16
 
 I know, everyone likes to admire disk defragmentator at work. But how about if instead of
 removing the groups accounted for, we color them instead?

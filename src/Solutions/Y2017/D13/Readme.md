@@ -2,7 +2,7 @@
 
 Those challenges are becoming more and more about the visualization. :)
 
-https://raw.githubusercontent.com/mlebkowski/advent-of-code-php/main/src/Solutions/Y2017/D13/assets/scanners.mov
+https://user-images.githubusercontent.com/848731/251570227-83eb93bb-d7dd-432d-8b95-82bcccefb2ac.mov
 
 But along the way I figured out the smart solution. I like smart solutions.
 So the scanner oscilates. Goes up and down, and arrives at its starting position,
