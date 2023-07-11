@@ -27,6 +27,6 @@ final class MemoryManeuver implements Solution
     {
         $stream = InputStream::of($input->numbers);
         $node = NodeBuilder::fromStream($stream);
-        return $node->sumMetadata();
+        return $challenge->isPartOne() ? $node->sumMetadata() : $node->value();
     }
 }

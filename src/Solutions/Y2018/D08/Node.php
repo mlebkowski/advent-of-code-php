@@ -10,7 +10,7 @@ final readonly class Node
         return new self($metadata, $children);
     }
 
-    private function __construct(private array $metadata, private array $children)
+    private function __construct(private array $metadata, /** @var Node[] */ private array $children)
     {
     }
 
@@ -23,5 +23,23 @@ final readonly class Node
                 $this->children,
             ),
         ]);
+    }
+
+    public function value(): int
+    {
+        if (0 === count($this->children)) {
+            return array_sum($this->metadata);
+        }
+
+        return array_reduce(
+            $this->metadata,
+            fn (int $sum, int $idx) => $sum + $this->children($idx)->value(),
+            0,
+        );
+    }
+
+    private function children(int $at): Node
+    {
+        return $this->children[$at - 1] ?? Node::of([]);
     }
 }
