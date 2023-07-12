@@ -27,12 +27,20 @@ final class SubterraneanSustainability implements Solution
     {
         $population = $input->population;
         $generations = 20;
-        echo "\n";
         while ($generations-- > 0) {
             $population = $population->step();
-            echo trim((string)$population, '.'), "\n";
         }
-        echo "\n";
-        return $population->magicNumber();
+
+        if ($challenge->isPartOne()) {
+            return $population->magicNumber();
+        }
+
+        $generations = 180;
+        while ($generations-- > 0) {
+            $population = $population->step();
+        }
+
+        $delta = $population->step()->magicNumber() - $population->magicNumber();
+        return $population->magicNumber() + $delta * (50_000_000_000 - 200);
     }
 }
