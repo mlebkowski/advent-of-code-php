@@ -3,6 +3,7 @@
 My adventures with [Advent of Code](https://adventofcode.com/), written in PHP. You can
 explore some of the solutions below:
 
+* [Blink and you miss it — animating stars in outer space](src/Solutions/Y2018/D10/Readme.md)
 * [How next solutions become just a higher-level abstraction over existing realms](src/Solutions/Y2017/D22/Readme.md)
 * [Implementing disk defragmentator](src/Solutions/Y2017/D14/Readme.md) — with some nice and colourful animations
 * [The visualizations become animated and colored!](src/Solutions/Y2017/D13/Readme.md)
