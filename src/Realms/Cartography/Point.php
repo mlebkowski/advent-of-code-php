@@ -60,6 +60,11 @@ final readonly class Point implements Stringable
         ];
     }
 
+    public function opposite(): self
+    {
+        return new self($this->x * -1, $this->y * -1);
+    }
+
     public function orthogonallyAdjacent(): array
     {
         return [
