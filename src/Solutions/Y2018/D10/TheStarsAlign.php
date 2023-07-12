@@ -32,7 +32,7 @@ final class TheStarsAlign implements Solution
         echo "\n\n";
         DisplayMapInIterations::display($animate, 50_000);
         echo "\n";
-        echo $animate->getReturn(), "\n\n";
-        return null;
+        echo $animate->getReturn()->photo, "\n\n";
+        return $animate->getReturn()->seconds;
     }
 }

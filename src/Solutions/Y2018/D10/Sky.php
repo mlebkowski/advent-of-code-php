@@ -21,8 +21,11 @@ final readonly class Sky
     {
     }
 
+    /** @return Generator<int,int,Map,Result> */
     public function animate(): Generator
     {
+        $seconds = 0;
+
         $stars = Collection::fromIterable($this->stars);
         $toPoints = static fn (Star $star) => Point::of($star->position->x, $star->position->y);
         $advance = static fn (Star $star) => $star->move();
@@ -33,7 +36,9 @@ final readonly class Sky
         $targetSize = 4 * sqrt(count($this->stars));
         $area = Area::covering(...$stars->map($toPoints));
         while ($area->width() > $targetSize) {
-            $stars = $stars->map($advanceBy((int)sqrt($area->width() - $targetSize)));
+            $by = (int)sqrt($area->width() - $targetSize);
+            $seconds += $by;
+            $stars = $stars->map($advanceBy($by));
             $area = Area::covering(...$stars->map($toPoints));
         }
         // endregion
@@ -44,6 +49,7 @@ final readonly class Sky
         // region now go back a little
         while ($starsInArea($stars)) {
             $stars = $stars->map($advanceBy(-3));
+            $seconds -= 3;
         }
         // endregion
 
@@ -52,7 +58,7 @@ final readonly class Sky
 
         $minSteps = 10;
         $textArea = $area;
-        $result = $map;
+        $result = Result::of($map, $seconds);
         while ($minSteps-- > 0 || $starsInArea($stars)) {
             $points = $stars
                 ->map($toPoints)
@@ -63,15 +69,15 @@ final readonly class Sky
             $currentArea = $points->count() === $stars->count() ? Area::covering(...$points) : $area;
             if ($currentArea->width() < $textArea->width() || $currentArea->height() < $textArea->height()) {
                 $textArea = $currentArea;
-                $result = $currentMap->cutOut($textArea);
+                $result = Result::of($currentMap->cutOut($textArea)->framed(), $seconds);
             }
 
             yield $currentMap;
             $stars = $stars->map($advance);
+            $seconds++;
         }
         yield $map;
 
-        return $result->framed();
+        return $result;
     }
-
 }
