@@ -21,8 +21,7 @@ final class FuelCellTest extends TestCase
     #[DataProvider('data')]
     public function test power level(int $x, int $y, int $serial, int $expected): void
     {
-        $sut = FuelCell::of(Point::of($x, $y), $serial);
-        $actual = $sut->powerLevel();
+        $actual = FuelCell::powerLevel(Point::of($x, $y), $serial);
         self::assertSame($expected, $actual);
     }
 }

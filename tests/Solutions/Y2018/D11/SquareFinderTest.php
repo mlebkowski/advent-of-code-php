@@ -10,16 +10,21 @@ final class SquareFinderTest extends TestCase
 {
     public static function data(): iterable
     {
-        yield [18, '33,45', 29];
-        yield [42, '21,61', 30];
+        yield [18, 3, Square::of(33, 45, 3, 29)];
+        yield [42, 3, Square::of(21, 61, 3, 30)];
+        yield [18, null, Square::of(90, 269, 16, 113)];
+        yield [42, null, Square::of(232, 251, 12, 119)];
     }
 
     #[DataProvider('data')]
-    public function test(int $serial, string $expectedId, int $expectedPower): void
+    public function test(int $serial, ?int $squareSize, Square $expected): void
     {
-        ini_set('memory_limit', '1G');
-        $actual = SquareFinder::of(300, 3, $serial);
-        self::assertSame($expectedId, $actual->id);
-        self::assertSame($expectedPower, $actual->totalPower());
+        if (null === $squareSize && false === in_array('--teamcity', $_SERVER['argv'], true)) {
+            $this->markTestSkipped('Expensive test');
+        }
+
+        $grid = PowerGrid::of($serial);
+        $actual = SquareFinder::of($grid, $squareSize);
+        self::assertSame($expected->toArray(), $actual->toArray());
     }
 }

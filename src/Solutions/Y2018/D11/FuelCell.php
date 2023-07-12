@@ -7,26 +7,13 @@ use App\Realms\Cartography\Point;
 
 final readonly class FuelCell
 {
-    public static function of(Point $coordinate, int $gridSerialNumber): self
+    public static function powerLevel(Point $coordinate, int $gridSerialNumber): int
     {
-        return new self($coordinate, $gridSerialNumber);
-    }
-
-    private function __construct(private Point $coordinate, private int $gridSerialNumber)
-    {
-    }
-
-    public function powerLevel(): int
-    {
-        $level = $this->rackId() * $this->coordinate->y;
-        $level += $this->gridSerialNumber;
-        $level *= $this->rackId();
+        $rackId = $coordinate->x + 10;
+        $level = $rackId * $coordinate->y;
+        $level += $gridSerialNumber;
+        $level *= $rackId;
         $level /= 100;
         return (int)$level % 10 - 5;
-    }
-
-    private function rackId(): int
-    {
-        return $this->coordinate->x + 10;
     }
 }
