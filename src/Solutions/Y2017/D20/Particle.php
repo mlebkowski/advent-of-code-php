@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2017\D20;
 
+use App\Realms\Physics\Vector;
+
 final readonly class Particle
 {
     public static function of(Vector $position, Vector $velocity, Vector $acceleration): self

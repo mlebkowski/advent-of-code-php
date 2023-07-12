@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Solutions\Y2017\D20;
+namespace App\Realms\Physics;
 
 use Stringable;
 
 final readonly class Vector implements Stringable
 {
-    public static function of(int $x, int $y, int $z): self
+    public static function of(int $x, int $y, int $z = 0): self
     {
         return new self($x, $y, $z);
     }
