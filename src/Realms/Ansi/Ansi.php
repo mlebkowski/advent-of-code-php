@@ -5,14 +5,29 @@ namespace App\Realms\Ansi;
 
 final readonly class Ansi
 {
-    public static function bgYellow(string $string): string
-    {
-        return sprintf('%s%s%s', Colors::YellowBackground->value, $string, Colors::Reset->value);
+    public static function color(
+        string $input,
+        Foreground $foreground = Foreground::Default,
+        Background $background = Background::Default,
+        Intensity $intensity = Intensity::Reset,
+    ): string {
+        return sprintf(
+            "\033[%d;%d;%dm%s\033[0m",
+            $intensity->value,
+            $foreground->value,
+            $background->value,
+            $input,
+        );
     }
 
     public static function yellow(string $string): string
     {
-        return sprintf('%s%s%s', Colors::Yellow->value, $string, Colors::Reset->value);
+        return self::color($string, Foreground::Yellow);
+    }
+
+    public static function white(string $string): string
+    {
+        return self::color($string, Foreground::White);
     }
 
     public static function moveUp(int $height): string
