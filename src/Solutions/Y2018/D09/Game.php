@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2018\D09;
 
+use App\Aoc\Progress\Progress;
+use SplDoublyLinkedList;
+
 final readonly class Game
 {
     public static function of(int $players): self
@@ -14,18 +17,28 @@ final readonly class Game
     {
     }
 
-    public function play(int $lastMarble): int
+    public function play(int $lastMarble, Progress $progress = null): int
     {
         $i = 2;
-        $circle = [1, 0];
+        $circle = new SplDoublyLinkedList();
+        $circle->unshift(0);
+        $circle->unshift(1);
         $players = array_fill(0, $this->players, 0);
-
         while ($i <= $lastMarble) {
+            $progress?->iterate($i);
             if ($i % 23) {
-                $circle = [$i, ...array_slice($circle, 2), ...array_slice($circle, 0, 2)];
+                $circle->push($circle->shift());
+                $circle->push($circle->shift());
+                $circle->unshift($i);
             } else {
-                $players[$i % count($players)] += $circle[count($circle) - 7] + $i;
-                $circle = [...array_slice($circle, -6), ...array_slice($circle, 0, -7)];
+                $circle->unshift($circle->pop());
+                $circle->unshift($circle->pop());
+                $circle->unshift($circle->pop());
+                $circle->unshift($circle->pop());
+                $circle->unshift($circle->pop());
+                $circle->unshift($circle->pop());
+                $removed = $circle->pop();
+                $players[$i % count($players)] += $removed + $i;
             }
             $i++;
         }

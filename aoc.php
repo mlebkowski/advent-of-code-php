@@ -7,6 +7,7 @@ namespace App\Aoc;
 
 // region setup
 use App\Aoc\Progress\Progress;
+use App\Aoc\Runner\RequiresMemoryLimit;
 use App\Aoc\Runner\Runner;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -31,6 +32,12 @@ if (4 === count($argv)) {
 
 $solution = $factory->make($challenge);
 $input = $fetcher->fetch($challenge);
+
+if ($solution instanceof RequiresMemoryLimit) {
+    $limit = $solution->getRequiredMemoryLimit();
+    echo "Increasing memory limit to $limit\n";
+    ini_set('memory_limit', $limit);
+}
 
 echo $challenge, "\n", '---', "\n\n";
 if ($input->sample) {
