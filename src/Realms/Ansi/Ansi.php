@@ -5,6 +5,11 @@ namespace App\Realms\Ansi;
 
 final readonly class Ansi
 {
+    public static function at(int $right, int $down, string $input): string
+    {
+        return self::moveDown($down) . self::moveRight($right) . $input . "\n" . self::moveUp($down + 1);
+    }
+
     public static function color(
         string $input,
         Foreground $foreground = Foreground::Default,
@@ -25,18 +30,43 @@ final readonly class Ansi
         return self::color($string, Foreground::Yellow);
     }
 
+    public static function red(string $string): string
+    {
+        return self::color($string, Foreground::Red);
+    }
+
     public static function white(string $string): string
     {
         return self::color($string, Foreground::White);
     }
 
-    public static function moveUp(int $height): string
+    public static function hideCursor(): string
     {
-        return sprintf(Cursor::Up->value, $height);
+        return Cursor::Hide->value;
     }
 
-    public static function moveDown(int $height): string
+    public static function showCursor(): string
     {
-        return sprintf(Cursor::Down->value, $height);
+        return Cursor::Restore->value;
+    }
+
+    public static function moveUp(int $distance): string
+    {
+        return $distance ? sprintf(Cursor::Up->value, $distance) : '';
+    }
+
+    public static function moveLeft(int $distance): string
+    {
+        return $distance ? sprintf(Cursor::Left->value, $distance) : '';
+    }
+
+    public static function moveDown(int $distance): string
+    {
+        return $distance ? sprintf(Cursor::Down->value, $distance) : '';
+    }
+
+    public static function moveRight(int $distance): string
+    {
+        return $distance ? sprintf(Cursor::Right->value, $distance) : '';
     }
 }
