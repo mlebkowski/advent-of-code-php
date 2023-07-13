@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Solutions\Y2018\D14;
 
+use App\Aoc\Progress\Progress;
 use RuntimeException;
 
-final readonly class ScoreCounter
+final readonly class ScoreFinder
 {
     public static function of(int $elves, array $recipes): self
     {
@@ -16,12 +17,15 @@ final readonly class ScoreCounter
     {
     }
 
-    public function count(int $after): string
+    public function find(string $scores, Progress $progress = null): int
     {
         $generator = Scoreboard::of($this->elves, $this->recipes);
         foreach ($generator->generate() as $count => $recipes) {
-            if ($count >= $after + 10) {
-                return substr($recipes, $after - ($count - 12), 10);
+            $progress?->iterate($count);
+            $pos = strpos($recipes, $scores);
+            if (false !== $pos) {
+                $basePos = max(0, $count - 12);
+                return $basePos + $pos;
             }
         }
         throw new RuntimeException('Oops!');

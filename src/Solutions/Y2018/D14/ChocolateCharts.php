@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Solutions\Y2018\D14;
 
 use App\Aoc\Challenge;
+use App\Aoc\Progress\Progress;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 
@@ -23,9 +24,13 @@ final class ChocolateCharts implements Solution
         return Challenge::bothParts(2018, 14);
     }
 
-    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
+    public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int|string
     {
-        $counter = ScoreCounter::of(2, [3, 7]);
-        return $counter->count($input->count);
+        if ($challenge->isPartOne()) {
+            return ScoreCounter::of(2, [3, 7])->count($input->count);
+        }
+
+        $progress = Progress::unknown()->reportInSteps(10_000);
+        return ScoreFinder::of(2, [3, 7])->find((string)$input->count, $progress);
     }
 }
