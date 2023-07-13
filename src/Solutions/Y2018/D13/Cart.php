@@ -11,14 +11,41 @@ final readonly class Cart
 {
     public static function of(Point $position, Orientation $direction): self
     {
-        return new self($position, $direction, TurnPreference::initial());
+        return new self($position, $direction, TurnPreference::initial(), collides: true);
     }
 
     private function __construct(
         public Point $position,
         public Orientation $orientation,
         public TurnPreference $turnPreference,
+        private bool $collides,
     ) {
+    }
+
+    public function collidesWith(self $other): bool
+    {
+        if ($other === $this) {
+            return false;
+        }
+        if ($other->isGhost() || $this->isGhost()) {
+            return false;
+        }
+        return $other->position->equals($this->position);
+    }
+
+    public function ghost(): self
+    {
+        return new self(
+            $this->position,
+            $this->orientation,
+            $this->turnPreference,
+            collides: false,
+        );
+    }
+
+    public function isGhost(): bool
+    {
+        return false === $this->collides;
     }
 
     public function move(string $gridChar): self
@@ -39,6 +66,7 @@ final readonly class Cart
             $this->position->inDirection($orientation),
             $orientation,
             $turnPreference,
+            $this->collides,
         );
     }
 }

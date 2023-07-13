@@ -6,7 +6,7 @@ namespace App\Solutions\Y2018\D13\Events;
 use App\Realms\Cartography\Point;
 use Stringable;
 
-final readonly class Crash implements Stringable
+final readonly class LastCartStanding implements Stringable
 {
     public static function of(Point $position): self
     {

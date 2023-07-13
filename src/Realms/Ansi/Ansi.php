@@ -25,6 +25,11 @@ final readonly class Ansi
         );
     }
 
+    public static function gray(string $string): string
+    {
+        return self::color($string, Foreground::White, intensity: Intensity::Faint);
+    }
+
     public static function yellow(string $string): string
     {
         return self::color($string, Foreground::Yellow);

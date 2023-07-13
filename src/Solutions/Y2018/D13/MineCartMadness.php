@@ -9,6 +9,7 @@ use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use App\Solutions\Y2018\D13\Events\Abort;
 use App\Solutions\Y2018\D13\Events\Crash;
+use App\Solutions\Y2018\D13\Events\LastCartStanding;
 use App\Solutions\Y2018\D13\Input\CartFinder;
 use App\Solutions\Y2018\D13\Input\PathConverter;
 use loophp\collection\Collection;
@@ -36,9 +37,17 @@ final class MineCartMadness implements Solution
         echo "\n\n";
         $process = CartAnimator::animate($map, Fleet::of(...$carts), $delay);
 
+        if ($challenge->isPartOne()) {
+            return Collection::fromGenerator($process)
+                ->filter(static fn (mixed $event) => $event instanceof Crash)
+                ->map(static fn (Crash $crash) => (string)$crash)
+                ->apply(static fn () => $process->send(Abort::of()))
+                ->first();
+        }
+
         return Collection::fromGenerator($process)
-            ->filter(static fn (mixed $event) => $event instanceof Crash)
-            ->map(static fn (Crash $crash) => sprintf('%d,%d', $crash->position->x, $crash->position->y))
+            ->filter(static fn (mixed $event) => $event instanceof LastCartStanding)
+            ->map(static fn (LastCartStanding $lastCart) => (string)$lastCart)
             ->apply(static fn () => $process->send(Abort::of()))
             ->first();
     }

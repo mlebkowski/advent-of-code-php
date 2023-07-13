@@ -6,6 +6,7 @@ namespace App\Solutions\Y2018\D13;
 use App\Realms\Ansi\Ansi;
 use App\Solutions\Y2018\D13\Events\Abort;
 use App\Solutions\Y2018\D13\Events\Crash;
+use App\Solutions\Y2018\D13\Events\LastCartStanding;
 use Generator;
 
 final class CartAnimator
@@ -24,7 +25,6 @@ final class CartAnimator
         );
 
         $cartIcon = Ansi::yellow('•');
-        $crashIcon = Ansi::red('×');
 
         foreach ($fleet as $cart) {
             echo Ansi::at(
@@ -34,36 +34,46 @@ final class CartAnimator
             );
         }
 
-        while (true) {
-            $cart = $fleet->current();
-            $gridChar = $grid[$cart->position->y][$cart->position->x];
-            echo Ansi::at(
-                $cart->position->x,
-                $cart->position->y,
-                $gridChar,
-            );
-
-            $cart = $fleet->step($gridChar);
-            foreach ($fleet as $other) {
-                if ($other !== $cart && $other->position->equals($cart->position)) {
-                    echo Ansi::at(
-                        $cart->position->x,
-                        $cart->position->y,
-                        $crashIcon,
-                    );
-                    $signal = yield Crash::of($cart->position);
-                    if ($signal instanceof Abort) {
-                        break 2;
-                    }
-                }
+        while ($fleet->count()) {
+            if (1 === $fleet->count()) {
+                yield LastCartStanding::of($fleet->current()->position);
+                break;
             }
 
-            echo Ansi::at(
-                $cart->position->x,
-                $cart->position->y,
-                $cartIcon,
-            );
-            usleep($delay);
+            while (false === $fleet->tickComplete()) {
+                $cart = $fleet->current();
+
+                $gridChar = $grid[$cart->position->y][$cart->position->x];
+                echo Ansi::at(
+                    $cart->position->x,
+                    $cart->position->y,
+                    $gridChar,
+                );
+
+                $cart = $fleet->step($gridChar);
+                foreach ($fleet as $other) {
+                    if (false === $cart->collidesWith($other)) {
+                        continue;
+                    }
+
+                    CrashSiteMarker::markCrashSite($cart->position);
+                    $signal = yield Crash::of($cart->position);
+                    if ($signal instanceof Abort) {
+                        break 3; // break outer loop
+                    }
+                    $fleet->remove($cart, $other);
+                    continue 2; // continue tick loop
+                }
+
+                echo Ansi::at(
+                    $cart->position->x,
+                    $cart->position->y,
+                    $cartIcon,
+                );
+
+                usleep($delay);
+            }
+            $fleet->tick();
         }
 
         echo Ansi::moveDown($height) . Ansi::showCursor();
