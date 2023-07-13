@@ -11,6 +11,6 @@ final class MineCartMadnessInputParser implements InputParser
 {
     public function parse(string $input): object
     {
-        return new MineCartMadnessInput(trim($input));
+        return new MineCartMadnessInput(rtrim($input));
     }
 }

@@ -4,10 +4,16 @@ declare(strict_types=1);
 namespace App\Solutions\Y2018\D13;
 
 use App\Realms\Ansi\Ansi;
+use App\Solutions\Y2018\D13\Events\Abort;
+use App\Solutions\Y2018\D13\Events\Crash;
+use Generator;
 
 final class CartAnimator
 {
-    public static function animate(string $map, Fleet $fleet): iterable
+    /**
+     * @return Generator<int,Abort,Crash>
+     */
+    public static function animate(string $map, Fleet $fleet, int $delay): Generator
     {
         $height = substr_count($map, "\n") + 1;
         echo $map, "\n", Ansi::moveUp($height) . Ansi::hideCursor();
@@ -17,7 +23,6 @@ final class CartAnimator
             explode("\n", $map),
         );
 
-        $steps = 100;
         $cartIcon = Ansi::yellow('•');
         $crashIcon = Ansi::red('×');
 
@@ -29,7 +34,7 @@ final class CartAnimator
             );
         }
 
-        while ($steps-- > 0) {
+        while (true) {
             $cart = $fleet->current();
             $gridChar = $grid[$cart->position->y][$cart->position->x];
             echo Ansi::at(
@@ -37,16 +42,30 @@ final class CartAnimator
                 $cart->position->y,
                 $gridChar,
             );
+
             $cart = $fleet->step($gridChar);
+            foreach ($fleet as $other) {
+                if ($other !== $cart && $other->position->equals($cart->position)) {
+                    echo Ansi::at(
+                        $cart->position->x,
+                        $cart->position->y,
+                        $crashIcon,
+                    );
+                    $signal = yield Crash::of($cart->position);
+                    if ($signal instanceof Abort) {
+                        break 2;
+                    }
+                }
+            }
+
             echo Ansi::at(
                 $cart->position->x,
                 $cart->position->y,
                 $cartIcon,
             );
-            usleep(30_000);
+            usleep($delay);
         }
 
         echo Ansi::moveDown($height) . Ansi::showCursor();
-        return [];
     }
 }

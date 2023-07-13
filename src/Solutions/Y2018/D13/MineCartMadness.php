@@ -7,8 +7,11 @@ namespace App\Solutions\Y2018\D13;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Solutions\Y2018\D13\Events\Abort;
+use App\Solutions\Y2018\D13\Events\Crash;
 use App\Solutions\Y2018\D13\Input\CartFinder;
 use App\Solutions\Y2018\D13\Input\PathConverter;
+use loophp\collection\Collection;
 
 /**
  * @implements Solution<MineCartMadnessInput>
@@ -27,10 +30,16 @@ final class MineCartMadness implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
+        $delay = $runMode->isSample() ? 100_000 : 10;
         $carts = CartFinder::fromDrawing($input->map);
         $map = PathConverter::convert($input->map);
         echo "\n\n";
-        CartAnimator::animate($map, Fleet::of(...$carts));
-        return null;
+        $process = CartAnimator::animate($map, Fleet::of(...$carts), $delay);
+
+        return Collection::fromGenerator($process)
+            ->filter(static fn (mixed $event) => $event instanceof Crash)
+            ->map(static fn (Crash $crash) => sprintf('%d,%d', $crash->position->x, $crash->position->y))
+            ->apply(static fn () => $process->send(Abort::of()))
+            ->first();
     }
 }

@@ -6,6 +6,7 @@ namespace App\Solutions\Y2018\D13;
 use IteratorAggregate;
 use Traversable;
 
+/** @implements IteratorAggregate<int,Cart> */
 final class Fleet implements IteratorAggregate
 {
     private int $position = 0;
