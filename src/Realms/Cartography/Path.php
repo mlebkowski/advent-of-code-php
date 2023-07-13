@@ -8,7 +8,9 @@ use loophp\collection\Collection;
 
 final readonly class Path
 {
+    // todo: remove me:
     public Point $firstIntersection;
+    public Point $firstPosition;
     public Point $lastPosition;
 
     public static function aroundArea(Area $area): self
@@ -89,9 +91,10 @@ final readonly class Path
             }
             $places[$key] = true;
         }
+        $this->firstPosition = reset($points);
         $this->lastPosition = end($points);
         if ($this->closed) {
-            assert($this->lastPosition->equals($this->points[0]));
+            assert($this->lastPosition->equals($this->firstPosition));
         }
     }
 

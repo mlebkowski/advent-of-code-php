@@ -38,6 +38,8 @@ final readonly class PathFinding
 
         $startPosition = $grid->getPoint(y: $from->y, x: $from->x);
         $endPosition = $grid->getPoint(y: $to->y, x: $to->x);
+        CannotFindPath::whenPointsIsOutsideTheGrid($startPosition, $from);
+        CannotFindPath::whenPointsIsOutsideTheGrid($endPosition, $to);
 
         $path = $astar->search($startPosition, $endPosition);
         CannotFindPath::whenResultIsEmpty($path, $from, $to);

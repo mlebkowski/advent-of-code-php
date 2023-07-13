@@ -14,4 +14,5 @@ enum Background: int
     case Cyan = 46;
     case White = 47;
     case Default = 49;
+    case Grey = 100;
 }
