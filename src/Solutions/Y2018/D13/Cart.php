@@ -31,30 +31,8 @@ final readonly class Cart
                 $orientation = $turnPreference->getDirection($orientation);
                 $turnPreference = $turnPreference->next();
                 break;
-            case Line::CornerTopRight->value:
-                $orientation = match ($orientation) {
-                    Orientation::East => Orientation::South,
-                    Orientation::North => Orientation::West,
-                };
-                break;
-            case Line::CornerBottomLeft->value:
-                $orientation = match ($orientation) {
-                    Orientation::South => Orientation::East,
-                    Orientation::West => Orientation::North,
-                };
-                break;
-            case Line::CornerBottomRight->value:
-                $orientation = match ($orientation) {
-                    Orientation::East => Orientation::North,
-                    Orientation::South => Orientation::West,
-                };
-                break;
-            case Line::CornerTopLeft->value:
-                $orientation = match ($orientation) {
-                    Orientation::North => Orientation::East,
-                    Orientation::West => Orientation::South,
-                };
-                break;
+            default:
+                $orientation = Line::from($gridChar)->followDirection($orientation);
         }
 
         return new self(
