@@ -18,6 +18,11 @@ final class Unit implements Stringable
         return new self($position, $faction);
     }
 
+    public static function isElf(self $unit): bool
+    {
+        return $unit->faction === Faction::Elves;
+    }
+
     private function __construct(public Point $position, public readonly Faction $faction)
     {
     }
@@ -41,12 +46,15 @@ final class Unit implements Stringable
     {
         $this->position = NextStepFactory::create($this, $battleground);
         $target = AttackTargetFactory::make($this, $battleground);
-        $target?->takeHit();
+        $target?->takeHits(match ($this->faction) {
+            Faction::Elves => $battleground->elfAttack,
+            Faction::Goblins => self::Attack,
+        });
     }
 
-    public function takeHit(): void
+    public function takeHits(int $damage): void
     {
-        $this->hitPoints -= self::Attack;
+        $this->hitPoints -= $damage;
     }
 
     public function isDead(): bool

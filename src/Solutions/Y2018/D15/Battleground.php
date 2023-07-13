@@ -11,14 +11,19 @@ final class Battleground
 {
     private int $position = 0;
     private int $rounds = 0;
+    private readonly int $startingElfCount;
 
-    public static function of(Map $map, Unit ...$units): self
+    public static function of(Map $map, int $elfAttack, Unit ...$units): self
     {
-        return new self($map, $units);
+        return new self($map, $elfAttack, $units);
     }
 
-    private function __construct(public Map $map, /** @var Unit[] */ private array $units)
-    {
+    private function __construct(
+        public readonly Map $map,
+        public readonly int $elfAttack,
+        private array $units,
+    ) {
+        $this->startingElfCount = $this->elfCount();
     }
 
     public function units(): array
@@ -37,11 +42,28 @@ final class Battleground
 
     public function battleContinues(): bool
     {
+        if ($this->elfAttack > 3 && $this->hasElfCasualties()) {
+            // break the sim as soon as we have casualties, save time
+            return false;
+        }
+
         $factionCount = Collection::fromIterable($this->units())
             ->map(static fn (Unit $unit) => $unit->faction->value)
             ->distinct()
             ->count();
         return $factionCount > 1;
+    }
+
+    public function hasElfCasualties(): bool
+    {
+        return $this->elfCount() < $this->startingElfCount;
+    }
+
+    public function outcome(): int
+    {
+        $rounds = $this->rounds - 1;
+        $hp = array_sum(array_map(static fn (Unit $unit) => $unit->hp(), $this->units()));
+        return $hp * $rounds;
     }
 
     public function pathFinding(Unit $unit): PathFinding
@@ -76,14 +98,14 @@ final class Battleground
         $this->cleanup();
     }
 
-    public function countRounds(): int
-    {
-        return $this->rounds;
-    }
-
     public function roundComplete(): bool
     {
         return $this->position === count($this->units);
+    }
+
+    private function elfCount(): int
+    {
+        return count(array_filter($this->units(), Unit::isElf(...)));
     }
 
     private function cleanup(): void

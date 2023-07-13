@@ -8,7 +8,7 @@ use App\Realms\Cartography\Point;
 
 final readonly class BattlegroundFactory
 {
-    public static function create(Map $map): Battleground
+    public static function create(Map $map, int $elfAttack = 3): Battleground
     {
         $units = $map->withCoordinates()
             ->map(static fn (string $item) => Faction::tryFrom($item))
@@ -22,6 +22,6 @@ final readonly class BattlegroundFactory
                 '#' => '#',
                 default => $item,
             });
-        return Battleground::of($map, ...$units);
+        return Battleground::of($map, $elfAttack, ...$units);
     }
 }

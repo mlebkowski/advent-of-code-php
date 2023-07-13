@@ -30,7 +30,7 @@ final readonly class MapUnitsPlotter
     public function plot(Battleground $battleground): Map
     {
         $units = Collection::fromIterable($battleground->units())
-            ->map(static fn (Unit $unit) => [
+            ->map(fn (Unit $unit) => [
                 $unit->position,
                 match ($unit->faction) {
                     Faction::Elves => $this->elves,
@@ -39,7 +39,7 @@ final readonly class MapUnitsPlotter
             ]);
 
         return $this->map->overlayPoints($units)->apply(
-            static fn (string $point) => match ($point) {
+            fn (string $point) => match ($point) {
                 '#' => ' ',
                 ' ' => $this->block,
                 default => $point,

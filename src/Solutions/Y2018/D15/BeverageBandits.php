@@ -25,11 +25,21 @@ final class BeverageBandits implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        $battleground = BattlegroundFactory::create($input->map);
+        if ($challenge->isPartOne()) {
+            $battleground = BattlegroundFactory::create($input->map);
+            Combat::animate($battleground);
+            return $battleground->outcome();
+        }
 
-        Combat::animate($battleground);
-        $rounds = $battleground->countRounds() - 1;
-        $hp = array_sum(array_map(static fn (Unit $unit) => $unit->hp(), $battleground->units()));
-        return $rounds * $hp;
+        echo "\n";
+        $attack = 3;
+        do {
+            $attack++;
+            echo "Increasing elf attack to $attack\n";
+            $battleground = BattlegroundFactory::create($input->map, $attack);
+
+            Combat::animate($battleground);
+        } while ($battleground->hasElfCasualties());
+        return $battleground->outcome();
     }
 }
