@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Realms\Cartography;
 
 use loophp\collection\Collection;
+use Stringable;
 
-final readonly class LineSegment
+final readonly class LineSegment implements Stringable
 {
     public static function of(Point ...$points): self
     {
@@ -58,5 +59,10 @@ final readonly class LineSegment
     public function end(): Point
     {
         return $this->points[count($this->points) - 1];
+    }
+
+    public function __toString(): string
+    {
+        return "{$this->start()} → {$this->end()}";
     }
 }

@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpDocSignatureInspection */
 declare(strict_types=1);
 
 namespace App\Lib\Type;
@@ -22,8 +23,19 @@ final readonly class Cast
         return (int)$value;
     }
 
+    public static function toString(mixed $value): string
+    {
+        return (string)$value;
+    }
+
     public static function toEnumValue(BackedEnum $enum): int|string
     {
         return $enum->value;
+    }
+
+    /** @return PointCast */
+    public static function point(): string
+    {
+        return PointCast::class;
     }
 }

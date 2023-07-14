@@ -56,7 +56,7 @@ final readonly class Sky
         // endregion
 
         $normalize = static fn (Point $point) => $point->offset($area->minCorner);
-        $map = Map::empty($area->width() + 1, $area->height() + 1);
+        $map = Map::ofArea($area);
 
         $minSteps = 10;
         $textArea = $area;

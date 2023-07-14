@@ -10,6 +10,16 @@ enum Orientation
     case South;
     case West;
 
+    public function isHorizontal(): bool
+    {
+        return in_array($this, [self::East, self::West], true);
+    }
+
+    public function isVertical(): bool
+    {
+        return in_array($this, [self::South, self::North], true);
+    }
+
     public function turn(Turn $direction): self
     {
         $orientations = self::cases();

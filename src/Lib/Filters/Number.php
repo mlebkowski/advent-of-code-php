@@ -16,4 +16,9 @@ final readonly class Number
     {
         return static fn (int $other) => $other >= $value;
     }
+
+    public static function lessThan(int $value): Closure
+    {
+        return static fn (int $other) => $other < $value;
+    }
 }

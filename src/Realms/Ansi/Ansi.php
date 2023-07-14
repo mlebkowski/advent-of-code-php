@@ -30,6 +30,16 @@ final readonly class Ansi
         return self::color($string, Foreground::White, intensity: Intensity::Faint);
     }
 
+    public static function blue(string $string): string
+    {
+        return self::color($string, Foreground::Blue);
+    }
+
+    public static function blueBg(string $string): string
+    {
+        return self::color($string, background: Background::Blue);
+    }
+
     public static function yellow(string $string): string
     {
         return self::color($string, Foreground::Yellow);
@@ -73,5 +83,10 @@ final readonly class Ansi
     public static function moveRight(int $distance): string
     {
         return $distance ? sprintf(Cursor::Right->value, $distance) : '';
+    }
+
+    public static function clearScren(): string
+    {
+        return "\033[2J\033[0;0H";
     }
 }

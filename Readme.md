@@ -3,6 +3,7 @@
 My adventures with [Advent of Code](https://adventofcode.com/), written in PHP. You can
 explore some of the solutions below:
 
+* [Ugh, a very traumatic challenge](src/Solutions/Y2018/D17/Readme.md)
 * [Help! Some goblins surrounded me in a cavern](src/Solutions/Y2018/D15/Readme.md)
 * [There are some carts running in circles along the drawn path!](src/Solutions/Y2018/D13/Readme.md)
 * [Usage of the Summed-area Table algo](src/Solutions/Y2018/D11/Readme.md) (and a nice visualization)

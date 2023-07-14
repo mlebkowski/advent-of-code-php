@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Realms\Cartography;
 
-use loophp\collection\Collection;
+use App\Lib\Type\Cast;
 use Stringable;
 
 final readonly class Area implements Stringable
 {
-    public static function covering(Point ...$point): self
+    public static function covering(Point ...$points): self
     {
-        $xValues = Collection::fromIterable($point)->map(static fn (Point $point) => $point->x);
-        $yValues = Collection::fromIterable($point)->map(static fn (Point $point) => $point->y);
+        $xValues = array_map(Cast::point()::toX(...), $points);
+        $yValues = array_map(Cast::point()::toY(...), $points);
 
-        $minX = $xValues->min();
-        $minY = $yValues->min();
-        $maxX = $xValues->max();
-        $maxY = $yValues->max();
+        $minX = min($xValues);
+        $minY = min($yValues);
+        $maxX = max($xValues);
+        $maxY = max($yValues);
 
         return new self(Point::of($minX, $minY), Point::of($maxX, $maxY));
     }
@@ -36,6 +36,16 @@ final readonly class Area implements Stringable
 
         return $this->minCorner->x <= $point->x && $point->x <= $this->maxCorner->x
             && $this->minCorner->y <= $point->y && $point->y <= $this->maxCorner->y;
+    }
+
+    public function extend(Orientation $orientation): self
+    {
+        return match ($orientation) {
+            Orientation::North, Orientation::West =>
+            Area::covering($this->minCorner->inDirection($orientation), $this->maxCorner),
+            Orientation::East, Orientation::South =>
+            Area::covering($this->minCorner, $this->maxCorner->inDirection($orientation)),
+        };
     }
 
     public function width(): int

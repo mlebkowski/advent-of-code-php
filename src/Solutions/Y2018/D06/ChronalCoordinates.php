@@ -41,18 +41,15 @@ final class ChronalCoordinates implements Solution
 
         $area = Area::covering(...$input->coordinates);
         $points = Collection::fromIterable($input->coordinates)
+            ->map(static fn (Point $point) => $point->offset($area->minCorner))
             ->map(static fn (Point $point, int $idx) => [$point, $colors[$idx]])
             ->unpack();
 
-        $map = Map::empty(
-            width: $area->width() + $area->minCorner->x + 1,
-            height: $area->height() + $area->minCorner->y + 1,
-            fill: '.',
-        )->overlayPoints($points->pack());
+        $map = Map::ofArea($area, fill: '.')->overlayPoints($points->pack());
 
         if ($challenge->isPartOne()) {
             $counter = ClosestCounter::of($points);
-            $map = $map->apply($counter->getClosest(...))->cutOut($area);
+            $map = $map->apply($counter->getClosest(...));
 
             echo "\n\n", $map, "\n";
 
