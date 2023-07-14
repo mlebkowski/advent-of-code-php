@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lib\Type;
 
+use BackedEnum;
 use RuntimeException;
 
 final readonly class Cast
@@ -19,5 +20,10 @@ final readonly class Cast
         }
 
         return (int)$value;
+    }
+
+    public static function toEnumValue(BackedEnum $enum): int|string
+    {
+        return $enum->value;
     }
 }

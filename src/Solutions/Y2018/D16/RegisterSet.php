@@ -5,6 +5,11 @@ namespace App\Solutions\Y2018\D16;
 
 final readonly class RegisterSet
 {
+    public static function empty(): self
+    {
+        return self::of(0, 0, 0, 0);
+    }
+
     public static function of(int $alpha, int $bravo, int $charlie, int $delta): self
     {
         return new self($alpha, $bravo, $charlie, $delta);

@@ -10,7 +10,7 @@ final readonly class ChronalClassificationInput
         /** @var Observation[] */
         public array $observations,
         /** @var InstructionCall[] */
-        public array $instructions,
+        public array $calls,
     ) {
     }
 }

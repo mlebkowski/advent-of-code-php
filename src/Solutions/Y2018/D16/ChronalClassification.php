@@ -8,6 +8,7 @@ use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
 use App\Lib\Filters\Number;
+use App\Solutions\Y2018\D16\Instructions\D16Instruction;
 use App\Solutions\Y2018\D16\Testers\ObservationTester;
 use loophp\collection\Collection;
 
@@ -28,9 +29,20 @@ final class ChronalClassification implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): mixed
     {
-        return Collection::fromIterable($input->observations)
-            ->map(ObservationTester::count(...))
-            ->filter(Number::greaterThanOrEqual(3))
-            ->count();
+        if ($challenge->isPartOne()) {
+            return Collection::fromIterable($input->observations)
+                ->map(ObservationTester::count(...))
+                ->filter(Number::greaterThanOrEqual(3))
+                ->count();
+        }
+
+        $resolver = OpcodeResolver::of(...$input->observations);
+        $instructions = array_map($resolver->resolve(...), $input->calls);
+
+        return array_reduce(
+            $instructions,
+            static fn (RegisterSet $input, D16Instruction $instruction) => $instruction->call($input),
+            RegisterSet::empty(),
+        )->alpha;
     }
 }
