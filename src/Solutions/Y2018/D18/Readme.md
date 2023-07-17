@@ -2,7 +2,7 @@
 
 WTF is going at the North Pole?!
 
-![](assets/crop-circles.gif)
+<img src="assets/crop-circles.gif" height="500">
 
 The solution is simple: detect a loop, induce the result. Easy as pie.
 
