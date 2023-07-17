@@ -40,6 +40,11 @@ final readonly class Ansi
         return self::color($string, background: Background::Blue);
     }
 
+    public static function green(string $string): string
+    {
+        return self::color($string, foreground: Foreground::Green);
+    }
+
     public static function yellow(string $string): string
     {
         return self::color($string, Foreground::Yellow);

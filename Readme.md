@@ -3,6 +3,7 @@
 My adventures with [Advent of Code](https://adventofcode.com/), written in PHP. You can
 explore some of the solutions below:
 
+* [Some serious shit is going on at the North Pole](src/Solutions/Y2018/D18/Readme.md)
 * [Ugh, a very traumatic challenge](src/Solutions/Y2018/D17/Readme.md)
 * [Help! Some goblins surrounded me in a cavern](src/Solutions/Y2018/D15/Readme.md)
 * [There are some carts running in circles along the drawn path!](src/Solutions/Y2018/D13/Readme.md)

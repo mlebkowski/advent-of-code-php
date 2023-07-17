@@ -24,7 +24,7 @@ final readonly class Map implements Stringable
 
     public static function ofPoints(array $map, int $width): self
     {
-        return new self($map, $width);
+        return new self(array_values($map), $width);
     }
 
     public static function empty(int $width, int $height, string $fill = ' '): self

@@ -7,6 +7,9 @@ namespace App\Solutions\Y2018\D18;
 use App\Aoc\Challenge;
 use App\Aoc\Runner\RunMode;
 use App\Aoc\Solution;
+use App\Realms\Ansi\Ansi;
+use App\Realms\Cartography\Map;
+use RuntimeException;
 
 /**
  * @implements Solution<SettlersOfTheNorthPoleInput>
@@ -25,12 +28,35 @@ final class SettlersOfTheNorthPole implements Solution
 
     public function solve(Challenge $challenge, mixed $input, RunMode $runMode): int
     {
-        $days = 10;
         $project = ConstructionProject::ofMap($input->map);
-        while ($days-- > 0) {
+        $day = 0;
+        echo Ansi::clearScren(), Ansi::hideCursor();
+        $iterations = [];
+        $thousandsOfYears = 1_000_000_000;
+        while (++$day) {
+            $map = (string)$project->toMap($input->map->width);
+            $index = array_search($map, $iterations, true);
+            if (false !== $index) {
+                $thousandsOfYears -= $index;
+                $loopSize = count($iterations) - $index;
+                $thousandsOfYears %= $loopSize;
+                $map = $iterations[$thousandsOfYears + $index];
+                return ConstructionProject::ofMap(Map::fromString($map))->resourceValue();
+            }
+            $iterations[] = $map;
+            echo $project->toMap($input->map->width)
+                ->apply(static fn (string $item) => match ($item) {
+                    '|' => Ansi::green('|'),
+                    default => $item,
+                })
+                ->withBoxDrawing(),
+            "\n", Ansi::moveUp($input->map->height);
             $project = $project->step();
+            if ($day === 10 && $challenge->isPartOne()) {
+                return $project->resourceValue();
+            }
         }
 
-        return $project->resourceValue();
+        throw new RuntimeException('This shouldn’t happen');
     }
 }
