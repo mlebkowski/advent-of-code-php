@@ -14,6 +14,11 @@ final readonly class Point implements Stringable
         return new self($x, $y);
     }
 
+    public static function fromString(string $input): self
+    {
+        return self::of(...sscanf($input, '%d×%d'));
+    }
+
     public static function center(): self
     {
         return self::of(0, 0);
